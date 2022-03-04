@@ -1,0 +1,4 @@
+rootProject.name = 'lmsSave'
+include 'lms-core'
+include 'lms-api'
+
