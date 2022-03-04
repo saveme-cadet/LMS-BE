@@ -40,6 +40,16 @@ ___Link___: [Notion][https://www.notion.so/savemecadet/LMS-24781856e3e5429490b8b
   2. Todo List에 작성한 목표에 따라 달성률이 자동으로 변경되게 만들었습니다.
   3. 출결을 통해서 휴가점수 관리가 간편해 졌습니다.
 
+
+- ㅊ
+ㅜ
+ㅜㄹ
+ㅜㄹㅅ
+ㅜㄹ서
+ㅜㄹ석
+ㅜㄹ석ㅍ
+ㅜㄹ석표
+
 * * *
 # Environment
 

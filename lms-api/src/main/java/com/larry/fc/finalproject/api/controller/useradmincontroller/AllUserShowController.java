@@ -47,14 +47,6 @@ public class AllUserShowController {
         return ResponseEntity.ok().build();
     }
 
-//    @Operation(description = "오늘 학생들 정보 생성")
-//    @PostMapping("/alluserstable")
-//    public ResponseEntity<Void> createTableUsers(@RequestBody AllUserDto allUserDto){
-//
-//        allUserTableService.createAllUser(allUserDto);
-//        return ResponseEntity.ok().build();
-//    }
-
     @Operation(description = "오늘 학생들 정보 불러오기")
     @GetMapping("/day")
     public List<AllTableDto> getUserTableByDay(
