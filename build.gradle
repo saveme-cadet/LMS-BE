@@ -57,5 +57,3 @@ project(':lms-api') {
     }
 }
 
-
-
