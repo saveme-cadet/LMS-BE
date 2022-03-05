@@ -163,7 +163,7 @@ public class AllUserTableService {
             });
 
 
-            for (int i = 0; i < 31; i++) {
+            for (int i = 0; i < tableCheckInDto.getTableDay().lengthOfMonth(); i++) {
                 LocalDate day = tableCheckInDto.getTableDay().withDayOfMonth(1).plusDays(i);
                 System.out.println(day);
                 final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckInDto.getId(), day);
@@ -229,7 +229,7 @@ public class AllUserTableService {
             userInfoRepository.save(userInfo);
         });
 
-        for (int i = 0; i < 31; i++) {
+        for (int i = 0; i < tableCheckOutDto.getTableDay().lengthOfMonth(); i++) {
             LocalDate day = tableCheckOutDto.getTableDay().withDayOfMonth(1).plusDays(i);
             final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getId(), day);
             original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
