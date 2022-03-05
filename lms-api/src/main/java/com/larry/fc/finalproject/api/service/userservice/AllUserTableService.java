@@ -80,7 +80,7 @@ public class AllUserTableService {
         final DayTable []dayTables = new DayTable[list.length];
         for (int i = 0; i < list.length; i++){
             dayTableRepository.findAllByTableDayAndCadet_Id(LocalDate.now(), list[i])
-                    .ifPresent(u -> {
+            .ifPresent(u -> {
                         throw new RuntimeException("user day already exit!");
                     });
             userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(list[i], 1L);
