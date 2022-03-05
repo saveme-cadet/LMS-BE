@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Builder
 public class AllUserInfoDto {
-    @Schema(description = "user id", example = "user id = 1 or 2..")
+    @Schema(name = "writer_id", example = "user id = 1 or 2..")
     private final Long writer_id;
     @Schema(description = "참여자 이름" , example = "진성대")
     private final String userName;

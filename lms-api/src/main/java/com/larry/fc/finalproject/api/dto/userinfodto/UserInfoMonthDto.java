@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Builder
 @Data
 public class UserInfoMonthDto {
-    @Schema(description = "userId")
+    @Schema(name = "userId")
     @NotNull
     @Min(1)
-    private final Long id;
+    private final Long userId;
     @Schema(description = "level" , example = "구해줘 카뎃 참여한 총 달")
     private final int level;
     @Schema(description = "지금 진행 중인 과제" , example = "libft")

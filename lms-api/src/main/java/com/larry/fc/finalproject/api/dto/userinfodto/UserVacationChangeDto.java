@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class UserVacationChangeDto {
-    @Schema(description = "유저 index", example = "1, 2, 3,..")
-    private final Long userid;
-    private final boolean check;
+    @Schema(name = "userId", example = "1, 2, 3,..")
+    private final Long userId;
 }

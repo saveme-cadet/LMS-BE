@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class PlusVacationDto {
-    @Schema(description = "현재 머슴인 id" , example = "userId = 1")
+    @Schema(name = "userId" , example = "userId = 1")
     @NotNull
     @Min(1)
     private final Long userId;
