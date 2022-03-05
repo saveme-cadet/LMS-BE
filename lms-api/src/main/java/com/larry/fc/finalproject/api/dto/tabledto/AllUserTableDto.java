@@ -17,10 +17,10 @@ import java.time.LocalDate;
 @Builder
 public class AllUserTableDto {
 
-    @Schema(description = "user id", example = "user id = 1 or 2..")
+    @Schema(name = "writer_id", example = "user id = 1 or 2..")
     @NotNull
     @Min(1)
-    private final Long write_id;
+    private final Long writer_id;
     @Schema(description = "체크 인" , example = "출석 = 1, 지각 = 2 ..")
     @Min(0)
     private final short checkIn;

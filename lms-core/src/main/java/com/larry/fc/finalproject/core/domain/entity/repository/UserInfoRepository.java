@@ -21,5 +21,4 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
     String findRoleByWriter_Id(Long id);
     String findByAttendeStatusAndWriter_Id(Long id, Long is);
     String findTeamByWriter_Id(Long id);
-
 }

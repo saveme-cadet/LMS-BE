@@ -15,7 +15,7 @@ import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 public abstract class DtoConverter {
     public static UserInfoDto fromUserInfo(UserInfo userInfo){
         return UserInfoDto.builder()
-                .id(userInfo.getId())
+                .userId(userInfo.getId())
                 .userName(userInfo.getUserName())
                 .level(userInfo.getLevel())
                 .nowSubject(userInfo.getNowSubject())
@@ -46,7 +46,7 @@ public abstract class DtoConverter {
 
     public static AllUserTableDto fromUserDayTable(DayTable dayTable){
         return AllUserTableDto.builder()
-                .write_id(dayTable.getCadet().getId())
+                .writer_id(dayTable.getCadet().getId())
                 .role(dayTable.getRole())
                 .team(dayTable.getTeam())
                 .attendScore(dayTable.getAttendScore())
@@ -68,7 +68,7 @@ public abstract class DtoConverter {
 
     public static UserInfoWeekDto fromUserInfoWeek(UserInfo userInfo){
         return UserInfoWeekDto.builder()
-                .id(userInfo.getId())
+                .userId(userInfo.getId())
                 .attendScore(userInfo.getAttendScore())
                 .role(userInfo.getRole())
                 .team(userInfo.getTeam())
@@ -78,7 +78,7 @@ public abstract class DtoConverter {
 
     public static UserInfoMonthDto fromUserInfoMonth(UserInfo userInfo){
         return UserInfoMonthDto.builder()
-                .id(userInfo.getId())
+                .userId(userInfo.getId())
                 .level(userInfo.getLevel())
                 .nowSubject(userInfo.getNowSubject())
                 .confidenceSubject(userInfo.getConfidenceSubject())
@@ -89,7 +89,7 @@ public abstract class DtoConverter {
 
     public static TodoDto fromTodo(Todo todo){
         return TodoDto.builder()
-                .id((todo.getWriter().getId()))
+                .userId((todo.getWriter().getId()))
                 .todoId(todo.getId())
                 .title(todo.getTitle())
                 .titleCheck(todo.isTitleCheck())
@@ -99,7 +99,7 @@ public abstract class DtoConverter {
 
     public static AllUserTableDto fromDayTable(DayTable dayTable){
         return AllUserTableDto.builder()
-                .write_id(dayTable.getCadet().getId())
+                .writer_id(dayTable.getCadet().getId())
                 .checkIn(dayTable.getCheckIn())
                 .checkOut(dayTable.getCheckOut())
                 .tableDay(dayTable.getTableDay())

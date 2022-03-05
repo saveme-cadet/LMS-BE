@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class UserInfoDayDto {
-    @Schema(description = "userId")
+    @Schema(name = "writer_id")
     @NotNull
     @Min(1)
-    private final Long write_id;
+    private final Long writer_id;
     @Schema(description = "참여자 이름" , example = "sjin")
     private final String userName;
     @Schema(description = "역할" , example = "카 뎃 or 머슴")

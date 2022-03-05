@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 @Builder
 @Data
 public class UserInfoWeekDto {
-    @Schema(description = "userId")
+    @Schema(name = "userId")
     @NotNull
     @Min(1)
-    private final Long id;
+    private final Long userId;
     @Schema(description = "역할" , example = "카 뎃 or 머슴")
     private final String role;            // 주 마다
     @Schema(description = "참석 점수", example = "2.4")

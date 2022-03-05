@@ -112,19 +112,19 @@ public class AllUserTableService {
 
     public void updateCheckIn(TableCheckInDto tableCheckInDto, LocalDate date){
         DayTable dayTable = DtoConverter.fromCheckInTableDto(tableCheckInDto);
-        final Optional<DayTable> original = dayTableRepository.findOptionalByCadet_IdAndTableDay(tableCheckInDto.getId(), date);
+        final Optional<DayTable> original = dayTableRepository.findOptionalByCadet_IdAndTableDay(tableCheckInDto.getUserId(), date);
         original.filter(userTable -> userTable.getTableDay().equals(date))
                 .ifPresent(allUser -> {
                             allUser.setCheckIn(dayTable.getCheckIn());
                             dayTableRepository.save(allUser);
                         });
-        Stream<Short> checkOut = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckInDto.getId(), 1L)
+        Stream<Short> checkOut = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckInDto.getUserId(), 1L)
                 .stream()
                 .filter(x -> x.getCheckIn() != null)
                 .filter(x -> x.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
                 .map(x -> x.getCheckOut());
         Short[] checkOutList = checkOut.toArray(Short[]::new);
-        Stream<Short> checkIn = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckInDto.getId(), 1L)
+        Stream<Short> checkIn = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckInDto.getUserId(), 1L)
                 .stream()
                 .filter(x -> x.getCheckOut() != null)
                 .filter(x -> x.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
@@ -149,13 +149,13 @@ public class AllUserTableService {
         final double result = score;
         final double participateResult = participateScore;
         if (tableCheckInDto.getCheckIn() == 6){
-            final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckInDto.getId());
+            final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckInDto.getUserId());
             change.ifPresent(userInfo -> {
                 userInfo.setVacation(userInfo.getVacation() - 0.5);
                 userInfoRepository.save(userInfo);
             });
         }
-        final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckInDto.getId());
+        final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckInDto.getUserId());
             change.ifPresent(userInfo -> {
                 userInfo.setParticipateScore(participateResult);
                 userInfo.setAttendScore(result);
@@ -166,7 +166,7 @@ public class AllUserTableService {
             for (int i = 0; i < tableCheckInDto.getTableDay().lengthOfMonth(); i++) {
                 LocalDate day = tableCheckInDto.getTableDay().withDayOfMonth(1).plusDays(i);
                 System.out.println(day);
-                final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckInDto.getId(), day);
+                final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckInDto.getUserId(), day);
                 original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
                         .ifPresent(allUser -> {
                             allUser.setAttendScore(result);
@@ -178,20 +178,20 @@ public class AllUserTableService {
 
     public void updateCheckOut(TableCheckOutDto tableCheckOutDto,  LocalDate date){
         DayTable dayTable = DtoConverter.fromCheckOutTableDto(tableCheckOutDto);
-        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getId(), dayTable.getTableDay());
+        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), dayTable.getTableDay());
         original.filter(userTable -> userTable.getTableDay().equals(date))
                 .ifPresent(allUser -> {
                     allUser.setCheckOut(dayTable.getCheckOut());
                     dayTableRepository.save(allUser);
                 });
         Stream<Short> checkOut = dayTableRepository
-                .findAllByCadet_IdAndAttendeStatus(tableCheckOutDto.getId(), 1L)
+                .findAllByCadet_IdAndAttendeStatus(tableCheckOutDto.getUserId(), 1L)
                 .stream()
                 .filter(x -> x.getCheckIn() != null)
                 .filter(x -> x.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
                 .map(x -> x.getCheckOut());
         Short[] checkOutList = checkOut.toArray(Short[]::new);
-        Stream<Short> checkIn = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckOutDto.getId(), 1L)
+        Stream<Short> checkIn = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckOutDto.getUserId(), 1L)
                 .stream()
                 .filter(x -> x.getCheckOut() != null)
                 .filter(x -> x.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
@@ -216,13 +216,13 @@ public class AllUserTableService {
         final double result = score;
         final double participateResult = participateScore;
         if (tableCheckOutDto.getCheckOut() == 6){
-            final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckOutDto.getId());
+            final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckOutDto.getUserId());
             change.ifPresent(userInfo -> {
                 userInfo.setVacation(userInfo.getVacation() - 0.5);
                 userInfoRepository.save(userInfo);
             });
         }
-        final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckOutDto.getId());
+        final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckOutDto.getUserId());
         change.ifPresent(userInfo -> {
             userInfo.setParticipateScore(participateResult);
             userInfo.setAttendScore(result);
@@ -231,7 +231,7 @@ public class AllUserTableService {
 
         for (int i = 0; i < tableCheckOutDto.getTableDay().lengthOfMonth(); i++) {
             LocalDate day = tableCheckOutDto.getTableDay().withDayOfMonth(1).plusDays(i);
-            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getId(), day);
+            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), day);
             original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
                     .ifPresent(allUser -> {
                         allUser.setAttendScore(result);
@@ -243,7 +243,7 @@ public class AllUserTableService {
 
     public void updateUserTeam(UserTeamChangeDto userTeamChangeDto, LocalDate date){
         DayTable dayTable = DtoConverter.fromDayTableTeam(userTeamChangeDto);
-        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(userTeamChangeDto.getUser_id(), date);
+        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(userTeamChangeDto.getUserId(), date);
 
         original.filter(userTable -> userTable.getTableDay().equals(date))
                 .ifPresent(allUser -> {
@@ -254,7 +254,7 @@ public class AllUserTableService {
 
     public void updateUserRole(UserRoleChangeDto userRoleChangeDto, LocalDate date){
         DayTable dayTable = DtoConverter.fromDayTableRole(userRoleChangeDto);
-        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(userRoleChangeDto.getUser_id(), date);
+        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(userRoleChangeDto.getUserId(), date);
 
         original.filter(userTable -> userTable.getTableDay().equals(date))
                 .ifPresent(allUser -> {

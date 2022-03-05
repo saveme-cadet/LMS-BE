@@ -11,10 +11,10 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class TableCheckOutDto {
-    @Schema(description = "userId")
+    @Schema(name = "userId")
     @NotNull
     @Min(1)
-    private final Long id;
+    private final Long userId;
     @Schema(description = "체크 아웃" , example = "출석 = 1, 지각 = 2 ..")
     @Min(0)
     private final short checkOut;

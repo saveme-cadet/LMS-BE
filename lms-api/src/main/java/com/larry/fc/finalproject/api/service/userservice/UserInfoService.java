@@ -106,7 +106,7 @@ public class UserInfoService {
 
     public void updateAttendStatus(UserAttendenceDto userAttendenceDto){
         UserInfo userInfo = DtoConverter.fromAttendStatus(userAttendenceDto);
-        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userAttendenceDto.getUser_id());
+        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userAttendenceDto.getUserId());
         original.ifPresent(userInfo1 -> {
             userInfo1.setAttendeStatus(userInfo.getAttendeStatus());
             userInfoRepository.save(userInfo1);
@@ -115,7 +115,7 @@ public class UserInfoService {
 
     public void updateUserTeam(UserTeamChangeDto userTeamChangeDto){
         UserInfo userInfo = UserDtoConverter.fromUserTeam(userTeamChangeDto);
-        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userTeamChangeDto.getUser_id());
+        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userTeamChangeDto.getUserId());
         original.ifPresent(userInfo1 -> {
             userInfo1.setTeam(userInfo.getTeam());
             userInfoRepository.save(userInfo1);
@@ -124,7 +124,7 @@ public class UserInfoService {
 
     public void updateUserRole(UserRoleChangeDto userRoleChangeDto){
         UserInfo userInfo = UserDtoConverter.fromUserRole(userRoleChangeDto);
-        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userRoleChangeDto.getUser_id());
+        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userRoleChangeDto.getUserId());
         original.ifPresent(userInfo1 -> {
             userInfo1.setRole(userInfo.getRole());
             userInfoRepository.save(userInfo1);
@@ -132,8 +132,7 @@ public class UserInfoService {
     }
 
     public void updateUserVacationPlus(UserVacationChangeDto userVacationChangeDto){
-        //UserInfo userInfo = DtoConverter.fromUserVacation(userVacationChangeDto);
-        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userVacationChangeDto.getUserid());
+        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userVacationChangeDto.getUserId());
         original.ifPresent(userInfo1 -> {
             userInfo1.setVacation(userInfo1.getVacation() + 0.5);
             userInfoRepository.save(userInfo1);
@@ -141,8 +140,7 @@ public class UserInfoService {
     }
 
     public void updateUserVacationMinus(UserVacationChangeDto userVacationChangeDto){
-        UserInfo userInfo = UserDtoConverter.fromUserVacation(userVacationChangeDto);
-        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userVacationChangeDto.getUserid());
+        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userVacationChangeDto.getUserId());
         original.ifPresent(userInfo1 -> {
             userInfo1.setVacation(userInfo1.getVacation() - 0.5);
             userInfoRepository.save(userInfo1);

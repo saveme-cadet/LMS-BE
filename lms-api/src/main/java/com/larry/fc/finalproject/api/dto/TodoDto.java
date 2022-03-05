@@ -12,10 +12,10 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class TodoDto {
-    @Schema(description = "userId")
+    @Schema(name= "userId")
     @NotNull
     @Min(1)
-    private final Long id;
+    private final Long userId;
     @Schema(description = "todo id" , example = "1. 공부하기 등등")
     @NotNull
     @Min(1)
