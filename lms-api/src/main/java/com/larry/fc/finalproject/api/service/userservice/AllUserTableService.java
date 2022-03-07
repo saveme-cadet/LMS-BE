@@ -42,6 +42,30 @@ public class AllUserTableService {
         dayTableRepository.save(dayTable);
     }
 
+//    public void createUserDate(AuthUser authUser) {          //수정 필요 ??
+//        Stream<Long> idList = userInfoRepository.findAllById(authUser.getId())
+//                .stream()
+//                .filter(x -> x.getAttendeStatus().equals(1L))
+//                .map(x -> x.getWriter_Id());
+//
+//        Long[] list = idList.toArray(Long[]::new);
+//
+//        UserInfo[] userInfos = new UserInfo[list.length];
+//
+//        final DayTable[] dayTables = new DayTable[list.length];
+//        for (int i = 0; i < list.length; i++) {
+//            dayTableRepository.findAllByTableDayAndCadet_Id(date, list[i])
+//                    .ifPresent(u -> {
+//                        throw new RuntimeException("user day already exit!");
+//                    });
+//            userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(list[i], 1L);
+//            UserInfoWeekDto userInfoWeekDto = DtoConverter.fromUserInfoWeek(userInfos[i]);
+//            dayTables[i] = DayTable.dayTableJoinWith(userService.findByUserId(list[i]),
+//                    userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
+//            dayTableRepository.save(dayTables[i]);
+//        }
+//    }
+
     public void createAllDate(LocalDate date){          //수정 필요 ??
         Stream<Long> idList = userInfoRepository.findAllBy()
                 .stream()
