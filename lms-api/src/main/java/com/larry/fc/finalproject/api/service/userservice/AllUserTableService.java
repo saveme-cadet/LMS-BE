@@ -60,8 +60,8 @@ public class AllUserTableService {
                     });
             userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(list[i], 1L);
             UserInfoWeekDto userInfoWeekDto = DtoConverter.fromUserInfoWeek(userInfos[i]);
-            dayTables[i] = DayTable.dayTableJoinWithDate(userService.findByUserId(list[i]), date,
-                    userInfoWeekDto.getRole(), userInfoWeekDto.getTeam());
+            dayTables[i] = DayTable.dayTableJoinWith(userService.findByUserId(list[i]),
+                    userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
             dayTableRepository.save(dayTables[i]);
         }
     }
@@ -86,7 +86,7 @@ public class AllUserTableService {
             userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(list[i], 1L);
             UserInfoWeekDto userInfoWeekDto = DtoConverter.fromUserInfoWeek(userInfos[i]);
             dayTables[i] = DayTable.dayTableJoinWith(userService.findByUserId(list[i]),
-                    userInfoWeekDto.getRole(), userInfoWeekDto.getTeam());
+                    userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
             dayTableRepository.save(dayTables[i]);
         }
     }

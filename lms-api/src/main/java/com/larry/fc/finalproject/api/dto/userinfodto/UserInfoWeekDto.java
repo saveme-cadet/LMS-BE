@@ -23,4 +23,6 @@ public class UserInfoWeekDto {
     private final String team;            // 주 마다
     @Schema(description = "가진 휴가 일 수", example = "1 or 2 ++")
     private final Double vacation;
+    @Schema(description = "참가 점수", example = "2.4")
+    private final double participateScore;
 }

@@ -73,6 +73,7 @@ public abstract class DtoConverter {
                 .role(userInfo.getRole())
                 .team(userInfo.getTeam())
                 .vacation(userInfo.getVacation())
+                .participateScore(userInfo.getParticipateScore())
                 .build();
     }
 

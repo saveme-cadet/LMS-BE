@@ -29,13 +29,6 @@ public class UserInfoController {
     private final UserInfoService userInfoService;
     private final UserInfoQueryService userInfoQueryService;
 
-//    @Operation(description = "유저 정보 저장")
-//    @PostMapping("/info")
-//    public ResponseEntity<Void> createUserInfo(@Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
-//        userInfoService.create(authUser);
-//        return ResponseEntity.ok().build();
-//    }
-
     @Operation(description = "유저 모든 정보 가져오기")
     @GetMapping("/allinfo")
     public List<UserInfoDto> getUserInfoByDay(
