@@ -53,8 +53,8 @@ public class UserInfoController {
 
     @Operation(description = "모든 유저 정보 가져오기")
     @GetMapping("/all")
-    public List<UserInfoDto> getAllUserInfo(@Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
-        return userInfoQueryService.getAllUserInfo(authUser);
+    public List<UserInfoDto> getAllUserInfo(){
+        return userInfoQueryService.getAllUserInfo();
     }
 
     @Operation(description = "유저 정보 모두 수정")

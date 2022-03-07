@@ -25,6 +25,7 @@ public abstract class DtoConverter {
                 .role(userInfo.getRole())
                 .team(userInfo.getTeam())
                 .vacation(userInfo.getVacation())
+                .participateScore(userInfo.getParticipateScore())
                 .build();
     }
 
@@ -198,6 +199,17 @@ public abstract class DtoConverter {
     public static DayTable fromDayTableRole(UserRoleChangeDto userRoleChangeDto) {
         return DayTable.builder()
                 .role(userRoleChangeDto.getRole())
+                .build();
+    }
+
+    public static DayTable fromDayTableAll(AllTableDto allTableDto) {
+        return DayTable.builder()
+                .participateScore(allTableDto.getParticipateScore())
+                .role(allTableDto.getRole())
+                .team(allTableDto.getTeam())
+                .attendScore(allTableDto.getAttendScore())
+                .checkOut(allTableDto.getCheckOut())
+                .checkIn(allTableDto.getCheckIn())
                 .build();
     }
 }
