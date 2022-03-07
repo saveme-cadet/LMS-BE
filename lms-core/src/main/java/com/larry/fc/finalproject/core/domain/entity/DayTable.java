@@ -39,6 +39,7 @@ public class DayTable extends BaseEntity{
                 .role("기 본")
                 .team("흰 색")
                 .attendScore(0.0)
+                .participateScore(0.0)
                 .build();
     }
 
@@ -56,7 +57,7 @@ public class DayTable extends BaseEntity{
                 .build();
     }
 
-    public static DayTable dayTableJoinWith(User writer, String role, String team){
+    public static DayTable dayTableJoinWith(User writer, String role, String team, double attendScore, double participateScore){
 
         return DayTable.builder()
                 .checkIn((short) 0)
@@ -66,7 +67,8 @@ public class DayTable extends BaseEntity{
                 .attendeStatus(writer.getAttendStatus())
                 .role(role)
                 .team(team)
-                .attendScore(0.0)
+                .attendScore(attendScore)
+                .participateScore(participateScore)
                 .build();
     }
 
