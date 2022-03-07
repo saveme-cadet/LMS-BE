@@ -88,7 +88,7 @@ public class AllUserShowController {
 //    @DeleteMapping("/delete")
 //    public ResponseEntity<Void> deleteTodo(@Parameter(description = "삭제할 userId") @RequestBody Long id){
 //        try{
-//            allUserTableService.delete(id);
+ //           allUserTableService.delete(id);
 //            return ResponseEntity.ok().build();
 //        } catch (Exception e){
 //            return ResponseEntity.badRequest().build();

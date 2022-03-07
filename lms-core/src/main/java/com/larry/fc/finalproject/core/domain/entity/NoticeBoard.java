@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -18,12 +20,16 @@ public class NoticeBoard extends BaseEntity{
     private boolean good;
     private boolean bad;
 
-    @JoinColumn(name  = "write_id")
-    @ManyToOne
-    private User user;
+//    @JoinColumn(name  = "write_id")
+//    @ManyToOne
+//    private User user;
+
+    @OneToMany(mappedBy = "noticeBoard", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     public static NoticeBoard writeNotice(User user, String title, VarcharTypeDescriptor content){
         return NoticeBoard.builder()
-                .user(user)
+               // .user(user)
                 .title(title)
                 .content(content)
                 .good(false)
