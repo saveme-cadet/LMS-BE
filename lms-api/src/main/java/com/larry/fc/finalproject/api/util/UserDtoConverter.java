@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.api.util;
 
+import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserRoleChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserTeamChangeDto;
@@ -50,6 +51,13 @@ public abstract class UserDtoConverter {
     public static UserInfo fromUserVacation(UserVacationChangeDto userVacationChangeDto){
         return UserInfo.builder()
 
+                .build();
+    }
+
+    public static UserInfo fromUserAllInfo(AllTableDto allTableDto) {
+        return UserInfo.builder()
+                .vacation(allTableDto.getVacation())
+                .level(allTableDto.getLevel())
                 .build();
     }
 }

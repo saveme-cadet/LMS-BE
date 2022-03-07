@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.service.userservice;
 
 import com.larry.fc.finalproject.api.dto.*;
+import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.dto.tabledto.TableCheckInDto;
 import com.larry.fc.finalproject.api.dto.tabledto.TableCheckOutDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserInfoDto;
@@ -8,6 +9,7 @@ import com.larry.fc.finalproject.api.dto.userinfodto.UserInfoWeekDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserRoleChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserTeamChangeDto;
 import com.larry.fc.finalproject.api.util.DtoConverter;
+import com.larry.fc.finalproject.api.util.UserDtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
@@ -267,6 +269,31 @@ public class AllUserTableService {
                     allUser.setRole(dayTable.getRole());
                     dayTableRepository.save(allUser);
                 });
+    }
+
+    public void updateUserAllInfo(AllTableDto allTableDto, Long id){
+
+        DayTable dayTable = DtoConverter.fromDayTableAll(allTableDto);
+        UserInfo userInfo = UserDtoConverter.fromUserAllInfo(allTableDto);
+        final Optional<DayTable> original = dayTableRepository.findAllByCadet_IdAndTableDay(id, allTableDto.getTableDay());
+
+        original.filter(userTable -> userTable.getTableDay().equals(allTableDto.getTableDay()))
+                .ifPresent(allUser -> {
+                    allUser.setRole(dayTable.getRole());
+                    allUser.setParticipateScore(dayTable.getParticipateScore());
+                    allUser.setTeam(dayTable.getTeam());
+                    allUser.setRole(dayTable.getRole());
+                    allUser.setCheckIn(dayTable.getCheckIn());
+                    allUser.setCheckOut(dayTable.getCheckOut());
+                    allUser.setAttendScore(dayTable.getAttendScore());
+                    dayTableRepository.save(allUser);
+                });
+        final Optional<UserInfo> info = userInfoRepository.findByWriter_Id(id);
+        info.ifPresent(userInfo1 -> {
+            userInfo1.setVacation(userInfo.getVacation());
+            userInfo1.setLevel(userInfo.getLevel());
+            userInfoRepository.save(userInfo1);
+        });
     }
 
     public void delete(Long id){

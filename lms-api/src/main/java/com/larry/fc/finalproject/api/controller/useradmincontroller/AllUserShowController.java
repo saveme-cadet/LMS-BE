@@ -54,6 +54,13 @@ public class AllUserShowController {
         return allUserTableQueryService.getDayTableByDay(date == null ? LocalDate.now() : date);
     }
 
+    @Operation(description = "그 날 출석표 정보 수정하기")
+    @PutMapping("/userinfoallmodify")
+    public ResponseEntity<Void> updateUserInfoAll(@Parameter @RequestBody AllTableDto allTableDto){
+        allUserTableService.updateUserAllInfo(allTableDto, allTableDto.getWriter_id());
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(description = "학생 체크인 수정하기")
     @PutMapping("/modifycheckin")
     public ResponseEntity<Void> updateUserCheckInTable(@Parameter @RequestBody TableCheckInDto tableCheckInDto){

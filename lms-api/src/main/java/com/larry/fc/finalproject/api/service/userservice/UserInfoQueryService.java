@@ -45,7 +45,7 @@ public class UserInfoQueryService {
         return response;
     }
 
-    public List<UserInfoDto> getAllUserInfo(AuthUser authUser) {
+    public List<UserInfoDto> getAllUserInfo() {
         final Stream<UserInfoDto> userInfo = userInfoRepository.findAll() // wirter 로 수정
                 .stream()
                 .map(userInfo1 -> DtoConverter.fromUserInfo(userInfo1));
