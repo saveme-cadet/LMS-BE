@@ -30,6 +30,7 @@ public class AllUserTableQueryService {
         Stream<Long> idList = userInfoRepository.findAllBy()
                 .stream()
                 .filter(x -> x.getAttendeStatus().equals(1L))
+                .filter(x -> x.getCreatedAt().isBefore(date))
                 .map(x -> x.getWriter_Id());
         Long[] list = idList.toArray(Long[]::new);
         for (int i = 0; i < list.length; i++){
