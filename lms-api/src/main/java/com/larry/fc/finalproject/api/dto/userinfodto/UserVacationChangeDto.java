@@ -9,4 +9,5 @@ import lombok.Data;
 public class UserVacationChangeDto {
     @Schema(name = "userId", example = "1, 2, 3,..")
     private final Long userId;
+    private final boolean check;
 }
