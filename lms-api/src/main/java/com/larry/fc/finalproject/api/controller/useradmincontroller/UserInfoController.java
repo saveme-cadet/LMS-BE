@@ -124,13 +124,13 @@ public class UserInfoController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUserInfo(@Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
-        try{
-            userInfoService.delete(authUser);
-            return ResponseEntity.ok().build();
-        } catch (Exception e){
-            return ResponseEntity.badRequest().build();
-        }
-    }
+//    @DeleteMapping("/delete")
+//    public ResponseEntity<Void> deleteUserInfo(@Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
+//        try{
+//            userInfoService.delete(authUser);
+//            return ResponseEntity.ok().build();
+//        } catch (Exception e){
+//            return ResponseEntity.badRequest().build();
+//        }
+//    }
 }

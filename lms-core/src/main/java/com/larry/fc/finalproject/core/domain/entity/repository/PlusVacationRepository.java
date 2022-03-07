@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface PlusVacationRepository extends JpaRepository<PlusVacation, Long> {
     Optional<PlusVacation> findAllByUserId(Long id);
     List<PlusVacation> findByUserId(Long id);
+    List<PlusVacation> deletePlusVacationByUserId(Long id);
 }

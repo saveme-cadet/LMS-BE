@@ -34,7 +34,7 @@ public class AllInfoController {
         Long id = loginService.signUp1(signUpReq, httpSession);
         userInfoService.create(AuthUser.of(id));
         userStatisticalChartService.create(AuthUser.of(id));
-        //allUserTableService.createUserDate(AuthUser.of(id));
+        allUserTableService.createUserDate(AuthUser.of(id));
         return ResponseEntity.ok().build();
 
     }

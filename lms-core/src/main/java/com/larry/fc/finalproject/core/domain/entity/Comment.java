@@ -17,9 +17,12 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String commentLine;
+
     @ManyToOne
-    @JoinColumn(name = "noticeboard_id")
+    @JoinColumn(name = "notice_board_id")
     private NoticeBoard noticeBoard;
+
+
 
     public static Comment writeComment(NoticeBoard noticeBoard, String commentLine){
         return Comment.builder()

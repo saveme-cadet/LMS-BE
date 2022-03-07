@@ -26,22 +26,29 @@ import java.util.stream.Stream;
 public class AllUserTableQueryService {
     private final UserInfoRepository userInfoRepository;
     private final DayTableRepository dayTableRepository;
-    public List<AllTableDto> getDayTableByDay(LocalDate date){
+    public List<AllTableDto> getDayTableByDay(LocalDate date) throws NullPointerException{
         Stream<Long> idList = userInfoRepository.findAllBy()
                 .stream()
                 .filter(x -> x.getAttendeStatus().equals(1L))
                 .filter(x -> x.getCreatedAt().isBefore(date))
                 .map(x -> x.getWriter_Id());
+        Stream<Long> idList1 = userInfoRepository.findAllBy()
+                .stream()
+                .filter(x -> x.getAttendeStatus().equals(1L))
+                .filter(x -> x.getCreatedAt().isEqual(date))
+                .map(x -> x.getWriter_Id());
         Long[] list = idList.toArray(Long[]::new);
-        for (int i = 0; i < list.length; i++){
-            System.out.println(list[i]);
+        Long[] list1 = idList1.toArray(Long[]::new);
+        Long[] sumList = Stream.of(list, list1).flatMap(Stream::of).toArray(Long[]::new);
+        for (int i = 0; i < sumList.length; i++){
+            System.out.println(sumList[i]);
         }
-        AllTableDto[] allTableDto = new AllTableDto[list.length];
-        UserInfo[] userInfos = new UserInfo[list.length];
-        DayTable[] dayTables = new DayTable[list.length];
-        for (int i = 0; i < list.length; i++){
-            userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(list[i], 1L);
-            dayTables[i] = dayTableRepository.findByTableDayAndCadet_Id(date, list[i]);
+        AllTableDto[] allTableDto = new AllTableDto[sumList.length];
+        UserInfo[] userInfos = new UserInfo[sumList.length];
+        DayTable[] dayTables = new DayTable[sumList.length];
+        for (int i = 0; i < sumList.length; i++){
+            userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(sumList[i], 1L);
+            dayTables[i] = dayTableRepository.findByTableDayAndCadet_Id(date, sumList[i]);
             allTableDto[i] = DtoConverter.fromUserInfoDay(
                     DtoConverter.fromUserDayTable(dayTables[i]),
                     DtoConverter.fromAllUserInfoDto(userInfos[i]));

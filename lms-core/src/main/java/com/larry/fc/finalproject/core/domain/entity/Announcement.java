@@ -15,14 +15,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "announcement")
 public class Announcement extends BaseEntity{
-    @JoinColumn(name = "writer_Id")
-    @ManyToOne
-    private User user;
+//    @JoinColumn(name = "writer_Id")
+//    @ManyToOne
+//    private User user;
     private String notice;
 
     public static Announcement getAnnouncement(User user, String notice){
         return Announcement.builder()
-                .user(user)
+          //      .user(user)
                 .notice(notice)
                 .build();
     }

@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findAllByWriter_Id(Long id);
+    List<Todo> deleteTodoByWriter_Id(Long id);
 
 }

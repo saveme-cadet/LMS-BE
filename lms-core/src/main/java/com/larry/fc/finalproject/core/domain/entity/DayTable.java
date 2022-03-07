@@ -28,6 +28,7 @@ public class DayTable extends BaseEntity{
     private Long attendeStatus;
     private LocalDate tableDay;
 
+
     public static DayTable dayTableJoin(User writer){
 
         return DayTable.builder()

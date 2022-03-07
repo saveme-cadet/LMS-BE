@@ -41,6 +41,8 @@ public class UserInfo extends BaseEntity{
     inverseJoinColumns = @JoinColumn(name = "daytable_id"))
     private DayTable dayTable;
 
+
+
     public static UserInfo userInfoJoin(User writer){
         return UserInfo.builder()
                 .level(0)
