@@ -41,7 +41,7 @@ public class TodoController {
         return todoQueryService.getTodoByDay(authUser, date == null ? LocalDate.now() : date);
     }
 
-    @PutMapping("/modify")
+    @PutMapping("/todo")
     public ResponseEntity<Void> updateTodo(@Parameter @RequestBody TodoDto todoDto, @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
         todoService.update(todoDto, authUser);
         return ResponseEntity.ok().build();
