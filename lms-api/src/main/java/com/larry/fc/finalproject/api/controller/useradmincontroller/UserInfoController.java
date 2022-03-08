@@ -58,7 +58,7 @@ public class UserInfoController {
     }
 
     @Operation(description = "유저 정보 모두 수정")
-    @PutMapping("/modifyall")
+    @PutMapping("/all")
     public ResponseEntity<Void> updateUserInfo(@Parameter @RequestBody UserInfoDto userInfoDto,
                                                @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
         userInfoService.update(userInfoDto, authUser);
@@ -73,7 +73,7 @@ public class UserInfoController {
     }
 
     @Operation(description = "유저 정보 week 수정")
-    @PutMapping("/modifyweek")
+    @PutMapping("/week")
     public ResponseEntity<Void> updateUserInfo(@Parameter @RequestBody UserInfoWeekDto userInfoDto,
                                                @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
         userInfoService.updateWeek(userInfoDto, authUser);
@@ -81,7 +81,7 @@ public class UserInfoController {
     }
 
     @Operation(description = "유저 정보 month 수정")
-    @PutMapping("/modifymonth")
+    @PutMapping("/month")
     public ResponseEntity<Void> updateUserInfo(@Parameter @RequestBody UserInfoMonthDto userInfoDto,
                                                @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
         userInfoService.updateMonth(userInfoDto, authUser);
@@ -89,28 +89,28 @@ public class UserInfoController {
     }
 
     @Operation(description = "유저 정보 참석 여부 수정")
-    @PutMapping("/modifyattendstatus")
+    @PutMapping("/attendstatus")
     public ResponseEntity<Void> updateUserAttendStatus(@RequestBody UserAttendenceDto userAttendenceDto){
         userInfoService.updateAttendStatus(userAttendenceDto);
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "유저 팀 수정")
-    @PutMapping("/modifyteam")
+    @PutMapping("/team")
     public ResponseEntity<Void> updateUserTeam(@RequestBody UserTeamChangeDto userTeamChangeDto){
         userInfoService.updateUserTeam(userTeamChangeDto);
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "유저 역할 수정")
-    @PutMapping("/modifyrole")
+    @PutMapping("/role")
     public ResponseEntity<Void> updateUserRole(@RequestBody UserRoleChangeDto userRoleChangeDto){
         userInfoService.updateUserRole(userRoleChangeDto);
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "유저 휴가 일 수 + 0.5")
-    @PutMapping("/modifyvacationplus")
+    @PutMapping("/vacationplus")
     public ResponseEntity<Void> updateUserVacationPlus(@RequestBody UserVacationChangeDto userVacationChangeDto){
         userInfoService.updateUserVacationPlus(userVacationChangeDto);
         return ResponseEntity.ok().build();
@@ -118,7 +118,7 @@ public class UserInfoController {
 
 
     @Operation(description = "유저 휴가 일 수 - 0.5")
-    @PutMapping("/modifyvacationminus")
+    @PutMapping("/vacationminus")
     public ResponseEntity<Void> updateUserVacationMinus(@RequestBody UserVacationChangeDto userVacationChangeDto){
         userInfoService.updateUserVacationMinus(userVacationChangeDto);
         return ResponseEntity.ok().build();

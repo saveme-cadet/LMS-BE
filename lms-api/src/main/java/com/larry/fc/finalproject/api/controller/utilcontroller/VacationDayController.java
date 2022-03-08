@@ -37,7 +37,7 @@ public class VacationDayController {
     }
 
     @Operation(description = "머슴 에서 카뎃이 될때 자동적으로 휴가 +1로해놨는데 7일 간격으로 했기 때문에 현실적으로 EndAt요일 수정 불가로 인해서 만듬")
-    @PutMapping("/modify")
+    @PutMapping("/vacation")
     public ResponseEntity<Void> updateUserCheckInTable(@Parameter @RequestBody PlusVacationDto plusVacationDto, @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
         plusVacationService.update(plusVacationDto, authUser);
         return ResponseEntity.ok().build();

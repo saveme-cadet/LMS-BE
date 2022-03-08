@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -34,6 +36,9 @@ public class UserInfo extends BaseEntity{
     @JoinColumn(name = "writer_id")
     @ManyToOne
     private User writer;
+
+    @OneToMany(mappedBy = "user_id", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    private List<StudyTime> studyTimes = new ArrayList<>();
 
     @OneToOne
     @JoinTable(name = "userinfo_daytable",

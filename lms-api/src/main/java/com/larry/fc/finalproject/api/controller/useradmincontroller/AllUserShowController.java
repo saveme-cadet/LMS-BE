@@ -55,28 +55,28 @@ public class AllUserShowController {
     }
 
     @Operation(description = "그 날 출석표 정보 수정하기")
-    @PutMapping("/userinfoallmodify")
+    @PutMapping("/userinfoall")
     public ResponseEntity<Void> updateUserInfoAll(@Parameter @RequestBody AllTableDto allTableDto){
         allUserTableService.updateUserAllInfo(allTableDto, allTableDto.getWriter_id());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "학생 체크인 수정하기")
-    @PutMapping("/modifycheckin")
+    @PutMapping("/checkin")
     public ResponseEntity<Void> updateUserCheckInTable(@Parameter @RequestBody TableCheckInDto tableCheckInDto){
         allUserTableService.updateCheckIn(tableCheckInDto, tableCheckInDto.getTableDay());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "학생 체크아웃 수정하기")
-    @PutMapping("/modifycheckout")
+    @PutMapping("/checkout")
     public ResponseEntity<Void> updateUserCheckOutTable(@Parameter @RequestBody TableCheckOutDto tableCheckOutDto){
         allUserTableService.updateCheckOut(tableCheckOutDto, tableCheckOutDto.getTableDay());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "학생 팀 수정하기 debugging용")
-    @PutMapping("/modifyuserteam")
+    @PutMapping("/userteam")
     public ResponseEntity<Void> updateUserTeam(@Parameter @RequestBody UserTeamChangeDto userTeamChangeDto,
                                                         @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         allUserTableService.updateUserTeam(userTeamChangeDto, date == null? LocalDate.now() : date);
@@ -84,7 +84,7 @@ public class AllUserShowController {
     }
 
     @Operation(description = "학생 역할 수정하기 debugging용")
-    @PutMapping("/modifyuserrole")
+    @PutMapping("/userrole")
     public ResponseEntity<Void> updateUserRole(@Parameter @RequestBody UserRoleChangeDto userRoleChangeDto,
                                                         @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         allUserTableService.updateUserRole(userRoleChangeDto, date == null? LocalDate.now() : date);
