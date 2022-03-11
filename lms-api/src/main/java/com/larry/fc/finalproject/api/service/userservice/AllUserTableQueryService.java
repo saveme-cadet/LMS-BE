@@ -31,11 +31,13 @@ public class AllUserTableQueryService {
                 .stream()
                 .filter(x -> x.getAttendeStatus().equals(1L))
                 .filter(x -> x.getCreatedAt().isBefore(date))
+                .filter(x -> dayTableRepository.existsByTableDay(date))
                 .map(x -> x.getWriter_Id());
         Stream<Long> idList1 = userInfoRepository.findAllBy()
                 .stream()
                 .filter(x -> x.getAttendeStatus().equals(1L))
                 .filter(x -> x.getCreatedAt().isEqual(date))
+                .filter(x -> dayTableRepository.existsByTableDay(date))
                 .map(x -> x.getWriter_Id());
         Long[] list = idList.toArray(Long[]::new);
         Long[] list1 = idList1.toArray(Long[]::new);
@@ -56,6 +58,5 @@ public class AllUserTableQueryService {
         List<AllTableDto> allTableDtoList = Arrays.asList(allTableDto);
         return allTableDtoList;
     }
-
 
 }
