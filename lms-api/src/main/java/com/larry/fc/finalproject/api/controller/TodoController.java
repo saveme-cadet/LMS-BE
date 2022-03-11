@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class TodoController {
 
     @Operation(description = "오늘 할 일 저장")
     @PostMapping("/usertodo")
-    public ResponseEntity<Void> createTodo(@Parameter @RequestBody TodoDto todoDto){
+    public ResponseEntity<Void> createTodo(@Validated @Parameter @RequestBody TodoDto todoDto){
         todoService.create(todoDto);
         return ResponseEntity.ok().build();
     }
@@ -45,13 +46,13 @@ public class TodoController {
     }
 
     @PutMapping("/todo")
-    public ResponseEntity<Void> updateTodo(@Parameter @RequestBody TodoDto todoDto){
+    public ResponseEntity<Void> updateTodo(@Validated @Parameter @RequestBody TodoDto todoDto){
         todoService.update(todoDto, todoDto.getWriterId());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteTodo(@RequestBody DeleteTodoDto deleteTodoDto){
+    public ResponseEntity<Void> deleteTodo(@Validated @RequestBody DeleteTodoDto deleteTodoDto){
         try{
             todoService.delete(deleteTodoDto);
             return ResponseEntity.ok().build();
