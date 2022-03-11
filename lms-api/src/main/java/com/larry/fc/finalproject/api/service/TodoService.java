@@ -1,7 +1,7 @@
 package com.larry.fc.finalproject.api.service;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
-import com.larry.fc.finalproject.api.dto.TodoDto;
+import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.util.DtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
 import com.larry.fc.finalproject.core.domain.entity.repository.TodoRepository;
@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -29,9 +27,11 @@ public class TodoService {
     }
 
 
-    public void update(TodoDto todoDto, AuthUser authUser){
+    public void update(TodoDto todoDto, Long userId){
         Todo todo = DtoConverter.fromTodoDto(todoDto);
-        final Optional<Todo> original = todoRepository.findById(todoDto.getTodoId());
+        final Optional<Todo> original = todoRepository.findById(userId)
+                .filter(todo1 -> todo1.getId().equals(todoDto.getTodoId()))
+                .filter(todo1 -> todo1.getTodoDay().equals(todoDto.getTodoDay()));
 
         original.ifPresent(todo1 -> {
             todo1.setTitle(todo.getTitle());

@@ -1,4 +1,4 @@
-package com.larry.fc.finalproject.api.dto;
+package com.larry.fc.finalproject.api.dto.tododto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
