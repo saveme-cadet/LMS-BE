@@ -139,6 +139,8 @@ public class UserInfoService {
             DayTable dayTable = DayTable.dayTableJoinWith(userService.findByUserId(userAttendenceDto.getUserId()),
                     userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
             dayTableRepository.save(dayTable);
+        } else if (userAttendenceDto.getAttendStatus() != 1L){
+            dayTableRepository.deleteByTableDayAndCadet_id(LocalDate.now(), userAttendenceDto.getUserId());
         }
     }
 

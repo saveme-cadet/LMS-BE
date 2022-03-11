@@ -2,6 +2,7 @@ package com.larry.fc.finalproject.core.domain.entity.repository;
 
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 public interface DayTableRepository extends JpaRepository<DayTable, Long> {
 
     List<DayTable> deleteDayTableByCadet_Id(Long id);
+    List<DayTable> deleteByTableDayAndCadet_id(LocalDate date, Long id);
     Optional<DayTable> findAllByCadet_IdAndTableDay(Long id, LocalDate date);
     Optional<DayTable> findAllOptionalByCadet_IdAndAttendeStatus(Long id, Long attend );
     List<DayTable> findAllByCadet_Id(Long id);
