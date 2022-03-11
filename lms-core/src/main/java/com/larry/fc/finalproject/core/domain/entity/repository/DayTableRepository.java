@@ -25,6 +25,6 @@ public interface DayTableRepository extends JpaRepository<DayTable, Long> {
     List<DayMapping> findByCadet_IdAndAttendeStatus(Long id, Long attend);
     List<CheckMapping> findAllByCadet_IdAndAttendeStatus(Long id, Long attend);
 
-
+    Optional<DayTable> findDayTableByCadet_Id(Long id);
     Optional<DayTable> findOptionalByCadet_IdAndTableDay(Long id, LocalDate date);
 }

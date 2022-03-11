@@ -8,12 +8,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "user")
 @Entity
+@Builder
 public class User extends BaseEntity{
     private String name;
     private String email;

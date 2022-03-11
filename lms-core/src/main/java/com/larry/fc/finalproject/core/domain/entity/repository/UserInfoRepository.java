@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
     //List<UserInfo> findAllById(Long id);
     List<UserInfo> findAllByWriter_Id(Long id);
-
+    UserInfo findUserInfosByWriter_Id(Long id);
     UserInfo findByWriter_IdAndAttendeStatus(Long id, Long attend);
     Optional<UserInfo> findByWriter_Id(Long id);
     List<UserInfo> findAllByAttendeStatus(Long attendStatus);

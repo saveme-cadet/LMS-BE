@@ -19,6 +19,7 @@ public class Todo extends BaseEntity{
     private boolean titleCheck;
     private LocalDate todoDay;
 
+    private Long todoId;
     @Enumerated(EnumType.STRING)
     private ScheduleType scheduleType;
 
@@ -26,9 +27,10 @@ public class Todo extends BaseEntity{
     @ManyToOne
     private User writer;
 
-    public static Todo todoJoin(String title, User writer){
+    public static Todo todoJoin(String title,Long todoId, User writer){
         return Todo.builder()
                 .title(title)
+                .todoId(todoId)
                 .titleCheck(false)
                 .scheduleType(ScheduleType.TODO)
                 .todoDay(LocalDate.now())

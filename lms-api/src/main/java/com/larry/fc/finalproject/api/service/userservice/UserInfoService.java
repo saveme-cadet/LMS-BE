@@ -7,6 +7,7 @@ import com.larry.fc.finalproject.api.util.DtoConverter;
 import com.larry.fc.finalproject.api.util.UserDtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
+import com.larry.fc.finalproject.core.domain.entity.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.entity.repository.DayTableRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.PlusVacationRepository;
@@ -113,6 +114,21 @@ public class UserInfoService {
             userInfo1.setAttendeStatus(userInfo.getAttendeStatus());
             userInfoRepository.save(userInfo1);
         });
+        User user = UserDtoConverter.fromUser(userAttendenceDto);
+        final Optional<User> userConvert = userRepository.findAllById(userAttendenceDto.getUserId());
+        userConvert.ifPresent(userInfo1 -> {
+            userInfo1.setAttendStatus(userInfo.getAttendeStatus());
+            userRepository.save(userInfo1);
+        });
+        for (int i = 0; i < LocalDate.now().lengthOfMonth(); i++) {
+            LocalDate day = LocalDate.now().withDayOfMonth(1).plusDays(i);
+            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(userAttendenceDto.getUserId(), day);
+            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(LocalDate.now().getMonth()))
+                    .ifPresent(allUser -> {
+                        allUser.setAttendeStatus(userAttendenceDto.getAttendStatus());
+                        dayTableRepository.save(allUser);
+                    });
+        }
         if (userAttendenceDto.getAttendStatus() == 1L){
             dayTableRepository.findAllByTableDayAndCadet_Id(LocalDate.now(), userAttendenceDto.getUserId())
                     .ifPresent(u -> {

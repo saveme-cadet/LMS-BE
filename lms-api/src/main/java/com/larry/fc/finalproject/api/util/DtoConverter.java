@@ -92,8 +92,8 @@ public abstract class DtoConverter {
 
     public static TodoDto fromTodo(Todo todo){
         return TodoDto.builder()
-                .userId((todo.getWriter().getId()))
-                .todoId(todo.getId())
+                .writerId((todo.getWriter().getId()))
+                .todoId(todo.getTodoId())
                 .title(todo.getTitle())
                 .titleCheck(todo.isTitleCheck())
                 .todoDay(todo.getTodoDay())

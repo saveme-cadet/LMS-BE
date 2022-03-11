@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.util;
 
 import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
+import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserRoleChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserTeamChangeDto;
@@ -58,6 +59,12 @@ public abstract class UserDtoConverter {
         return UserInfo.builder()
                 .vacation(allTableDto.getVacation())
                 .level(allTableDto.getLevel())
+                .build();
+    }
+
+    public static User fromUser(UserAttendenceDto userAttendenceDto){
+        return User.builder()
+                .attendStatus(userAttendenceDto.getAttendStatus())
                 .build();
     }
 }
