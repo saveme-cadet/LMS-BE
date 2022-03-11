@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.service;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
+import com.larry.fc.finalproject.api.dto.tododto.DeleteTodoDto;
 import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.util.DtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
@@ -9,6 +10,7 @@ import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,10 +21,15 @@ public class TodoService {
     private final UserService userService;
     private final TodoRepository todoRepository;
 
-    public void create(TodoDto todoDto, AuthUser authUser){
+    public void create(TodoDto todoDto){
+        todoRepository.findByTodoIdAndTodoDayAndWriter_Id(todoDto.getTodoId(), todoDto.getTodoDay(), todoDto.getWriterId())
+                .ifPresent(u -> {
+                    throw new RuntimeException("todoId already exit!");
+                });
         final Todo todo = Todo.todoJoin(
                 todoDto.getTitle(),
-                userService.findByUserId(authUser.getId()));
+                todoDto.getTodoId(),
+                userService.findByUserId(todoDto.getWriterId()));
         todoRepository.save(todo);
     }
 
@@ -30,7 +37,7 @@ public class TodoService {
     public void update(TodoDto todoDto, Long userId){
         Todo todo = DtoConverter.fromTodoDto(todoDto);
         final Optional<Todo> original = todoRepository.findById(userId)
-                .filter(todo1 -> todo1.getId().equals(todoDto.getTodoId()))
+                .filter(todo1 -> todo1.getTodoId().equals(todoDto.getTodoId()))
                 .filter(todo1 -> todo1.getTodoDay().equals(todoDto.getTodoDay()));
 
         original.ifPresent(todo1 -> {
@@ -40,12 +47,12 @@ public class TodoService {
         });
     }
 
-    public void delete(Long todoId){
+    public void delete(DeleteTodoDto deleteTodoDto){
         try{
-            todoRepository.deleteById(todoId);
+            todoRepository.deleteTodoByWriter_IdAndTodoIdAndTodoDay(deleteTodoDto.getWriterId(), deleteTodoDto.getTodoId(), deleteTodoDto.getTodoDay());
         } catch (Exception e){
-            log.error("error deleting entity Todo", todoId, e);
-            throw new RuntimeException("error deleting entity Todo " + todoId);
+            log.error("error deleting entity Todo", deleteTodoDto.getTodoId(), e);
+            throw new RuntimeException("error deleting entity Todo " + deleteTodoDto.getTodoId());
         }
     }
 }

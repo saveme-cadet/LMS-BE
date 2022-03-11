@@ -1,6 +1,8 @@
 package com.larry.fc.finalproject.api.controller;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
+import com.larry.fc.finalproject.api.dto.tododto.AllUserTodoDto;
+import com.larry.fc.finalproject.api.dto.tododto.DeleteTodoDto;
 import com.larry.fc.finalproject.api.dto.tododto.RequestTodoDto;
 import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.service.TodoQueryService;
@@ -28,33 +30,33 @@ public class TodoController {
 
     @Operation(description = "오늘 할 일 저장")
     @PostMapping("/usertodo")
-    public ResponseEntity<Void> createTodo(@Parameter @RequestBody TodoDto todoDto,
-                                           @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
-        todoService.create(todoDto, authUser);
+    public ResponseEntity<Void> createTodo(@Parameter @RequestBody TodoDto todoDto){
+        todoService.create(todoDto);
         return ResponseEntity.ok().build();
     }
 
+
+
     @Operation(description = "오늘 할 일 가져오기")
-    @GetMapping("/day")
-    public List<TodoDto> getUserInfoByDay(@RequestBody RequestTodoDto requestTodoDto){
-        return todoQueryService.getTodoByDay(requestTodoDto.getWriterId(),
-                requestTodoDto.getDate() == null ? LocalDate.now() : requestTodoDto.getDate());
+    @GetMapping("/day/{userId}")
+    public List<TodoDto> getUserInfoByDay(@PathVariable(name = "userId") Integer userId, @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return todoQueryService.getTodoByDay(userId.longValue(),
+                date == null ? LocalDate.now() : date);
     }
 
     @PutMapping("/todo")
     public ResponseEntity<Void> updateTodo(@Parameter @RequestBody TodoDto todoDto){
-        todoService.update(todoDto, todoDto.getUserId());
+        todoService.update(todoDto, todoDto.getWriterId());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteTodo(@Parameter(name ="todoId", description = "삭제할 todoId")Long todoId){
+    public ResponseEntity<Void> deleteTodo(@RequestBody DeleteTodoDto deleteTodoDto){
         try{
-            todoService.delete(todoId);
+            todoService.delete(deleteTodoDto);
             return ResponseEntity.ok().build();
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
     }
-
 }
