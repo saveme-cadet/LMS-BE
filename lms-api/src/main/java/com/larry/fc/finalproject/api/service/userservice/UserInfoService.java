@@ -141,10 +141,10 @@ public class UserInfoService {
             dayTableRepository.save(dayTable);
         } else if (userAttendenceDto.getAttendStatus() != 1L){
             try{
-                dayTableRepository.deleteByTableDayAndCadet_id(LocalDate.now(), userAttendenceDto.getUserId());
+                dayTableRepository.deleteDayTableByTableDayAndCadet_Id(LocalDate.now(), userAttendenceDto.getUserId());
             } catch (Exception e){
                 log.error("error deleting entity Todo",userAttendenceDto.getUserId(), e);
-                throw new RuntimeException("error deleting entity Todo " + userAttendenceDto.getUserId());
+                throw new RuntimeException("error deleting entity daytable " + userAttendenceDto.getUserId());
             }
         }
     }

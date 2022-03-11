@@ -40,11 +40,7 @@ public class UserInfo extends BaseEntity{
     @OneToMany(mappedBy = "user_id", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<StudyTime> studyTimes = new ArrayList<>();
 
-    @OneToOne
-    @JoinTable(name = "userinfo_daytable",
-    joinColumns = @JoinColumn(name = "userinfo_id"),
-    inverseJoinColumns = @JoinColumn(name = "daytable_id"))
-    private DayTable dayTable;
+
 
 
 
