@@ -37,7 +37,7 @@ public class UserInfo extends BaseEntity{
     @ManyToOne
     private User writer;
 
-    @OneToMany(mappedBy = "user_id", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<StudyTime> studyTimes = new ArrayList<>();
 
 

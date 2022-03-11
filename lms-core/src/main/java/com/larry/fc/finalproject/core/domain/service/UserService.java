@@ -2,6 +2,7 @@ package com.larry.fc.finalproject.core.domain.service;
 
 import com.larry.fc.finalproject.core.domain.dto.UserCreateReq;
 import com.larry.fc.finalproject.core.domain.entity.User;
+import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.entity.repository.*;
 import com.larry.fc.finalproject.core.domain.util.BCryptEncryptor;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
@@ -48,6 +49,12 @@ public class UserService {
     @Transactional
     public User findByUserId(Long userId){
         return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("no user by id"));
+    }
+
+    @Transactional
+    public UserInfo findByUserInfoId(Long userId){
+        return userInfoRepository.findByWriter_Id(userId)
                 .orElseThrow(() -> new RuntimeException("no user by id"));
     }
 
