@@ -8,6 +8,7 @@ import com.larry.fc.finalproject.api.util.UserDtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
+import com.larry.fc.finalproject.core.domain.entity.repository.DayTableRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.PlusVacationRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.UserInfoRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
@@ -31,6 +32,7 @@ public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
     private final PlusVacationRepository plusVacationRepository;
     private final UserRepository userRepository;
+    private final DayTableRepository dayTableRepository;
 
     public void create(AuthUser authUser){
         final UserInfo userInfo = UserInfo.userInfoJoin(
@@ -111,6 +113,17 @@ public class UserInfoService {
             userInfo1.setAttendeStatus(userInfo.getAttendeStatus());
             userInfoRepository.save(userInfo1);
         });
+        if (userAttendenceDto.getAttendStatus() == 1L){
+            dayTableRepository.findAllByTableDayAndCadet_Id(LocalDate.now(), userAttendenceDto.getUserId())
+                    .ifPresent(u -> {
+                        throw new RuntimeException("user day already exit!");
+                    });
+            UserInfo userInfo1 = userInfoRepository.findByWriter_IdAndAttendeStatus(userAttendenceDto.getUserId(), 0L);
+            UserInfoWeekDto userInfoWeekDto = DtoConverter.fromUserInfoWeek(userInfo1);
+            DayTable dayTable = DayTable.dayTableJoinWith(userService.findByUserId(userAttendenceDto.getUserId()),
+                    userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
+            dayTableRepository.save(dayTable);
+        }
     }
 
     public void updateUserTeam(UserTeamChangeDto userTeamChangeDto){
