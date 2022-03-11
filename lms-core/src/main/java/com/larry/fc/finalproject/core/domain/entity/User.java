@@ -21,8 +21,9 @@ public class User extends BaseEntity{
     private String password;
     private LocalDate bithday;
     private Long attendStatus;
-    @OneToMany(mappedBy = "cadet",cascade = {CascadeType.REMOVE}, orphanRemoval = true)
-    private List<DayTable> dayTableList = new ArrayList<>();
+
+   // @OneToMany(mappedBy = "cadet",cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    //private List<DayTable> dayTableList = new ArrayList<>();
     @OneToMany(mappedBy = "writer", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<UserInfo> userInfoList = new ArrayList<>();
     @OneToMany(mappedBy = "writer", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
