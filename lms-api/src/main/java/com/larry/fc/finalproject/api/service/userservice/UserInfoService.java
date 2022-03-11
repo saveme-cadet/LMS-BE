@@ -118,7 +118,7 @@ public class UserInfoService {
                     .ifPresent(u -> {
                         throw new RuntimeException("user day already exit!");
                     });
-            UserInfo userInfo1 = userInfoRepository.findByWriter_IdAndAttendeStatus(userAttendenceDto.getUserId(), 0L);
+            UserInfo userInfo1 = userInfoRepository.findByWriter_IdAndAttendeStatus(userAttendenceDto.getUserId(), 1L);
             UserInfoWeekDto userInfoWeekDto = DtoConverter.fromUserInfoWeek(userInfo1);
             DayTable dayTable = DayTable.dayTableJoinWith(userService.findByUserId(userAttendenceDto.getUserId()),
                     userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
