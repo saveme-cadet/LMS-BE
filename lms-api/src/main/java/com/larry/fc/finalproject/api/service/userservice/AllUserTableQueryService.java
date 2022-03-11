@@ -49,6 +49,16 @@ public class AllUserTableQueryService {
         for (int i = 0; i < sumList.length; i++){
             userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(sumList[i], 1L);
             dayTables[i] = dayTableRepository.findByTableDayAndCadet_IdAndAttendeStatus(date, sumList[i], 1L);
+            if (dayTables[i] == null){
+                dayTables[i].setAttendScore(userInfos[i].getAttendScore());
+                 dayTables[i].setCadet(userInfos[i].getWriter());
+                 dayTables[i].setRole(userInfos[i].getRole());
+                 dayTables[i].setTeam(userInfos[i].getTeam());
+                 dayTables[i].setParticipateScore(userInfos[i].getParticipateScore());
+                 dayTables[i].setCheckIn((short)0);
+                 dayTables[i].setCheckOut((short) 0);
+                 dayTables[i].setTableDay(date);
+            }
             allTableDto[i] = DtoConverter.fromUserInfoDay(
                     DtoConverter.fromUserDayTable(dayTables[i]),
                     DtoConverter.fromAllUserInfoDto(userInfos[i]));
