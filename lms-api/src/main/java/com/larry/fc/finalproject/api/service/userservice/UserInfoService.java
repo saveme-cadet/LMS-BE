@@ -140,7 +140,12 @@ public class UserInfoService {
                     userInfoWeekDto.getRole(), userInfoWeekDto.getTeam(), userInfoWeekDto.getAttendScore(), userInfoWeekDto.getParticipateScore());
             dayTableRepository.save(dayTable);
         } else if (userAttendenceDto.getAttendStatus() != 1L){
-            dayTableRepository.deleteByTableDayAndCadet_id(LocalDate.now(), userAttendenceDto.getUserId());
+            try{
+                dayTableRepository.deleteByTableDayAndCadet_id(LocalDate.now(), userAttendenceDto.getUserId());
+            } catch (Exception e){
+                log.error("error deleting entity Todo",userAttendenceDto.getUserId(), e);
+                throw new RuntimeException("error deleting entity Todo " + userAttendenceDto.getUserId());
+            }
         }
     }
 
