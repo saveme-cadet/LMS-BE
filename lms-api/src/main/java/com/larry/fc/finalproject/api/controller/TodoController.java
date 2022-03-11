@@ -1,7 +1,8 @@
 package com.larry.fc.finalproject.api.controller;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
-import com.larry.fc.finalproject.api.dto.TodoDto;
+import com.larry.fc.finalproject.api.dto.tododto.RequestTodoDto;
+import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.service.TodoQueryService;
 import com.larry.fc.finalproject.api.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,15 +36,14 @@ public class TodoController {
 
     @Operation(description = "오늘 할 일 가져오기")
     @GetMapping("/day")
-    public List<TodoDto> getUserInfoByDay(
-            @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser,
-            @Parameter(name = "date", description = "date=2022-02-14", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        return todoQueryService.getTodoByDay(authUser, date == null ? LocalDate.now() : date);
+    public List<TodoDto> getUserInfoByDay(@RequestBody RequestTodoDto requestTodoDto){
+        return todoQueryService.getTodoByDay(requestTodoDto.getWriterId(),
+                requestTodoDto.getDate() == null ? LocalDate.now() : requestTodoDto.getDate());
     }
 
     @PutMapping("/todo")
-    public ResponseEntity<Void> updateTodo(@Parameter @RequestBody TodoDto todoDto, @Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
-        todoService.update(todoDto, authUser);
+    public ResponseEntity<Void> updateTodo(@Parameter @RequestBody TodoDto todoDto){
+        todoService.update(todoDto, todoDto.getUserId());
         return ResponseEntity.ok().build();
     }
 

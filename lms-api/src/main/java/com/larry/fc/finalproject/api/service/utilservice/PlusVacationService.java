@@ -2,12 +2,8 @@ package com.larry.fc.finalproject.api.service.utilservice;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
 import com.larry.fc.finalproject.api.dto.PlusVacationDto;
-import com.larry.fc.finalproject.api.dto.TodoDto;
-import com.larry.fc.finalproject.api.dto.userinfodto.UserInfoDto;
 import com.larry.fc.finalproject.api.util.DtoConverter;
-import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
-import com.larry.fc.finalproject.core.domain.entity.Todo;
 import com.larry.fc.finalproject.core.domain.entity.repository.PlusVacationRepository;
 import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;

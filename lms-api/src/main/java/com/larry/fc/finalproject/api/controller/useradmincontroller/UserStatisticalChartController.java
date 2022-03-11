@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.controller.useradmincontroller;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
+import com.larry.fc.finalproject.api.dto.tododto.RequestTodoDto;
 import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.AttendDto;
 import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.ObjectDto;
 import com.larry.fc.finalproject.api.service.UserStatisticalChartService;
@@ -30,7 +31,7 @@ public class UserStatisticalChartController {
 
     @Operation(description = "유저 목표 차트 보여주기")
     @GetMapping("/objectstatic")
-    public List<ObjectDto> getObject(@Parameter(name="userId", description = "유저 목표 차트 볼 id") AuthUser authUser){
-        return userStatisticalChartService.getUserObjectStatic(authUser.getId());
+    public List<ObjectDto> getObject(@RequestBody RequestTodoDto requestTodoDto){
+        return userStatisticalChartService.getUserObjectStatic(requestTodoDto.getWriterId(), requestTodoDto.getDate());
     }
 }

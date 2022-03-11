@@ -37,9 +37,9 @@ public class UserStatisticalChartService {
         return response;
     }
 
-    public List<ObjectDto> getUserObjectStatic(Long userId){
-        UserDayObjectStatic(userId);
-        UserMonthObjectStatic(userId);
+    public List<ObjectDto> getUserObjectStatic(Long userId , LocalDate date){
+        UserDayObjectStatic(userId, date);
+        UserMonthObjectStatic(userId, date);
         final Stream<ObjectDto> userObject = userStatisticalChartRepository.findByWriter_Id(userId) // wirter 로 수정
                 .stream()
                 .map(userInfo1 -> UserDtoConverter.fromObject(userInfo1));
@@ -53,13 +53,13 @@ public class UserStatisticalChartService {
         userStatisticalChartRepository.save(statisticalChart);
     }
 
-    public void UserDayObjectStatic(Long userId){
+    public void UserDayObjectStatic(Long userId, LocalDate date){
 
         int count = (int)todoRepository.findAllByWriter_Id(userId).stream()
-                .filter(c -> c.getTodoDay().equals(LocalDate.now()))
+                .filter(c -> c.getTodoDay().equals(date))
                 .count();
         int facount = (int) todoRepository.findAllByWriter_Id(userId).stream()
-                .filter(w -> w.getTodoDay().equals(LocalDate.now()))
+                .filter(w -> w.getTodoDay().equals(date))
                 .filter(i -> i.isTitleCheck())
                 .count();
         Double result;
@@ -73,13 +73,13 @@ public class UserStatisticalChartService {
         });
     }
 
-    public void UserMonthObjectStatic(Long userId){
+    public void UserMonthObjectStatic(Long userId, LocalDate date){
 
         int count = (int)todoRepository.findAllByWriter_Id(userId).stream()
-                .filter(c -> c.getTodoDay().getMonth().equals(LocalDate.now().getMonth()))
+                .filter(c -> c.getTodoDay().getMonth().equals(date.getMonth()))
                 .count();
         int facount = (int) todoRepository.findAllByWriter_Id(userId).stream()
-                .filter(w -> w.getTodoDay().getMonth().equals(LocalDate.now().getMonth()))
+                .filter(w -> w.getTodoDay().getMonth().equals(date.getMonth()))
                 .filter(i -> i.isTitleCheck())
                 .count();
         Double result;

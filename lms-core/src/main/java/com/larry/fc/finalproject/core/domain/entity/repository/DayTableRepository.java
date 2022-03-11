@@ -20,7 +20,7 @@ public interface DayTableRepository extends JpaRepository<DayTable, Long> {
     Optional<DayTable> findAllOptionalByCadet_IdAndAttendeStatus(Long id, Long attend );
     List<DayTable> findAllByCadet_Id(Long id);
     Optional<DayTable> findAllByTableDayAndCadet_Id(LocalDate date, Long id);
-    DayTable findByTableDayAndCadet_Id(LocalDate date, Long id);
+    DayTable findByTableDayAndCadet_IdAndAttendeStatus(LocalDate date, Long id, Long status);
     List<DayMapping> findByCadet_IdAndAttendeStatus(Long id, Long attend);
     List<CheckMapping> findAllByCadet_IdAndAttendeStatus(Long id, Long attend);
 

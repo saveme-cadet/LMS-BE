@@ -48,7 +48,7 @@ public class AllUserTableQueryService {
         DayTable[] dayTables = new DayTable[sumList.length];
         for (int i = 0; i < sumList.length; i++){
             userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(sumList[i], 1L);
-            dayTables[i] = dayTableRepository.findByTableDayAndCadet_Id(date, sumList[i]);
+            dayTables[i] = dayTableRepository.findByTableDayAndCadet_IdAndAttendeStatus(date, sumList[i], 1L);
             allTableDto[i] = DtoConverter.fromUserInfoDay(
                     DtoConverter.fromUserDayTable(dayTables[i]),
                     DtoConverter.fromAllUserInfoDto(userInfos[i]));
