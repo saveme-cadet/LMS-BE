@@ -19,8 +19,4 @@ public class AttendDto {
     @Min(0)
     @Max(100)
     private double monthAttendanceRate;
-    @Schema(description = "주간 출석률" , example = "70.0")
-    @Min(0)
-    @Max(100)
-    private double weekAttendanceRate;
 }

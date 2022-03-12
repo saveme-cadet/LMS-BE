@@ -41,12 +41,8 @@ public class AojiQuertService {
         Long []list = userAoji.toArray(Long[]::new);
         UserInfo[] userInfos = new UserInfo[list.length];
         AojiUserDto[] aojiUserDtos = new AojiUserDto[list.length];
-        for (int j = 0; j < list.length; j++){
-            System.out.println(list[j]);
-        }
         for (int i = 0; i < list.length; i++){
             userInfos[i] = userInfoRepository.findByWriter_IdAndAttendeStatus(list[i], 1L);
-            System.out.println(userInfos[i].getTeam());
             aojiUserDtos[i] = DtoConverter.aojiUserDtofromUserInfo(userInfos[i]);
         }
         List<AojiUserDto> aojiUserDtoList = Arrays.asList(aojiUserDtos);

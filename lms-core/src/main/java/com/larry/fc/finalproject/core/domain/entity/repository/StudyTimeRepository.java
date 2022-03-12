@@ -14,9 +14,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
-    Optional<StudyTime> findAllByUser_Id(Long id);
+    //Optional<StudyTime> findAllByUser_Id(Long id);
     Optional<StudyTime> findAllByUser_IdAndEndAt(Long id, LocalDateTime time);
+    StudyTime findStudyTimeByAojiTimeIndexAndUser_Id(Long index, Long id);
+    StudyTime findAllByUser_Id(Long id);
     List<StudyTime> findStudyTimeByUser_Id(Long id);
+    List<AojiIdMapping> findAllBy();
     Long countAllByUser_Id(Long id);
     Optional<StudyTime> findAllByUser_IdAndAojiTimeIndex(Long id, Long index);
     List<AojiIdMapping> findAllByEndAt(LocalDateTime time);
@@ -24,4 +27,7 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     @Modifying
     List<StudyTime> deleteByAojiTimeIndexAndUser_Id(@Param("aoji_time_index") Long aojiIndex,
                                                        @Param("user_id") Long id);
+    @Transactional
+    @Modifying
+    List<StudyTime> deleteByUser_Id(@Param("user_id") Long id);
 }

@@ -64,4 +64,16 @@ public class AojiTimeController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @Operation(description = "aoji 24시간 뒤에 삭제")
+    @DeleteMapping("test")
+    public ResponseEntity<Void> delete() {
+        try {
+            aojiService.deleteAojiTimeAtDay();
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

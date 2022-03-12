@@ -19,10 +19,6 @@ public class ObjectDto {
     @Min(0)
     @Max(100)
     private double dayObjectiveAchievementRate;
-    @Schema(description = "주간 목표 달성률" , example = "70.0")
-    @Min(0)
-    @Max(100)
-    private double weekObjectiveAchievementRate;
     @Schema(description = "월간 목표 달성률" , example = "70.0")
     @Min(0)
     @Max(100)
