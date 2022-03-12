@@ -24,7 +24,6 @@ public abstract class UserDtoConverter {
     public static AttendDto fromAttend(StatisticalChart statisticalChart){
         return AttendDto.builder()
                 .userId(statisticalChart.getWriter().getId())
-                .weekAttendanceRate(statisticalChart.getWeekAttendanceRate())
                 .monthAttendanceRate(statisticalChart.getMonthAttendanceRate())
                 .build();
     }
@@ -33,7 +32,6 @@ public abstract class UserDtoConverter {
         return ObjectDto.builder()
                 .userId(statisticalChart.getWriter().getId())
                 .dayObjectiveAchievementRate(statisticalChart.getDayObjectiveAchievementRate())
-                .weekObjectiveAchievementRate(statisticalChart.getWeekObjectiveAchievementRate())
                 .monthObjectiveAchievementRate(statisticalChart.getMonthObjectiveAchievementRate())
                 .build();
     }
@@ -65,6 +63,12 @@ public abstract class UserDtoConverter {
     public static User fromUser(UserAttendenceDto userAttendenceDto){
         return User.builder()
                 .attendStatus(userAttendenceDto.getAttendStatus())
+                .build();
+    }
+
+    public static UserInfo fromUserInfoInAttendScore(Double attendScore){
+        return UserInfo.builder()
+                .attendScore(attendScore)
                 .build();
     }
 }
