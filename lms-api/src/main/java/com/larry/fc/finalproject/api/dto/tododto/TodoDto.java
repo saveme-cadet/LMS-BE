@@ -14,11 +14,11 @@ import java.time.LocalDate;
 @Builder
 @Validated
 public class TodoDto {
-    @Schema(name= "writerId")
+    @Schema(name= "writerId" , example = "1")
     @NotNull
     @Min(1)
     private final Long writerId;
-    @Schema(name = "todoId" , example = "1. 공부하기 등등")
+    @Schema(name = "todoId" , example = "1")
     @NotNull
     @Min(1)
     private final Long todoId;

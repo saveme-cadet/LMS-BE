@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 public class AttendDto {
-    @Schema(name = "userId" , example = "유저 아이디")
+    @Schema(name = "userId" , example = "1")
     @NotNull
     @Min(1)
     private Long userId;

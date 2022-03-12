@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserTeamChangeDto {
-    @Schema(name = "userId" , example = "1 or 2 ..")
+    @Schema(name = "userId" , example = "1")
     private Long userId;
     @Schema(description = "이번주 팀" , example = "red or blue")
     private String team;

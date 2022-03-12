@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserRoleChangeDto {
-    @Schema(name = "userId" , example = "1 or 2 ..")
+    @Schema(name = "userId" , example = "1")
     private final Long userId;
     @Schema(description = "역할" , example = "카 뎃 or 머슴")
     private final String role;

@@ -21,7 +21,7 @@ public class UserInfoWeekDto {
     private final double attendScore;     // 매일 자동 갱신
     @Schema(description = "이번 주 팀", example = "red or blue")
     private final String team;            // 주 마다
-    @Schema(description = "가진 휴가 일 수", example = "1 or 2 ++")
+    @Schema(description = "가진 휴가 일 수", example = "0.5")
     private final Double vacation;
     @Schema(description = "참가 점수", example = "2.4")
     private final double participateScore;

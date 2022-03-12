@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 @Builder
 public class UserAttendenceDto {
-    @Schema(name = "userId" , example = "1 or 2 ..")
+    @Schema(name = "userId" , example = "1")
     private final Long userId;
-    @Schema(description = "유처 참여 여부", example = "1 or 0")
+    @Schema(description = "유처 참여 여부", example = "1L")
     private final Long attendStatus;
 }
