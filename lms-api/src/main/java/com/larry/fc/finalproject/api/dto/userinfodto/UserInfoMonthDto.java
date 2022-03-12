@@ -20,6 +20,6 @@ public class UserInfoMonthDto {
     private final String nowSubject;
     @Schema(description = "현재 자신있는 과제" , example = "libft")
     private final String confidenceSubject;
-    @Schema(description = "참여 여부" , example = "1 or 2")
+    @Schema(description = "참여 여부" , example = "1L")
     private final Long attendeStatus;
 }

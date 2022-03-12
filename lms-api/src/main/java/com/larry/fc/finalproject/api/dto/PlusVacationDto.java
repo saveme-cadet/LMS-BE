@@ -20,6 +20,6 @@ public class PlusVacationDto {
     private final LocalDate startAt;
     @Schema(description = "머슴 끝난 날짜" , example = "date=2022-02-24")
     private final LocalDate endAt;
-    @Schema(description = "머슴 끝난 여부" , example = "true or false")
+    @Schema(description = "머슴 끝난 여부" , example = "false")
     private final boolean finished;
 }
