@@ -17,7 +17,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
     List<UserInfo> findAllByAttendeStatus(Long attendStatus);
     List<UserInfo> deleteUserInfoByWriter_Id(Long id);
     List<IdMapping> findAllBy();
-
+    Boolean existsUserInfoByAttendeStatusAndWriter_Id(Long status, Long id);
     String findRoleByWriter_Id(Long id);
     String findByAttendeStatusAndWriter_Id(Long id, Long is);
     String findTeamByWriter_Id(Long id);

@@ -1,18 +1,16 @@
 package com.larry.fc.finalproject.api.controller.aojicontroller;
 
+import com.larry.fc.finalproject.api.dto.aojidto.AojiDto;
 import com.larry.fc.finalproject.api.dto.aojidto.AojiResponseDto;
+import com.larry.fc.finalproject.api.dto.aojidto.AojiUserDto;
 import com.larry.fc.finalproject.api.service.aojiservice.AojiQuertService;
 import com.larry.fc.finalproject.api.service.aojiservice.AojiService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "아오지 탄광")
@@ -39,8 +37,8 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 공부 시간 수정")
     @PutMapping("/aojitime/{userId}")
-    public ResponseEntity<Void> updateAojiTime(@PathVariable(name = "userId") Integer userId){
-        aojiService.updateAojiTime(userId.longValue());
+    public ResponseEntity<Void> updateAojiTime(@PathVariable(name = "userId") Integer userId, @RequestBody AojiDto aojiDto){
+        aojiService.updateAllAojiTime(userId.longValue(), aojiDto);
         return ResponseEntity.ok().build();
     }
 
@@ -52,14 +50,18 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 하는 사람")
     @GetMapping("/studyuser")
-    public ResponseEntity<AojiResponseDto> readAojiDoingUser(){
-        return ResponseEntity.ok().build();
+    public List<AojiUserDto> readAojiDoingUser(){
+        return aojiQuertService.getAojiUser();
     }
 
     @Operation(description = "aoji 삭제")
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> deleteAoji(@PathVariable(name = "userId") Integer userId){
-        aojiService.deleteAojiTime(userId.longValue());
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/delete/{userId}/{aojiIndex}")
+    public ResponseEntity<Void> deleteAoji(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "aojiIndex") Integer aojiIndex){
+        try{
+            aojiService.deleteAojiTime(userId.longValue(), aojiIndex.longValue());
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
