@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.util;
 
 import com.larry.fc.finalproject.api.dto.*;
+import com.larry.fc.finalproject.api.dto.aojidto.AojiUserDto;
 import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.dto.tabledto.AllUserTableDto;
 import com.larry.fc.finalproject.api.dto.tabledto.TableCheckInDto;
@@ -211,6 +212,13 @@ public abstract class DtoConverter {
                 .attendScore(allTableDto.getAttendScore())
                 .checkOut(allTableDto.getCheckOut())
                 .checkIn(allTableDto.getCheckIn())
+                .build();
+    }
+
+    public static AojiUserDto aojiUserDtofromUserInfo(UserInfo userInfo){
+        return AojiUserDto.builder()
+                .name(userInfo.getUserName())
+                .team(userInfo.getTeam())
                 .build();
     }
 }

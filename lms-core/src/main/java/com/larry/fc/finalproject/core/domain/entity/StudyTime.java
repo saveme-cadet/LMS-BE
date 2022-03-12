@@ -23,13 +23,15 @@ public class StudyTime extends BaseEntity{
     @ManyToOne
     private UserInfo user;
 
+    private Long aojiTimeIndex;
     private LocalDate day;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
 
-    public static StudyTime studyTimeJoin(UserInfo writer){
+    public static StudyTime studyTimeJoin(UserInfo writer, Long aojiTimeIndex){
         return StudyTime.builder()
                 .user(writer)
+                .aojiTimeIndex(aojiTimeIndex)
                 .day(LocalDate.now())
                 .startAt(LocalDateTime.now())
                 .endAt(null)

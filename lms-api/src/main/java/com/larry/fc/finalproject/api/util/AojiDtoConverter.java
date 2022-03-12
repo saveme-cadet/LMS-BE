@@ -1,10 +1,12 @@
 package com.larry.fc.finalproject.api.util;
 
+import com.larry.fc.finalproject.api.dto.aojidto.AojiDto;
 import com.larry.fc.finalproject.api.dto.aojidto.AojiResponseDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserInfoDto;
 import com.larry.fc.finalproject.core.domain.entity.StudyTime;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public abstract class AojiDtoConverter {
@@ -18,9 +20,31 @@ public abstract class AojiDtoConverter {
 
         return AojiResponseDto.builder()
                 .userId(studyTime.getUser().getWriter().getId())
+                .aojiTimeIndex(studyTime.getAojiTimeIndex())
                 .startAt(studyTime.getStartAt())
                 .endAt(studyTime.getEndAt())
                 .recodeTime(sb.toString())
                 .build();
     }
+
+    public static StudyTime fromAojiDto(AojiDto aojiDto){
+        LocalDateTime end;
+        LocalDateTime start;
+        if (aojiDto.getEndAt() == null){
+            end = aojiDto.getStartAt().plusSeconds(1);
+        } else {
+            end = aojiDto.getEndAt();
+        }
+        if (aojiDto.getStartAt() == null){
+            start = aojiDto.getEndAt().plusSeconds(1);
+        } else {
+            start = aojiDto.getStartAt();
+        }
+        return StudyTime.builder()
+                .startAt(start)
+                .endAt(end)
+                .build();
+    }
+
+
 }
