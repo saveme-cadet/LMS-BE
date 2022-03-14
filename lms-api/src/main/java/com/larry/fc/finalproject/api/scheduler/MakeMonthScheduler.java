@@ -17,7 +17,7 @@ public class MakeMonthScheduler {
     private final AllUserTableService allUserTableService;
     private final AojiService aojiService;
     //@Scheduled(cron = "0 0/1 0 * * *")
-    @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 1 0 * * MON-FRI", zone = "Asia/Seoul")
     @Transactional
     public void makeTable() {
         allUserTableService.createAllDate1();
