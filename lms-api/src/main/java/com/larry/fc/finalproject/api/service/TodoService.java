@@ -36,9 +36,7 @@ public class TodoService {
 
     public void update(TodoDto todoDto, Long userId){
         Todo todo = DtoConverter.fromTodoDto(todoDto);
-        final Optional<Todo> original = todoRepository.findById(userId)
-                .filter(todo1 -> todo1.getTodoId().equals(todoDto.getTodoId()))
-                .filter(todo1 -> todo1.getTodoDay().equals(todoDto.getTodoDay()));
+        final Optional<Todo> original = todoRepository.findByTodoIdAndTodoDayAndWriter_Id(todoDto.getTodoId(), todoDto.getTodoDay(), userId);
 
         original.ifPresent(todo1 -> {
             todo1.setTitle(todo.getTitle());
