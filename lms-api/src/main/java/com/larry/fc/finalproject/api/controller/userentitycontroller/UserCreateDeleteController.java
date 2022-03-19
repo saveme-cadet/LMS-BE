@@ -20,19 +20,19 @@ public class UserCreateDeleteController {
     private final UserQueryService userQueryService;
 
     @Operation(description = "특정 유저 삭제")
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@RequestBody UserDto userDto) {
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "userId") Integer userId) {
         try {
-            userService.delete(userDto.getUserId());
+            userService.delete(userId.longValue());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-        @Operation(description = "참가 하는 모든 유저 Id 가져 오기")
-        @GetMapping("/alluser")
-        public List<UserDto> allUserGet () {
+    @Operation(description = "참가 하는 모든 유저 Id 가져 오기")
+    @GetMapping("/alluser")
+    public List<UserDto> allUserGet () {
             return userQueryService.getUser();
     }
 }

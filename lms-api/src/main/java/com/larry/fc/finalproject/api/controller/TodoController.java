@@ -35,8 +35,6 @@ public class TodoController {
         return ResponseEntity.ok().build();
     }
 
-
-
     @Operation(description = "오늘 할 일 가져오기")
     @GetMapping("/day/{userId}")
     public List<TodoDto> getUserInfoByDay(@PathVariable(name = "userId") Integer userId, @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
