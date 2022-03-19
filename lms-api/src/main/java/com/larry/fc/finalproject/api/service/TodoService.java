@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Slf4j
@@ -45,12 +46,12 @@ public class TodoService {
         });
     }
 
-    public void delete(DeleteTodoDto deleteTodoDto){
+    public void delete(Long userId, Long todoId, LocalDate date){
         try{
-            todoRepository.deleteTodoByWriter_IdAndTodoIdAndTodoDay(deleteTodoDto.getWriterId(), deleteTodoDto.getTodoId(), deleteTodoDto.getTodoDay());
+            todoRepository.deleteTodoByWriter_IdAndTodoIdAndTodoDay(userId, todoId, date);
         } catch (Exception e){
-            log.error("error deleting entity Todo", deleteTodoDto.getTodoId(), e);
-            throw new RuntimeException("error deleting entity Todo " + deleteTodoDto.getTodoId());
+            log.error("error deleting entity Todo", todoId, e);
+            throw new RuntimeException("error deleting entity Todo " + todoId);
         }
     }
 }

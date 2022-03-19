@@ -25,7 +25,6 @@ import java.util.List;
 @RequestMapping("/api/todo")
 @RestController
 public class TodoController {
-
     private final TodoService todoService;
     private final TodoQueryService todoQueryService;
 
@@ -52,9 +51,10 @@ public class TodoController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteTodo(@Validated @RequestBody DeleteTodoDto deleteTodoDto){
+    public ResponseEntity<Void> deleteTodo(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "todoId") Integer todoId, @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+
         try{
-            todoService.delete(deleteTodoDto);
+            todoService.delete(userId.longValue(), todoId.longValue(), date);
             return ResponseEntity.ok().build();
         } catch (Exception e){
             return ResponseEntity.badRequest().build();

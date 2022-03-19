@@ -3,6 +3,7 @@ package com.larry.fc.finalproject.api.dto.tododto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Min;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-@Validated
+@Setter
 public class DeleteTodoDto {
     @Schema(name= "writerId" , example = "1")
     @NotNull
