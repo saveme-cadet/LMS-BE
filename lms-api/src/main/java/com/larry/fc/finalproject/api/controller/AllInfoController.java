@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 @Tag(name = "유저 생성")
 @RequiredArgsConstructor
-@RequestMapping("/api/usermake")
+@RequestMapping("/api")
 @RestController
 public class AllInfoController {
     private final LoginService loginService;
@@ -29,7 +29,7 @@ public class AllInfoController {
     private final AllUserTableService allUserTableService;
 
     @Operation(description = "user id 생성과 동시에 userinfo, statisticalChart 생성 ")
-    @PostMapping("/sign-up")
+    @PostMapping("/user")
     public ResponseEntity<Void> makeUserAndUserinfo(@Parameter @RequestBody SignUpReq signUpReq, HttpSession httpSession){
         Long id = loginService.signUp1(signUpReq, httpSession);
         userInfoService.create(AuthUser.of(id));
