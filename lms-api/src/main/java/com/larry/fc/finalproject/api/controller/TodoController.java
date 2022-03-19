@@ -50,7 +50,7 @@ public class TodoController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{userId}/{todoId}")
     public ResponseEntity<Void> deleteTodo(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "todoId") Integer todoId, @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
 
         try{
