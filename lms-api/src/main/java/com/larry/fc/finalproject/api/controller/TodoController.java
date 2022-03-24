@@ -1,12 +1,8 @@
 package com.larry.fc.finalproject.api.controller;
 
-import com.larry.fc.finalproject.api.dto.AuthUser;
-import com.larry.fc.finalproject.api.dto.tododto.AllUserTodoDto;
-import com.larry.fc.finalproject.api.dto.tododto.DeleteTodoDto;
-import com.larry.fc.finalproject.api.dto.tododto.RequestTodoDto;
 import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
-import com.larry.fc.finalproject.api.service.TodoQueryService;
-import com.larry.fc.finalproject.api.service.TodoService;
+import com.larry.fc.finalproject.api.service.todoservice.TodoQueryService;
+import com.larry.fc.finalproject.api.service.todoservice.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
