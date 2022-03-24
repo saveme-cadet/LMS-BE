@@ -1,4 +1,4 @@
-package com.larry.fc.finalproject.api.service;
+package com.larry.fc.finalproject.api.service.todoservice;
 
 import com.larry.fc.finalproject.api.dto.AuthUser;
 import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
