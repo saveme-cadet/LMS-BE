@@ -42,6 +42,7 @@ ___Link___: [Notion][https://www.notion.so/savemecadet/LMS-24781856e3e5429490b8b
 ## 수정 Figma - by dhyeon
 ### PC .ver
 <img width="762" alt="Screen Shot 2022-03-24 at 3 29 45 PM" src="https://user-images.githubusercontent.com/56079997/159855928-772d7868-84e0-48e1-bf72-28b8d5e865d3.png">
+
 ### Mobile .ver
 <img width="831" alt="Screen Shot 2022-03-24 at 3 30 21 PM" src="https://user-images.githubusercontent.com/56079997/159856022-5c4180f5-5b9d-416c-84be-1d8a3a335856.png">
 
