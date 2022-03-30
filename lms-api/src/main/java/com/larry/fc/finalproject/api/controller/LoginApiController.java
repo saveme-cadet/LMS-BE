@@ -1,8 +1,12 @@
 package com.larry.fc.finalproject.api.controller;
 
+import com.larry.fc.finalproject.api.dto.AuthUser;
 import com.larry.fc.finalproject.api.dto.LoginReq;
 import com.larry.fc.finalproject.api.dto.SignUpReq;
 import com.larry.fc.finalproject.api.service.LoginService;
+import com.larry.fc.finalproject.api.service.UserStatisticalChartService;
+import com.larry.fc.finalproject.api.service.userservice.AllUserTableService;
+import com.larry.fc.finalproject.api.service.userservice.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,11 +23,18 @@ import javax.servlet.http.HttpSession;
 @RestController
 public class LoginApiController {
     private final LoginService loginService;
+    private final UserInfoService userInfoService;
+    private final UserStatisticalChartService userStatisticalChartService;
+    private final AllUserTableService allUserTableService;
 
     @Operation(description = "회원 가입")
     @PostMapping("/api/sign-up")
-    public ResponseEntity<Void> signUp(@Parameter @RequestBody SignUpReq signUpReq, HttpSession session){
-        loginService.signUp(signUpReq, session);
+    public ResponseEntity<Void> signUp(@Parameter @RequestBody SignUpReq signUpReq, HttpSession httpSession){
+        //loginService.signUp(signUpReq, httpSession);
+        Long id = loginService.signUp1(signUpReq, httpSession);
+        userInfoService.create(AuthUser.of(id));
+        userStatisticalChartService.create(AuthUser.of(id));
+        allUserTableService.createUserDate(AuthUser.of(id));
         return ResponseEntity.ok().build();
     }
 

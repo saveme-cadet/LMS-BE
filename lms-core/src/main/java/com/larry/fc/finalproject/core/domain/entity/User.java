@@ -43,7 +43,6 @@ public class User extends BaseEntity{
     }
 
     public boolean isMatch(Encryptor encryptor, String password) {
-
         return encryptor.isMatch(password, this.password);
     }
 
