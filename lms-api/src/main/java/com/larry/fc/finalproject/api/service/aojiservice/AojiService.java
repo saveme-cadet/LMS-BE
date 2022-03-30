@@ -38,11 +38,16 @@ public class AojiService {
     }
 
     public void updateAojiTime(Long userId){
-        final Optional<StudyTime> studyTime = studyTimeRepository.findAllByUser_IdAndEndAt(userId, null);
-        studyTime.ifPresent(studyTime1 -> {
-            studyTime1.setEndAt(LocalDateTime.now());
-            studyTimeRepository.save(studyTime1);
-        });
+        // final Optional<StudyTime> studyTime = studyTimeRepository.findAllByUser_IdAndCh(userId, 0L);
+        StudyTime studyTime2 = studyTimeRepository.findAllByUser_IdAndCh(userId, 0L);
+        studyTime2.setEndAt(LocalDateTime.now());
+        studyTime2.setCh(1L);
+        studyTimeRepository.save(studyTime2);
+//        studyTime.ifPresent(studyTime1 -> {
+//            studyTime1.setEndAt(LocalDateTime.now());
+//            studyTime1.setCh(1L);
+//            studyTimeRepository.save(studyTime1);
+//        });
         calcAttendScore(userId);
     }
 

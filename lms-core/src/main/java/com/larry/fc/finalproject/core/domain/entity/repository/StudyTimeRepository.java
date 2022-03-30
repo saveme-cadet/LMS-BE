@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     //Optional<StudyTime> findAllByUser_Id(Long id);
-    Optional<StudyTime> findAllByUser_IdAndEndAt(Long id, LocalDateTime time);
+    StudyTime findAllByUser_IdAndCh(Long id, Long ch);
     StudyTime findStudyTimeByAojiTimeIndexAndUser_Id(Long index, Long id);
     StudyTime findAllByUser_Id(Long id);
     List<StudyTime> findStudyTimeByUser_Id(Long id);
