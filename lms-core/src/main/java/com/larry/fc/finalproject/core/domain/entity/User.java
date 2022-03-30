@@ -30,6 +30,8 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<PlusVacation> plusVacationList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<StudyTime> studyTimes = new ArrayList<>();
 
     @OneToMany(mappedBy = "writer", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private List<StatisticalChart> statisticalCharts = new ArrayList<>();

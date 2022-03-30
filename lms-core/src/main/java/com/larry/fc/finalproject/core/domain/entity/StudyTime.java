@@ -3,10 +3,7 @@ package com.larry.fc.finalproject.core.domain.entity;
 import com.larry.fc.finalproject.core.domain.ScheduleType;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -17,11 +14,12 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "aojitime")
 @Entity
+@NamedQuery(name="aojitime.findAll", query="select m from StudyTime m")
 public class StudyTime extends BaseEntity{
 
     @JoinColumn(name = "user_id")
-    @ManyToOne
-    private UserInfo user;
+    @ManyToOne (fetch = FetchType.EAGER)
+    private User user;
 
     private Long aojiTimeIndex;
     private LocalDate day;
@@ -29,13 +27,13 @@ public class StudyTime extends BaseEntity{
     private LocalDateTime endAt;
     private Long ch;
 
-    public static StudyTime studyTimeJoin(UserInfo writer, Long aojiTimeIndex){
+    public static StudyTime studyTimeJoin(User writer, Long aojiTimeIndex){
         return StudyTime.builder()
                 .user(writer)
                 .aojiTimeIndex(aojiTimeIndex)
                 .day(LocalDate.now())
                 .startAt(LocalDateTime.now())
-                .endAt(null)
+                .endAt(LocalDateTime.now())
                 .ch(0L)
                 .build();
     }

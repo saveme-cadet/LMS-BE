@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,11 @@ public class AojiQuertService {
     private final StudyTimeRepository studyTimeRepository;
     private final UserInfoRepository userInfoRepository;
 
-    public List<AojiResponseDto> getAojiTime(Long userId) throws NullPointerException{
+    public List<AojiResponseDto> getAojiTime(Long userId){
+//        final Stream<AojiResponseDto> userAoji = studyTimeRepository.findStudyTimeByUser_IdAndCh(userId, 1L)
+//                .stream()
+//                .filter(userAoji1 -> ChronoUnit.SECONDS.between(userAoji1.getStartAt(), userAoji1.getEndAt()) != 0)
+//                .map(userAoji1 -> AojiDtoConverter.fromStudyTime(userAoji1));
         final Stream<AojiResponseDto> userAoji = studyTimeRepository.findStudyTimeByUser_Id(userId)
                 .stream()
                 .map(userAoji1 -> AojiDtoConverter.fromStudyTime(userAoji1));
@@ -34,7 +39,7 @@ public class AojiQuertService {
     }
 
     public List<AojiUserDto> getAojiUser() throws NullPointerException{
-        final Stream<Long> userAoji = studyTimeRepository.findAllByEndAt(null)
+        final Stream<Long> userAoji = studyTimeRepository.findAllByCh(0L)
                 .stream()
                 .filter(x-> userInfoRepository.existsUserInfoByAttendeStatusAndWriter_Id(1L, x.getUserId()))
                 .map(x -> x.getUserId());
@@ -48,4 +53,16 @@ public class AojiQuertService {
         List<AojiUserDto> aojiUserDtoList = Arrays.asList(aojiUserDtos);
         return aojiUserDtoList;
     }
+
+//    public String getAojiTime2(long longValue) {
+//        String response = " 없다";
+//        try {
+//            final Stream<Long> idList = (Stream<Long>) studyTimeRepository.findAllByUser_IdAndCH(longValue, 0L);
+//
+//                response = "있다.";
+//        } catch (RuntimeException e) {
+//            System.out.println(e);
+//        }
+//        return response;
+//    }
 }
