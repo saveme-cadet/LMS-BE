@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-@Profile("dev")
+@Profile("!dev")
 @Configuration
 public class DevWebConfig implements WebMvcConfigurer {
     @Override

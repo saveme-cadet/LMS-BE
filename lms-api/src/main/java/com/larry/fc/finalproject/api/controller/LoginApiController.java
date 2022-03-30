@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 @Tag(name = "로그인 api")
@@ -29,7 +30,7 @@ public class LoginApiController {
 
     @Operation(description = "회원 가입")
     @PostMapping("/api/sign-up")
-    public ResponseEntity<Void> signUp(@Parameter @RequestBody SignUpReq signUpReq, HttpSession httpSession){
+    public ResponseEntity<Void> signUp(@RequestBody SignUpReq signUpReq, HttpSession httpSession){
         //loginService.signUp(signUpReq, httpSession);
         Long id = loginService.signUp1(signUpReq, httpSession);
         userInfoService.create(AuthUser.of(id));
@@ -40,17 +41,18 @@ public class LoginApiController {
 
     @Operation(description = "로그인")
     @PostMapping("/api/login")
-    public ResponseEntity<Void> login(@Parameter @RequestBody LoginReq loginReq, HttpSession session){
+    public ResponseEntity<Void> login(@RequestBody LoginReq loginReq, HttpSession session){
         loginService.login(loginReq, session);
+
         return ResponseEntity.ok().build();
     }
 
-    @Operation(description = "로그인")
-    @PostMapping("/api/login1")
-    public ResponseEntity<Void> login1(@Parameter @RequestBody LoginReq loginReq){
-        //loginService.login();
-        return ResponseEntity.ok().build();
-    }
+//    @Operation(description = "로그인")
+//    @PostMapping("/api/login1")
+//    public ResponseEntity<Void> login1(@Parameter @RequestBody LoginReq loginReq){
+//        //loginService.login();
+//        return ResponseEntity.ok().build();
+//    }
 
     @Operation(description = "로그아웃")
     @PostMapping("/api/logout")
