@@ -56,6 +56,11 @@ public class LoginService {
         }
     }
 
+
+    public void login1(LoginReq loginReq){
+
+    }
+
     @Transactional
     public void logout(HttpSession session){
         session.removeAttribute(LOGIN_SESSION_KEY);

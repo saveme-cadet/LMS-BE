@@ -19,7 +19,6 @@ public class User extends BaseEntity{
     private String name;
     private String email;
     private String password;
-    private LocalDate bithday;
     private Long attendStatus;
 
    // @OneToMany(mappedBy = "cadet",cascade = {CascadeType.REMOVE}, orphanRemoval = true)
@@ -40,7 +39,6 @@ public class User extends BaseEntity{
         this.name = name;
         this.email = email;
         this.password = password;
-        this.bithday = bithday;
         this.attendStatus = 1L;
     }
 

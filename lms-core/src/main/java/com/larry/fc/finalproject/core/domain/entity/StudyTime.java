@@ -27,6 +27,7 @@ public class StudyTime extends BaseEntity{
     private LocalDate day;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
+    private Long ch;
 
     public static StudyTime studyTimeJoin(UserInfo writer, Long aojiTimeIndex){
         return StudyTime.builder()
@@ -35,6 +36,7 @@ public class StudyTime extends BaseEntity{
                 .day(LocalDate.now())
                 .startAt(LocalDateTime.now())
                 .endAt(null)
+                .ch(0L)
                 .build();
     }
 }
