@@ -47,6 +47,12 @@ public class AojiTimeController {
     public List<AojiResponseDto> readAoji(@PathVariable(name = "userId") Integer userId){
         return aojiQuertService.getAojiTime(userId.longValue());
     }
+//
+//    @Operation(description = "aoji status 보기")
+//    @GetMapping("/read2/{userId}")
+//    public String readAoji2(@PathVariable(name = "userId") Integer userId){
+//        return aojiQuertService.getAojiTime2(userId.longValue());
+//    }
 
     @Operation(description = "aoji 하는 사람")
     @GetMapping("/studyuser")

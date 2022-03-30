@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.service.aojiservice;
 
 import com.larry.fc.finalproject.api.dto.aojidto.AojiDto;
+import com.larry.fc.finalproject.api.dto.aojidto.AojiResponseDto;
 import com.larry.fc.finalproject.api.util.AojiDtoConverter;
 import com.larry.fc.finalproject.api.util.UserDtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
@@ -12,12 +13,15 @@ import com.larry.fc.finalproject.core.domain.entity.repository.UserInfoRepositor
 import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -33,22 +37,21 @@ public class AojiService {
     public void createAojiTime(Long userId){
         Long id = studyTimeRepository.countAllByUser_Id(userId);
         final StudyTime studyTime = StudyTime.studyTimeJoin(
-                    userService.findByUserInfoId(userId), id + 1);
+                    userService.findByUserId(userId), id + 1);
         studyTimeRepository.save(studyTime);
     }
 
-    public void updateAojiTime(Long userId){
-        // final Optional<StudyTime> studyTime = studyTimeRepository.findAllByUser_IdAndCh(userId, 0L);
-        StudyTime studyTime2 = studyTimeRepository.findAllByUser_IdAndCh(userId, 0L);
-        studyTime2.setEndAt(LocalDateTime.now());
-        studyTime2.setCh(1L);
-        studyTimeRepository.save(studyTime2);
-//        studyTime.ifPresent(studyTime1 -> {
-//            studyTime1.setEndAt(LocalDateTime.now());
-//            studyTime1.setCh(1L);
-//            studyTimeRepository.save(studyTime1);
-//        });
-        calcAttendScore(userId);
+    public void updateAojiTime(Long userId) {
+        StudyTime studyTime1;
+        try {
+            StudyTime studyTime = studyTimeRepository.findByUser_IdAndCh(userId, 0L);
+            studyTime.setEndAt(LocalDateTime.now());
+            studyTime.setCh(1L);
+            studyTimeRepository.save(studyTime);
+            calcAttendScore(userId);
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     public void updateAllAojiTime(Long userId, AojiDto aojiDto){

@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.api.dto.aojidto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class AojiResponseDto {
     @Schema(description = "시작 시간", example = "2022-03-12 02:38:10.268987")
     private final LocalDateTime startAt;
     @Schema(description = "끝나는 시간", example = "2022-03-12 02:38:33.488874")
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     private final LocalDateTime endAt;
     @Schema(description = "시간 차", example = "03:00:00")
     private final String recodeTime;
