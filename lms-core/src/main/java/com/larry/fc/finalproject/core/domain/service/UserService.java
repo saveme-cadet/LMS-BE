@@ -43,6 +43,7 @@ public class UserService {
     @Transactional
     public Optional<User> findPwMatchUser(String email, String password) {
         return userRepository.findByEmail(email)
+        //        .map(user -> user.getPassword().equals(password) ? user : null);
                 .map(user -> user.isMatch(encryptor, password) ? user : null);
     }
 
