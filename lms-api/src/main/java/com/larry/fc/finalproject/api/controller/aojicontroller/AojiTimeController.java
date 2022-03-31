@@ -57,7 +57,7 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 하는 사람")
     @GetMapping("/studyuser")
-    public List<AojiUserDto> readAojiDoingUser(@PathVariable(name = "userId") Integer userId){
+    public List<AojiUserDto> readAojiDoingUser(){
         return aojiQuertService.getAojiUser();
     }
 
