@@ -10,7 +10,7 @@ import java.util.List;
 @Profile("!dev")
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Override
+    //@Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers){
         resolvers.add(new AuthUserResolver());
     }

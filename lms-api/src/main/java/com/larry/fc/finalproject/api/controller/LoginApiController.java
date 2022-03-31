@@ -3,11 +3,9 @@ package com.larry.fc.finalproject.api.controller;
 import com.larry.fc.finalproject.api.dto.AuthUser;
 import com.larry.fc.finalproject.api.dto.LoginReq;
 import com.larry.fc.finalproject.api.dto.SignUpReq;
-import com.larry.fc.finalproject.api.dto.userinfodto.UserInfoDto;
 import com.larry.fc.finalproject.api.service.LoginService;
 import com.larry.fc.finalproject.api.service.UserStatisticalChartService;
 import com.larry.fc.finalproject.api.service.userservice.AllUserTableService;
-import com.larry.fc.finalproject.api.service.userservice.UserInfoQueryService;
 import com.larry.fc.finalproject.api.service.userservice.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,10 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import java.util.List;
-
-import static com.larry.fc.finalproject.api.service.LoginService.LOGIN_SESSION_KEY;
-
 @Tag(name = "로그인 api")
 @RequiredArgsConstructor
 @RestController
@@ -33,7 +27,6 @@ public class LoginApiController {
     private final UserInfoService userInfoService;
     private final UserStatisticalChartService userStatisticalChartService;
     private final AllUserTableService allUserTableService;
-    private final UserInfoQueryService userInfoQueryService;
 
     @Operation(description = "회원 가입")
     @PostMapping("/api/sign-up")
@@ -48,10 +41,9 @@ public class LoginApiController {
 
     @Operation(description = "로그인")
     @PostMapping("/api/login")
-    public List<UserInfoDto> login(@RequestBody LoginReq loginReq, HttpSession session){
+    public ResponseEntity<Void> login(@RequestBody LoginReq loginReq, HttpSession session){
         loginService.login(loginReq, session);
-        final Long userId = (Long)session.getAttribute(LOGIN_SESSION_KEY);
-        return userInfoQueryService.getUserInfo(userId);
+        return ResponseEntity.ok().build();
     }
 
 //    @Operation(description = "로그인")
