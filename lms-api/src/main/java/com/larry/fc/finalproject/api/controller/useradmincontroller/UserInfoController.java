@@ -2,6 +2,7 @@ package com.larry.fc.finalproject.api.controller.useradmincontroller;
 
 import com.larry.fc.finalproject.api.dto.*;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
+import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.*;
 import com.larry.fc.finalproject.api.service.userservice.UserInfoQueryService;
 import com.larry.fc.finalproject.api.service.userservice.UserInfoService;
@@ -92,6 +93,13 @@ public class UserInfoController {
     @PutMapping("/attendstatus")
     public ResponseEntity<Void> updateUserAttendStatus(@RequestBody UserAttendenceDto userAttendenceDto){
         userInfoService.updateAttendStatus(userAttendenceDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(description = "유저 팀 역할 즉시 수정")
+    @PutMapping("/teamandrole")
+    public ResponseEntity<Void> updateUserTeamAndRole(@RequestBody UserTeamAndRoleDto userTeamAndRoleDto){
+        userInfoService.updateTeamAndRole(userTeamAndRoleDto);
         return ResponseEntity.ok().build();
     }
 

@@ -48,7 +48,7 @@ public class LoginService {
         if (userId != null){
             return ;
         }
-        final Optional<User> user = userService.findPwMatchUser(loginReq.getEmail(), loginReq.getPassword());
+        final Optional<User> user = userService.findPwMatchUser(loginReq.getName(), loginReq.getPassword());
         if (user.isPresent()){
             session.setAttribute(LOGIN_SESSION_KEY, user.get().getId());
         } else {

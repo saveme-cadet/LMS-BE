@@ -2,6 +2,7 @@ package com.larry.fc.finalproject.api.service.userservice;
 
 import com.larry.fc.finalproject.api.dto.*;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
+import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.*;
 import com.larry.fc.finalproject.api.util.DtoConverter;
 import com.larry.fc.finalproject.api.util.UserDtoConverter;
@@ -146,6 +147,27 @@ public class UserInfoService {
                 log.error("error deleting entity Todo",userAttendenceDto.getUserId(), e);
                 throw new RuntimeException("error deleting entity daytable " + userAttendenceDto.getUserId());
             }
+        }
+    }
+
+    public void updateTeamAndRole(UserTeamAndRoleDto userTeamAndRoleDto){
+        UserInfo userInfo = DtoConverter.fromTeamAndRole(userTeamAndRoleDto);
+        final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userTeamAndRoleDto.getUserId());
+        original.ifPresent(userInfo1 -> {
+            userInfo1.setRole(userInfo.getRole());
+            userInfo1.setTeam(userInfo.getTeam());
+            userInfoRepository.save(userInfo1);
+        });
+
+        for (int i = 0; i < LocalDate.now().lengthOfMonth(); i++) {
+            LocalDate day = LocalDate.now().withDayOfMonth(1).plusDays(i);
+            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(userTeamAndRoleDto.getUserId(), day);
+            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(LocalDate.now().getMonth()))
+                    .ifPresent(allUser -> {
+                        allUser.setRole(userTeamAndRoleDto.getRole());
+                        allUser.setTeam(userTeamAndRoleDto.getTeam());
+                        dayTableRepository.save(allUser);
+                    });
         }
     }
 
