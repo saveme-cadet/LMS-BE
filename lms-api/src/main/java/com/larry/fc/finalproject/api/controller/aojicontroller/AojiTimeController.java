@@ -24,29 +24,29 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 공부 시작")
     @PostMapping("/create/{userId}")
-    public ResponseEntity<Void> createAoji(AuthUser authUser){
-        aojiService.createAojiTime(authUser.getId());
+    public ResponseEntity<Void> createAoji(@PathVariable(name = "userId") Integer userId) {//AuthUser authUser){
+        aojiService.createAojiTime(userId.longValue());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "aoji 공부 끝")
     @PutMapping("/update/{userId}")
-    public ResponseEntity<Void> updateAoji(AuthUser authUser){
-        aojiService.updateAojiTime(authUser.getId());
+    public ResponseEntity<Void> updateAoji( @PathVariable(name = "userId") Integer userId) {//AuthUser authUser){
+        aojiService.updateAojiTime(userId.longValue());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "aoji 공부 시간 수정")
     @PutMapping("/aojitime/{userId}")
-    public ResponseEntity<Void> updateAojiTime(AuthUser authUser, @RequestBody AojiDto aojiDto){
-        aojiService.updateAllAojiTime(authUser.getId(), aojiDto);
+    public ResponseEntity<Void> updateAojiTime(@PathVariable(name = "userId") Integer userId, @RequestBody AojiDto aojiDto){
+        aojiService.updateAllAojiTime(userId.longValue(), aojiDto);
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "aoji 보기")
     @GetMapping("/read/{userId}")
-    public List<AojiResponseDto> readAoji(AuthUser authUser){
-        return aojiQuertService.getAojiTime(authUser.getId());
+    public List<AojiResponseDto> readAoji(@PathVariable(name = "userId") Integer userId){
+        return aojiQuertService.getAojiTime(userId.longValue());
     }
 //
 //    @Operation(description = "aoji status 보기")
@@ -57,15 +57,15 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 하는 사람")
     @GetMapping("/studyuser")
-    public List<AojiUserDto> readAojiDoingUser(AuthUser authUser){
+    public List<AojiUserDto> readAojiDoingUser(@PathVariable(name = "userId") Integer userId){
         return aojiQuertService.getAojiUser();
     }
 
     @Operation(description = "aoji 삭제")
     @DeleteMapping("/delete/{aojiIndex}")
-    public ResponseEntity<Void> deleteAoji(AuthUser authUser, @PathVariable(name = "aojiIndex") Integer aojiIndex){
+    public ResponseEntity<Void> deleteAoji(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "aojiIndex") Integer aojiIndex){
         try{
-            aojiService.deleteAojiTime(authUser.getId(), aojiIndex.longValue());
+            aojiService.deleteAojiTime(userId.longValue(), aojiIndex.longValue());
             return ResponseEntity.ok().build();
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
