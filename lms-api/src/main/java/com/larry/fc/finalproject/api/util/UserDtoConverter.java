@@ -3,6 +3,7 @@ package com.larry.fc.finalproject.api.util;
 import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserDto;
+import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserRoleChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserTeamChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserVacationChangeDto;
@@ -65,6 +66,7 @@ public abstract class UserDtoConverter {
                 .attendStatus(userAttendenceDto.getAttendStatus())
                 .build();
     }
+
 
     public static UserInfo fromUserInfoInAttendScore(Double attendScore){
         return UserInfo.builder()

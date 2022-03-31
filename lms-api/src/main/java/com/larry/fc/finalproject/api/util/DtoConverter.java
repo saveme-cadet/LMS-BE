@@ -8,6 +8,7 @@ import com.larry.fc.finalproject.api.dto.tabledto.TableCheckInDto;
 import com.larry.fc.finalproject.api.dto.tabledto.TableCheckOutDto;
 import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
+import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.*;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
@@ -149,6 +150,13 @@ public abstract class DtoConverter {
     public static UserInfo fromAttendStatus(UserAttendenceDto userAttendenceDto){
         return UserInfo.builder()
                 .attendeStatus(userAttendenceDto.getAttendStatus())
+                .build();
+    }
+
+    public static UserInfo fromTeamAndRole(UserTeamAndRoleDto userTeamAndRoleDto){
+        return UserInfo.builder()
+                .role(userTeamAndRoleDto.getRole())
+                .team(userTeamAndRoleDto.getTeam())
                 .build();
     }
 
