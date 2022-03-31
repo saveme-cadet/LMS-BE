@@ -50,7 +50,7 @@ public class AllUserShowController {
     @Operation(description = "오늘 학생들 정보 불러오기")
     @GetMapping("/day")
     public List<AllTableDto> getUserTableByDay(
-            @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+            @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, AuthUser authUser){
         return allUserTableQueryService.getDayTableByDay(date == null ? LocalDate.now() : date);
     }
 

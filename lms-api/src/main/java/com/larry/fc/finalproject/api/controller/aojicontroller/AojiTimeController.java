@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.api.controller.aojicontroller;
 
+import com.larry.fc.finalproject.api.dto.AuthUser;
 import com.larry.fc.finalproject.api.dto.aojidto.AojiDto;
 import com.larry.fc.finalproject.api.dto.aojidto.AojiResponseDto;
 import com.larry.fc.finalproject.api.dto.aojidto.AojiUserDto;
@@ -23,29 +24,29 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 공부 시작")
     @PostMapping("/create/{userId}")
-    public ResponseEntity<Void> createAoji(@PathVariable(name = "userId") Integer userId){
-        aojiService.createAojiTime(userId.longValue());
+    public ResponseEntity<Void> createAoji(AuthUser authUser){
+        aojiService.createAojiTime(authUser.getId());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "aoji 공부 끝")
     @PutMapping("/update/{userId}")
-    public ResponseEntity<Void> updateAoji(@PathVariable(name = "userId") Integer userId){
-        aojiService.updateAojiTime(userId.longValue());
+    public ResponseEntity<Void> updateAoji(AuthUser authUser){
+        aojiService.updateAojiTime(authUser.getId());
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "aoji 공부 시간 수정")
     @PutMapping("/aojitime/{userId}")
-    public ResponseEntity<Void> updateAojiTime(@PathVariable(name = "userId") Integer userId, @RequestBody AojiDto aojiDto){
-        aojiService.updateAllAojiTime(userId.longValue(), aojiDto);
+    public ResponseEntity<Void> updateAojiTime(AuthUser authUser, @RequestBody AojiDto aojiDto){
+        aojiService.updateAllAojiTime(authUser.getId(), aojiDto);
         return ResponseEntity.ok().build();
     }
 
     @Operation(description = "aoji 보기")
     @GetMapping("/read/{userId}")
-    public List<AojiResponseDto> readAoji(@PathVariable(name = "userId") Integer userId){
-        return aojiQuertService.getAojiTime(userId.longValue());
+    public List<AojiResponseDto> readAoji(AuthUser authUser){
+        return aojiQuertService.getAojiTime(authUser.getId());
     }
 //
 //    @Operation(description = "aoji status 보기")
@@ -56,15 +57,15 @@ public class AojiTimeController {
 
     @Operation(description = "aoji 하는 사람")
     @GetMapping("/studyuser")
-    public List<AojiUserDto> readAojiDoingUser(){
+    public List<AojiUserDto> readAojiDoingUser(AuthUser authUser){
         return aojiQuertService.getAojiUser();
     }
 
     @Operation(description = "aoji 삭제")
-    @DeleteMapping("/delete/{userId}/{aojiIndex}")
-    public ResponseEntity<Void> deleteAoji(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "aojiIndex") Integer aojiIndex){
+    @DeleteMapping("/delete/{aojiIndex}")
+    public ResponseEntity<Void> deleteAoji(AuthUser authUser, @PathVariable(name = "aojiIndex") Integer aojiIndex){
         try{
-            aojiService.deleteAojiTime(userId.longValue(), aojiIndex.longValue());
+            aojiService.deleteAojiTime(authUser.getId(), aojiIndex.longValue());
             return ResponseEntity.ok().build();
         } catch (Exception e){
             return ResponseEntity.badRequest().build();

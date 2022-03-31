@@ -52,4 +52,12 @@ public class UserInfoQueryService {
         final List<UserInfoDto> response = userInfo.collect(Collectors.toList());
         return response;
     }
+
+    public List<UserInfoDto> getUserInfo(Long userId) {
+        final Stream<UserInfoDto> userInfo = userInfoRepository.findAllByWriter_Id(userId) // wirter 로 수정
+                .stream()
+                .map(userInfo1 -> DtoConverter.fromUserInfo(userInfo1));
+        final List<UserInfoDto> response = userInfo.collect(Collectors.toList());
+        return response;
+    }
 }
