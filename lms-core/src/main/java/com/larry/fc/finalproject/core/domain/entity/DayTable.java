@@ -37,8 +37,8 @@ public class DayTable extends BaseEntity{
                 .cadet(writer)
                 .tableDay(LocalDate.now())
                 .attendeStatus(writer.getAttendStatus())
-                .role("기 본")
-                .team("흰 색")
+                .role("카뎃")
+                .team("white")
                 .attendScore(0.0)
                 .participateScore(0.0)
                 .build();
