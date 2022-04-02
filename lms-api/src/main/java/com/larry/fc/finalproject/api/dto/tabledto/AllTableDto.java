@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -34,4 +35,12 @@ public class AllTableDto {
     private final double vacation;
     @Schema(description = "level" , example = "구해줘 카뎃 참여한 총 달")
     private final int level;
+    @Schema(description = "일간 목표 달성률" , example = "70.0")
+    @Min(0)
+    @Max(100)
+    private double dayObjectiveAchievementRate;
+    @Schema(description = "월간 목표 달성률" , example = "70.0")
+    @Min(0)
+    @Max(100)
+    private double monthObjectiveAchievementRate;
 }

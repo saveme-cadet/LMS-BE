@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class RequestTodoDto {
-    @Schema(name = "todoId" , example = "1")
+
     @NotNull
     @Min(1)
     private final Long writerId;

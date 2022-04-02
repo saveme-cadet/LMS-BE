@@ -7,6 +7,7 @@ import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserRoleChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserTeamChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserVacationChangeDto;
+import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.AllObjectDto;
 import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.AttendDto;
 import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.ObjectDto;
 import com.larry.fc.finalproject.core.domain.entity.StatisticalChart;
@@ -32,6 +33,13 @@ public abstract class UserDtoConverter {
     public static ObjectDto fromObject(StatisticalChart statisticalChart){
         return ObjectDto.builder()
                 .userId(statisticalChart.getWriter().getId())
+                .dayObjectiveAchievementRate(statisticalChart.getDayObjectiveAchievementRate())
+                .monthObjectiveAchievementRate(statisticalChart.getMonthObjectiveAchievementRate())
+                .build();
+    }
+
+    public static AllObjectDto fromAllObject(StatisticalChart statisticalChart){
+        return AllObjectDto.builder()
                 .dayObjectiveAchievementRate(statisticalChart.getDayObjectiveAchievementRate())
                 .monthObjectiveAchievementRate(statisticalChart.getMonthObjectiveAchievementRate())
                 .build();
