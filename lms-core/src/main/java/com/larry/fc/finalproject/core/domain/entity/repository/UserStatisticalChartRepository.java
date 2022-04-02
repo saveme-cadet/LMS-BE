@@ -11,4 +11,5 @@ public interface UserStatisticalChartRepository extends JpaRepository<Statistica
     List<StatisticalChart> deleteStatisticalChartByWriter_Id(Long id);
 
     Optional<StatisticalChart> findAllByWriter_Id(Long id);
+    StatisticalChart findStatisticalChartByWriter_Id(Long id);
 }

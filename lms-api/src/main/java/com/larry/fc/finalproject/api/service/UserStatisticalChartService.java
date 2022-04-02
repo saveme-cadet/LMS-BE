@@ -62,9 +62,13 @@ public class UserStatisticalChartService {
                 .filter(w -> w.getTodoDay().equals(date))
                 .filter(i -> i.isTitleCheck())
                 .count();
+
         Double result;
 
-        result = (double) facount / (double) count * 100;
+        if (count == 0)
+            result = 0.0;
+        else
+            result = (double) facount / (double) count * 100;
 
         final Optional<StatisticalChart> original = userStatisticalChartRepository.findAllByWriter_Id(userId);
         original.ifPresent(allUser -> {
@@ -84,7 +88,10 @@ public class UserStatisticalChartService {
                 .count();
         Double result;
 
-        result = (double) facount / (double) count * 100;
+        if (count == 0)
+            result = 0.0;
+        else
+            result = (double) facount / (double) count * 100;
 
         final Optional<StatisticalChart> original = userStatisticalChartRepository.findAllByWriter_Id(userId);
         original.ifPresent(allUser -> {

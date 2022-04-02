@@ -10,6 +10,7 @@ import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.*;
+import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.AllObjectDto;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
@@ -32,7 +33,7 @@ public abstract class DtoConverter {
                 .build();
     }
 
-    public static AllTableDto fromUserInfoDay(AllUserTableDto allUserTableDto, AllUserInfoDto allUserInfoDto){
+    public static AllTableDto fromUserInfoDay(AllUserTableDto allUserTableDto, AllUserInfoDto allUserInfoDto, AllObjectDto allObjectDto){
         return AllTableDto.builder()
                 .writer_id(allUserInfoDto.getWriter_id())
                 .userName(allUserInfoDto.getUserName())
@@ -45,6 +46,8 @@ public abstract class DtoConverter {
                 .checkIn(allUserTableDto.getCheckIn())
                 .checkOut(allUserTableDto.getCheckOut())
                 .tableDay(allUserTableDto.getTableDay())
+                .dayObjectiveAchievementRate(allObjectDto.getDayObjectiveAchievementRate())
+                .monthObjectiveAchievementRate(allObjectDto.getMonthObjectiveAchievementRate())
                 .build();
     }
 

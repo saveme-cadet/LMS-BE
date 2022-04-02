@@ -178,15 +178,34 @@ public class UserInfoService {
             userInfo1.setTeam(userInfo.getTeam());
             userInfoRepository.save(userInfo1);
         });
+
+        for (int i = 0; i < LocalDate.now().lengthOfMonth(); i++) {
+            LocalDate day = LocalDate.now().withDayOfMonth(1).plusDays(i);
+            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(userTeamChangeDto.getUserId(), day);
+            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(LocalDate.now().getMonth()))
+                    .ifPresent(allUser -> {
+                        allUser.setTeam(userTeamChangeDto.getTeam());
+                        dayTableRepository.save(allUser);
+                    });
+        }
     }
 
-    public void updateUserRole(UserRoleChangeDto userRoleChangeDto){
+    public void updateUserRole(UserRoleChangeDto userRoleChangeDto) {
         UserInfo userInfo = UserDtoConverter.fromUserRole(userRoleChangeDto);
         final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(userRoleChangeDto.getUserId());
         original.ifPresent(userInfo1 -> {
             userInfo1.setRole(userInfo.getRole());
             userInfoRepository.save(userInfo1);
         });
+        for (int i = 0; i < LocalDate.now().lengthOfMonth(); i++) {
+            LocalDate day = LocalDate.now().withDayOfMonth(1).plusDays(i);
+            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(userRoleChangeDto.getUserId(), day);
+            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(LocalDate.now().getMonth()))
+                    .ifPresent(allUser -> {
+                        allUser.setRole(userRoleChangeDto.getRole());
+                        dayTableRepository.save(allUser);
+                    });
+        }
     }
 
     public void updateUserVacationPlus(UserVacationChangeDto userVacationChangeDto){
