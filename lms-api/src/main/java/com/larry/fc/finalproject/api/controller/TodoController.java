@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.api.controller;
 
+import com.larry.fc.finalproject.api.dto.tododto.AllUserTodoDto;
 import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.service.todoservice.TodoQueryService;
 import com.larry.fc.finalproject.api.service.todoservice.TodoService;
@@ -36,6 +37,12 @@ public class TodoController {
     public List<TodoDto> getUserInfoByDay(@PathVariable(name = "userId") Integer userId, @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         return todoQueryService.getTodoByDay(userId.longValue(),
                 date == null ? LocalDate.now() : date);
+    }
+
+    @Operation(description = "오늘 할 일 모든 유저 가져오기")
+    @GetMapping("/day")
+    public List<AllUserTodoDto> getUserTodoAllByDay(@Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY) @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return todoQueryService.getTodoAllByDay(date == null ? LocalDate.now() : date);
     }
 
     @PutMapping("/todo")
