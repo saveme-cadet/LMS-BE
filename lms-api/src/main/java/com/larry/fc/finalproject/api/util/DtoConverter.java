@@ -6,6 +6,7 @@ import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.dto.tabledto.AllUserTableDto;
 import com.larry.fc.finalproject.api.dto.tabledto.TableCheckInDto;
 import com.larry.fc.finalproject.api.dto.tabledto.TableCheckOutDto;
+import com.larry.fc.finalproject.api.dto.tododto.AllUserTodoDto;
 import com.larry.fc.finalproject.api.dto.tododto.TodoDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
@@ -15,6 +16,8 @@ import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
+
+import java.util.List;
 
 public abstract class DtoConverter {
     public static UserInfoDto fromUserInfo(UserInfo userInfo){
@@ -230,6 +233,14 @@ public abstract class DtoConverter {
         return AojiUserDto.builder()
                 .name(userInfo.getUserName())
                 .team(userInfo.getTeam())
+                .build();
+    }
+
+    public static AllUserTodoDto allUserTodoDtoFrom(UserInfo userInfo, List<TodoDto> todo){
+        return AllUserTodoDto.builder()
+                .writer_id(userInfo.getWriter().getId())
+                .userName(userInfo.getUserName())
+                .todoDtoList(todo)
                 .build();
     }
 }
