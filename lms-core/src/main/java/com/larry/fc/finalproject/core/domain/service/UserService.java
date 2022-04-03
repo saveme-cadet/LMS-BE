@@ -27,7 +27,7 @@ public class UserService {
 
     @Transactional
     public User create(UserCreateReq userCreateReq){
-        userRepository.findByEmail(userCreateReq.getEmail())
+        userRepository.findByName(userCreateReq.getName())
                 .ifPresent(u -> {
                     throw new RuntimeException("user already exit!");
                 });
