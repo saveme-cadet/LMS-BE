@@ -62,7 +62,7 @@ public class AojiTimeController {
     }
 
     @Operation(description = "aoji 삭제")
-    @DeleteMapping("/delete/{aojiIndex}")
+    @DeleteMapping("/delete/{userId}/{aojiIndex}")
     public ResponseEntity<Void> deleteAoji(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "aojiIndex") Integer aojiIndex){
         try{
             aojiService.deleteAojiTime(userId.longValue(), aojiIndex.longValue());
