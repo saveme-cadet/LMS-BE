@@ -1,9 +1,9 @@
 spring:
   profiles:
     default: dev
-    thymeleaf:
-      cache: false
-      prefix: file:lms-api/src/main/resources/templates/
+#    thymeleaf:
+#      cache: false
+#      prefix: file:lms-api/src/main/resources/templates/
     web:
       resources:
         cache:
