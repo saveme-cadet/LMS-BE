@@ -77,7 +77,7 @@ public class AojiService {
         Long id = studyTimeRepository.countAllByUser_Id(userId);
         for (Long i = 1L; i <= id; i++){
             StudyTime studyTime = studyTimeRepository.findStudyTimeByAojiTimeIndexAndUser_Id(i, userId);
-            if (studyTime.getEndAt() != null){
+            if (ChronoUnit.SECONDS.between(studyTime.getStartAt() , studyTime.getEndAt() ) != 0){
                 Long time = Duration.between(studyTime.getStartAt(), studyTime.getEndAt()).getSeconds();
                 Double timeDouble = time.doubleValue();
                 Double aojiScore = timeDouble  / 28800;
@@ -116,7 +116,7 @@ public class AojiService {
             Long []idList = new Long[list.length];
             for (int i = 0; i < list.length; i++) {
                 idList[i] = studyTimeRepository.countAllByUser_Id(list[i]);
-                if (studyTimeRepository.findStudyTimeByAojiTimeIndexAndUser_Id(idList[i], list[i]).getEndAt() == null){
+                if (ChronoUnit.SECONDS.between(studyTimeRepository.findStudyTimeByAojiTimeIndexAndUser_Id(idList[i], list[i]).getStartAt() , studyTimeRepository.findStudyTimeByAojiTimeIndexAndUser_Id(idList[i], list[i]).getEndAt() ) == 0) {
                     final Optional<StudyTime> studyTime = studyTimeRepository.findAllByUser_IdAndAojiTimeIndex(list[i], idList[i]);
                     studyTime.ifPresent(studyTime1 -> {
                         studyTime1.setEndAt(LocalDateTime.now());
