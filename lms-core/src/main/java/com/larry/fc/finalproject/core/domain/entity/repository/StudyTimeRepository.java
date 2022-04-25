@@ -22,6 +22,7 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     //@Query("select m from StudyTime m join fetch m.user")
     //@Query("select m from StudyTime m where m.user.id = :userId and m.ch = : ch" )
     StudyTime findByUser_IdAndCh(Long userId, Long ch);
+    Optional<StudyTime> findAllStudyTimeByUser_IdAndCh(Long userId, Long ch);
     //List<StudyTime> findDistinctByChAndUserId(Long ch, Long userId);
     StudyTime findStudyTimeByAojiTimeIndexAndUser_Id(Long index, Long id);
     StudyTime findAllByUser_Id(Long id);

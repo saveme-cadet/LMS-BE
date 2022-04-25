@@ -42,13 +42,17 @@ public class AojiService {
     }
 
     public void updateAojiTime(Long userId) {
-        StudyTime studyTime1;
+
         try {
-            StudyTime studyTime = studyTimeRepository.findByUser_IdAndCh(userId, 0L);
-            studyTime.setEndAt(LocalDateTime.now());
-            studyTime.setCh(1L);
-            studyTimeRepository.save(studyTime);
-            calcAttendScore(userId);
+            final Optional<StudyTime> studyTime = studyTimeRepository.findAllStudyTimeByUser_IdAndCh(userId, 0L);
+            studyTime.ifPresent(studyTime1 ->{
+                studyTime1.setEndAt(LocalDateTime.now());
+                calcAttendScore(userId);
+                studyTime1.setCh(1L);
+                studyTimeRepository.save(studyTime1);
+            });
+
+
         } catch (Exception e){
             System.out.println(e);
         }
@@ -74,33 +78,30 @@ public class AojiService {
     }
 
     public void calcAttendScore(Long userId){
-        Long id = studyTimeRepository.countAllByUser_Id(userId);
-        for (Long i = 1L; i <= id; i++){
-            StudyTime studyTime = studyTimeRepository.findStudyTimeByAojiTimeIndexAndUser_Id(i, userId);
-            if (ChronoUnit.SECONDS.between(studyTime.getStartAt() , studyTime.getEndAt() ) != 0){
-                Long time = Duration.between(studyTime.getStartAt(), studyTime.getEndAt()).getSeconds();
-                Double timeDouble = time.doubleValue();
-                Double aojiScore = timeDouble  / 28800;
-                UserInfo changeUserInfo = UserDtoConverter.fromUserInfoInAttendScore(Math.round(aojiScore*100)/100.0);
-                final Optional<UserInfo> userInfo = userInfoRepository.findByWriter_Id(userId);
-                userInfo.ifPresent(userInfo1 -> {
-                    userInfo1.setAttendScore(userInfo1.getAttendScore() - changeUserInfo.getAttendScore());
-                    userInfoRepository.save(userInfo1);
-                });
-            }
+        StudyTime studyTime = studyTimeRepository.findByUser_IdAndCh(userId, 0L);
+        if (ChronoUnit.SECONDS.between(studyTime.getStartAt() , LocalDateTime.now() ) != 0) {
+            Long time = Duration.between(studyTime.getStartAt(), LocalDateTime.now()).getSeconds();
+            Double timeDouble = time.doubleValue();
+            Double aojiScore = timeDouble  / 28800;
+            UserInfo changeUserInfo = UserDtoConverter.fromUserInfoInAttendScore(Math.round(aojiScore*100)/100.0);
+            final Optional<UserInfo> userInfo = userInfoRepository.findByWriter_Id(userId);
+            userInfo.ifPresent(userInfo1 -> {
+                userInfo1.setAttendScore(userInfo1.getAttendScore() - changeUserInfo.getAttendScore());
+                userInfoRepository.save(userInfo1);
+            });
         }
 
-        Double result = userInfoRepository.findByWriter_IdAndAttendeStatus(userId, 1L).getAttendScore();
-        LocalDate nowDay = studyTimeRepository.findAllByUser_Id(userId).getDay();
-        for (int i = 0; i < nowDay.lengthOfMonth(); i++) {
-            LocalDate day = nowDay.withDayOfMonth(1).plusDays(i);
-            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(userId, day);
-            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(nowDay.getMonth()))
-                    .ifPresent(allUser -> {
-                        allUser.setAttendScore(result);
-                        dayTableRepository.save(allUser);
-                    });
-        }
+//        Double result = userInfoRepository.findByWriter_IdAndAttendeStatus(userId, 1L).getAttendScore();
+//        LocalDate nowDay = studyTimeRepository.findAllByUser_Id(userId).getDay();
+//        for (int i = 0; i < nowDay.lengthOfMonth(); i++) {
+//            LocalDate day = nowDay.withDayOfMonth(1).plusDays(i);
+//            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(userId, day);
+//            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(nowDay.getMonth()))
+//                    .ifPresent(allUser -> {
+//                        allUser.setAttendScore(result);
+//                        dayTableRepository.save(allUser);
+//                    });
+ //       }
     }
 
     public void deleteAojiTimeAtDay(){
