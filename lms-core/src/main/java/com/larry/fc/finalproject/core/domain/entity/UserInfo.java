@@ -29,6 +29,7 @@ public class UserInfo extends BaseEntity{
     private String role;            // 주 마다
     private double attendScore;     // 매일 자동 갱신
     private String team;// 주 마다
+    private double aojitimescore;
     @Min(0)
     private double vacation;         // 가진 휴가 일 수
 

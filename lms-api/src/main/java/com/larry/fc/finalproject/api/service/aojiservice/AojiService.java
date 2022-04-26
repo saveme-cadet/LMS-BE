@@ -86,7 +86,7 @@ public class AojiService {
             UserInfo changeUserInfo = UserDtoConverter.fromUserInfoInAttendScore(Math.round(aojiScore*100)/100.0);
             final Optional<UserInfo> userInfo = userInfoRepository.findByWriter_Id(userId);
             userInfo.ifPresent(userInfo1 -> {
-                userInfo1.setAttendScore(userInfo1.getAttendScore() - changeUserInfo.getAttendScore());
+                userInfo1.setAojitimescore(userInfo1.getAojitimescore() + changeUserInfo.getAojitimescore());
                 userInfoRepository.save(userInfo1);
             });
         }
