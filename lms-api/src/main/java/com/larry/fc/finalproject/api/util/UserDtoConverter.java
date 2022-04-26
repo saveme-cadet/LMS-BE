@@ -78,7 +78,7 @@ public abstract class UserDtoConverter {
 
     public static UserInfo fromUserInfoInAttendScore(Double attendScore){
         return UserInfo.builder()
-                .attendScore(attendScore)
+                .aojitimescore(attendScore)
                 .build();
     }
 }
