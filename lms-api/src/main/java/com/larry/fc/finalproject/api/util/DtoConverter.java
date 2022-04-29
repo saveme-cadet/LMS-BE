@@ -51,6 +51,7 @@ public abstract class DtoConverter {
                 .tableDay(allUserTableDto.getTableDay())
                 .dayObjectiveAchievementRate(allObjectDto.getDayObjectiveAchievementRate())
                 .monthObjectiveAchievementRate(allObjectDto.getMonthObjectiveAchievementRate())
+                .aojiTime(allUserInfoDto.getAojiscore())
                 .build();
     }
 
@@ -73,6 +74,7 @@ public abstract class DtoConverter {
                 .userName(userInfo.getUserName())
                 .vacation(userInfo.getVacation())
                 .level(userInfo.getLevel())
+                .aojiscore(userInfo.getAojitimescore())
                 .build();
     }
 
