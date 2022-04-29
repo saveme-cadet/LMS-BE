@@ -132,6 +132,13 @@ public class UserInfoController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation (description = "aoji 점수 매달 마지막 attendscore 와 합산")
+    @PutMapping("/MonthScoreOfAllUserAttendScore")
+    public ResponseEntity<Void> MonthScoreOfAllUserAttendScore(){
+        userInfoService.updateMonthOfUserAttendScore();
+        return ResponseEntity.ok().build();
+    }
+
 //    @DeleteMapping("/delete")
 //    public ResponseEntity<Void> deleteUserInfo(@Parameter(name = "userId", description = "user 의 id", in = ParameterIn.QUERY) AuthUser authUser){
 //        try{

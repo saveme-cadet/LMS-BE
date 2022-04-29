@@ -251,4 +251,20 @@ public class UserInfoService {
             throw new RuntimeException("error deleting entity Todo " + authUser.getId());
         }
     }
+
+    public void updateMonthOfUserAttendScore(){
+        Stream<Long> idList = userInfoRepository.findAllBy()
+                .stream()
+                .filter(x -> x.getAttendeStatus().equals(1L))
+                .map(x -> x.getWriter_Id());
+
+        Long[] list = idList.toArray(Long[]::new);
+        for (int i = 0; i < list.length; i++) {
+            final Optional<UserInfo> original = userInfoRepository.findByWriter_Id(list[i]);
+            original.ifPresent(userInfo1 -> {
+                userInfo1.setAttendScore(userInfo1.getAttendScore() - userInfo1.getAojitimescore());
+                userInfoRepository.save(userInfo1);
+            });
+        }
+    }
 }
