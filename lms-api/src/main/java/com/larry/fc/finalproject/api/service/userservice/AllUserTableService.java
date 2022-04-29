@@ -170,18 +170,18 @@ public class AllUserTableService {
                 userInfoRepository.save(userInfo);
             });
 
-
-            for (int i = 0; i < tableCheckInDto.getTableDay().lengthOfMonth(); i++) {
-                LocalDate day = tableCheckInDto.getTableDay().withDayOfMonth(1).plusDays(i);
-                System.out.println(day);
-                final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckInDto.getUserId(), day);
-                original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
-                        .ifPresent(allUser -> {
-                            allUser.setAttendScore(result);
-                            allUser.setParticipateScore(participateResult);
-                            dayTableRepository.save(allUser);
-                        });
-            }
+        // 유저의 출석 점수 매일 갱신
+//            for (int i = 0; i < tableCheckInDto.getTableDay().lengthOfMonth(); i++) {
+//                LocalDate day = tableCheckInDto.getTableDay().withDayOfMonth(1).plusDays(i);
+//                System.out.println(day);
+//                final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckInDto.getUserId(), day);
+//                original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
+//                        .ifPresent(allUser -> {
+//                            allUser.setAttendScore(result);
+//                            allUser.setParticipateScore(participateResult);
+//                            dayTableRepository.save(allUser);
+//                        });
+//            }
     }
 
     public void updateCheckOut(TableCheckOutDto tableCheckOutDto,  LocalDate date){
@@ -237,16 +237,17 @@ public class AllUserTableService {
             userInfoRepository.save(userInfo);
         });
 
-        for (int i = 0; i < tableCheckOutDto.getTableDay().lengthOfMonth(); i++) {
-            LocalDate day = tableCheckOutDto.getTableDay().withDayOfMonth(1).plusDays(i);
-            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), day);
-            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
-                    .ifPresent(allUser -> {
-                        allUser.setAttendScore(result);
-                        allUser.setParticipateScore(participateResult);
-                        dayTableRepository.save(allUser);
-                    });
-        }
+        // 유저의 출석 점수 매일 갱신
+//        for (int i = 0; i < tableCheckOutDto.getTableDay().lengthOfMonth(); i++) {
+//            LocalDate day = tableCheckOutDto.getTableDay().withDayOfMonth(1).plusDays(i);
+//            final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), day);
+//            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
+//                    .ifPresent(allUser -> {
+//                        allUser.setAttendScore(result);
+//                        allUser.setParticipateScore(participateResult);
+//                        dayTableRepository.save(allUser);
+//                    });
+//        }
     }
 
     public void updateUserTeam(UserTeamChangeDto userTeamChangeDto, LocalDate date){

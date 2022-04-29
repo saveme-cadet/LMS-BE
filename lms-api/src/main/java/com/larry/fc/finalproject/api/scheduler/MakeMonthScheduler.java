@@ -4,6 +4,8 @@ import com.larry.fc.finalproject.api.controller.useradmincontroller.AllUserShowC
 import com.larry.fc.finalproject.api.controller.useradmincontroller.UserInfoController;
 import com.larry.fc.finalproject.api.service.aojiservice.AojiService;
 import com.larry.fc.finalproject.api.service.userservice.AllUserTableService;
+import com.larry.fc.finalproject.api.service.userservice.UserInfoService;
+import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,8 @@ public class MakeMonthScheduler {
     private final UserInfoController userInfoController;
     private final AllUserTableService allUserTableService;
     private final AojiService aojiService;
+    private final UserInfoService userInfoService;
+
     //@Scheduled(cron = "0 0/1 0 * * *")
     @Scheduled(cron = "0 1 0 * * MON-FRI", zone = "Asia/Seoul")
     @Transactional
@@ -39,4 +43,6 @@ public class MakeMonthScheduler {
         aojiService.deleteAojiTimeAtDay();
     }
 
+    @Scheduled(cron = "0 15 4 L * ?", zone = "Asia/Seoul")
+    public void monthLastDayScore() { userInfoService.updateMonthOfUserAttendScore();}
 }
