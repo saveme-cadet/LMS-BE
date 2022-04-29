@@ -43,4 +43,6 @@ public class AllTableDto {
     @Min(0)
     @Max(100)
     private double monthObjectiveAchievementRate;
+    @Schema(description = "aojiTime" , example = "한달 aoji score 총 점수")
+    private final double aojiTime;
 }

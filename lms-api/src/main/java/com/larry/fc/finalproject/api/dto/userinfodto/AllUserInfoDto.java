@@ -19,4 +19,6 @@ public class AllUserInfoDto {
     private final double vacation;
     @Schema(description = "level" , example = "구해줘 카뎃 참여한 총 달")
     private final int level;
+    @Schema(description = "aojiscore", example = "아오지 한달 총 점수")
+    private final double aojiscore;
 }
