@@ -17,6 +17,12 @@ public abstract class AojiDtoConverter {
         if (ChronoUnit.SECONDS.between(studyTime.getStartAt(), studyTime.getEndAt()) != 0) {
             Long time = Duration.between(studyTime.getStartAt(), studyTime.getEndAt()).getSeconds();
             Long hour = time / (60 * 60);
+            String tmp;
+            if (hour.toString().length() == 1){
+                tmp = "0";
+                tmp += hour.toString();
+            }
+
             Long minute = time / 60 - (hour * 60);
             Long second = time % 60;
             sb.append(hour + ":").append(minute + ":").append(second);
