@@ -238,6 +238,7 @@ public class UserInfoService {
                 userInfo1.setAttendScore(0);
                 userInfo1.setLevel(userInfo1.getLevel() + 1);
                 userInfo1.setParticipateScore(0);
+                userInfo1.setAojitimescore(0);
                 userInfoRepository.save(userInfo1);
             });
         }
