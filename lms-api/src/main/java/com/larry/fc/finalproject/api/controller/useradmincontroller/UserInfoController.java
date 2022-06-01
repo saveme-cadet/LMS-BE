@@ -67,7 +67,7 @@ public class UserInfoController {
     }
 
     @Operation(description = "매달 1일 유저 출결 상태, 출결횟수, 레벨 초기화 및 상승")
-    @PutMapping()
+    @PutMapping("/debugging")
     public  ResponseEntity<Void> updateUserMonthInfo(){
         userInfoService.updateMonthUser();
         return ResponseEntity.ok().build();
