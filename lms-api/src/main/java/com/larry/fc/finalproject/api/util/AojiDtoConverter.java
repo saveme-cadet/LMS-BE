@@ -17,15 +17,45 @@ public abstract class AojiDtoConverter {
         if (ChronoUnit.SECONDS.between(studyTime.getStartAt(), studyTime.getEndAt()) != 0) {
             Long time = Duration.between(studyTime.getStartAt(), studyTime.getEndAt()).getSeconds();
             Long hour = time / (60 * 60);
-            String tmp;
+            String tmp = "";
+            Long minute = time / 60 - (hour * 60);
+            Long second = time % 60;
             if (hour.toString().length() == 1){
                 tmp = "0";
                 tmp += hour.toString();
+                sb.append(tmp + ":");
+            } else if (hour.toString().length() == 0){
+                tmp = "00";
+                tmp += hour.toString();
+                sb.append(tmp + ":");
+            } else {
+                sb.append(hour + ":");
+            }
+            if (minute.toString().length() == 1){
+                tmp = "0";
+                tmp += minute.toString();
+                sb.append(tmp + ":");
+            } else if (minute.toString().length() == 0){
+                tmp = "00";
+                tmp += minute.toString();
+                sb.append(tmp + ":");
+            } else {
+                sb.append(minute + ":");
+            }
+            if (second.toString().length() == 0){
+                tmp = "00";
+                tmp += second.toString();
+                sb.append(tmp);
+            }
+            else if (second.toString().length() == 1){
+                tmp = "0";
+                tmp += second.toString();
+                sb.append(tmp);
+            } else {
+                sb.append(second);
             }
 
-            Long minute = time / 60 - (hour * 60);
-            Long second = time % 60;
-            sb.append(hour + ":").append(minute + ":").append(second);
+
             ld = studyTime.getEndAt();
         }
         else {
