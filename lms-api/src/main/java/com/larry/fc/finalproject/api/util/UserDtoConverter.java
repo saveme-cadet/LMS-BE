@@ -3,7 +3,6 @@ package com.larry.fc.finalproject.api.util;
 import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserAttendenceDto;
 import com.larry.fc.finalproject.api.dto.userdto.UserDto;
-import com.larry.fc.finalproject.api.dto.userdto.UserTeamAndRoleDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserRoleChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserTeamChangeDto;
 import com.larry.fc.finalproject.api.dto.userinfodto.UserVacationChangeDto;
@@ -11,7 +10,7 @@ import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.AllObjectDto;
 import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.AttendDto;
 import com.larry.fc.finalproject.api.dto.userstatisticalchartdto.ObjectDto;
 import com.larry.fc.finalproject.core.domain.entity.StatisticalChart;
-import com.larry.fc.finalproject.core.domain.entity.User;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 
 

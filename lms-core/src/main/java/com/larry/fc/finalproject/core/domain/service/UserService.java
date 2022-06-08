@@ -1,10 +1,8 @@
 package com.larry.fc.finalproject.core.domain.service;
 
-import com.larry.fc.finalproject.core.domain.dto.UserCreateReq;
-import com.larry.fc.finalproject.core.domain.entity.User;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.entity.repository.*;
-import com.larry.fc.finalproject.core.domain.util.BCryptEncryptor;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +23,33 @@ public class UserService {
     private final UserStatisticalChartRepository userStatisticalChartRepository;
     private final PlusVacationRepository plusVacationRepository;
 
+//    @Transactional
+//    public User create(UserCreateReq userCreateReq){
+//        userRepository.findByName(userCreateReq.getName())
+//                .ifPresent(u -> {
+//                    throw new RuntimeException("user already exit!");
+//                });
+//        return userRepository.save(new User(
+//                userCreateReq.getName(),
+//                userCreateReq.getEmail(),
+//                encryptor.encrypt(userCreateReq.getPassword()),
+//                userCreateReq.getBirthday()
+//        ));
+//    }
+
     @Transactional
-    public User create(UserCreateReq userCreateReq){
-        userRepository.findByName(userCreateReq.getName())
-                .ifPresent(u -> {
-                    throw new RuntimeException("user already exit!");
+    public Long validateUserNameAndCreate(User user) {
+        validateUsernameDuplicate(user);
+        user.getPassword()
+
+        userRepository.save(user);
+    }
+
+    private void validateUsernameDuplicate(User user) {
+        userRepository.findByName(user.getName())
+            .ifPresent(u -> {
+                    throw new RuntimeException("Id : "+ u.getName()+"는 이미 사용중입니다.");
                 });
-        return userRepository.save(new User(
-                userCreateReq.getName(),
-                userCreateReq.getEmail(),
-                encryptor.encrypt(userCreateReq.getPassword()),
-                userCreateReq.getBirthday()
-        ));
     }
 
 

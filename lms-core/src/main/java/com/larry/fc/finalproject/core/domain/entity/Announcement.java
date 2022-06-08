@@ -1,10 +1,9 @@
 package com.larry.fc.finalproject.core.domain.entity;
 
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @NoArgsConstructor

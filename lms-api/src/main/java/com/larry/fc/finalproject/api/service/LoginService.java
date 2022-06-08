@@ -3,7 +3,7 @@ package com.larry.fc.finalproject.api.service;
 import com.larry.fc.finalproject.api.dto.LoginReq;
 import com.larry.fc.finalproject.api.dto.SignUpReq;
 import com.larry.fc.finalproject.core.domain.dto.UserCreateReq;
-import com.larry.fc.finalproject.core.domain.entity.User;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,10 @@
 package com.larry.fc.finalproject.api.service.userservice;
 
-import com.larry.fc.finalproject.api.dto.AllUserDto;
 import com.larry.fc.finalproject.api.dto.tabledto.AllTableDto;
 import com.larry.fc.finalproject.api.util.DtoConverter;
 import com.larry.fc.finalproject.api.util.UserDtoConverter;
 import com.larry.fc.finalproject.core.domain.entity.DayTable;
 import com.larry.fc.finalproject.core.domain.entity.StatisticalChart;
-import com.larry.fc.finalproject.core.domain.entity.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.entity.repository.DayTableRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.TodoRepository;
@@ -17,11 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor

@@ -1,5 +1,11 @@
-package com.larry.fc.finalproject.core.domain.entity;
+package com.larry.fc.finalproject.core.domain.entity.user;
 
+import com.larry.fc.finalproject.core.domain.entity.BaseEntity;
+import com.larry.fc.finalproject.core.domain.entity.PlusVacation;
+import com.larry.fc.finalproject.core.domain.entity.StatisticalChart;
+import com.larry.fc.finalproject.core.domain.entity.StudyTime;
+import com.larry.fc.finalproject.core.domain.entity.Todo;
+import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
 import lombok.*;
 
@@ -15,10 +21,11 @@ import java.util.List;
 @Table(name = "user")
 @Entity
 @Builder
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     private String name;
     private String email;
     private String password;
+    private String role;
     private Long attendStatus;
 
    // @OneToMany(mappedBy = "cadet",cascade = {CascadeType.REMOVE}, orphanRemoval = true)

@@ -1,6 +1,5 @@
 package com.larry.fc.finalproject.api.dto;
 
-import com.larry.fc.finalproject.core.domain.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;

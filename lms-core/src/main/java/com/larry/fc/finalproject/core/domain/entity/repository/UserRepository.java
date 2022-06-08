@@ -1,6 +1,6 @@
 package com.larry.fc.finalproject.core.domain.entity.repository;
 
-import com.larry.fc.finalproject.core.domain.entity.User;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
