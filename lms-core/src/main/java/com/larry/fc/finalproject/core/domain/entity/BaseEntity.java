@@ -27,6 +27,10 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDate updatedAt;
 
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     public BaseEntity(Long id) {
         this.id = id;
     }

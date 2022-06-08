@@ -3,10 +3,10 @@ spring:
     default: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/savedb?useSSL=false&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: takim
-    password: takim
+    username: test
+    password: Test1234!
   jpa:
     open-in-view: false
     show-sql: true
@@ -14,4 +14,5 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: update
+      //ddl-auto: update
+      ddl-auto: create

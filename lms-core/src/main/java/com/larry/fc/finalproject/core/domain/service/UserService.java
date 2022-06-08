@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.core.domain.service;
 
+import com.larry.fc.finalproject.core.domain.entity.user.Role;
 import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.entity.repository.*;
@@ -42,9 +43,17 @@ public class UserService {
     @Transactional
     public Long validateUserNameAndCreate(User user) {
         validateUsernameDuplicate(user);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        //첫 회원가입시 유저 상태 저장.
+        setUserDefaultStatus(user);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
+    }
+
+    private void setUserDefaultStatus(User user) {
+        user.setRole(Role.ROLE_UNAUTHORIZED.name());
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setNickName(user.getName());
+        user.setAttendStatus(0L);
     }
 
     private void validateUsernameDuplicate(User user) {
