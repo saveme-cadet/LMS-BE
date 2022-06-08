@@ -5,8 +5,8 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/savedb?useSSL=false&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: ''
+    username: takim
+    password: takim
   jpa:
     open-in-view: false
     show-sql: true
