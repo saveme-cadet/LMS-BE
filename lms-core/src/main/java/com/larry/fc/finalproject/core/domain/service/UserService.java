@@ -6,6 +6,7 @@ import com.larry.fc.finalproject.core.domain.entity.repository.*;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Encryptor encryptor;
     private final UserRepository userRepository;
     private final UserInfoRepository userInfoRepository;
@@ -40,9 +42,9 @@ public class UserService {
     @Transactional
     public Long validateUserNameAndCreate(User user) {
         validateUsernameDuplicate(user);
-        user.getPassword()
-
-        userRepository.save(user);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        User savedUser = userRepository.save(user);
+        return savedUser.getId();
     }
 
     private void validateUsernameDuplicate(User user) {
