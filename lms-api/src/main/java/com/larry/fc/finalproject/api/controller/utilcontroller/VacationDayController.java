@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://15.165.148.236:8080")
 @Tag(name = "휴가 테스트 위한 api")
 @RequiredArgsConstructor
 @RequestMapping("/api/day")
