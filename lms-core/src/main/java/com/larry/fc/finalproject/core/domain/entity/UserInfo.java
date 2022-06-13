@@ -48,7 +48,7 @@ public class UserInfo extends BaseEntity{
                 .team("white")
                 .role("카뎃")
                 .participateScore(0.0)
-                .userName(writer.getName())
+                .userName(writer.getUsername())
                 .vacation(0.0)
                 .build();
     }

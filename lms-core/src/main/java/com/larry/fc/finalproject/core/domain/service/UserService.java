@@ -28,7 +28,7 @@ public class UserService {
 
 //    @Transactional
 //    public User create(UserCreateReq userCreateReq){
-//        userRepository.findByName(userCreateReq.getName())
+//        userRepository.findByUsername(userCreateReq.getName())
 //                .ifPresent(u -> {
 //                    throw new RuntimeException("user already exit!");
 //                });
@@ -52,21 +52,21 @@ public class UserService {
     private void setUserDefaultStatus(User user) {
         user.setRole(Role.ROLE_UNAUTHORIZED.name());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setNickName(user.getName());
+        user.setNickName(user.getUsername());
         user.setAttendStatus(0L);
     }
 
     private void validateUsernameDuplicate(User user) {
-        userRepository.findByName(user.getName())
+        userRepository.findByUsername(user.getUsername())
             .ifPresent(u -> {
-                    throw new RuntimeException("Id : "+ u.getName()+"는 이미 사용중입니다.");
+                    throw new RuntimeException("Id : "+ u.getUsername()+"는 이미 사용중입니다.");
                 });
     }
 
 
     @Transactional
     public Optional<User> findPwMatchUser(String email, String password) {
-        return userRepository.findByName(email)
+        return userRepository.findByUsername(email)
         //        .map(user -> user.getPassword().equals(password) ? user : null);
                 .map(user -> user.isMatch(encryptor, password) ? user : null);
     }

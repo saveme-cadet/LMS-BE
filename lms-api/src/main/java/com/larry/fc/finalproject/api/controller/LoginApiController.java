@@ -45,13 +45,13 @@ public class LoginApiController {
 //        return ResponseEntity.ok().build();
 //    }
 
-//    @Operation(description = "로그인")
-//    @PostMapping("/api/login")
-//    public List<UserInfoDto> login(@RequestBody LoginReq loginReq, HttpSession session){
-//        loginService.login(loginReq, session);
-//        final Long userId = (Long)session.getAttribute(LOGIN_SESSION_KEY);
-//        return  userInfoQueryService.getUserInfo(userId);
-//    }
+    @Operation(description = "로그인")
+    @PostMapping("/api/login")
+    public List<UserInfoDto> login(@RequestBody LoginReq loginReq, HttpSession session){
+        loginService.login(loginReq, session);
+        final Long userId = (Long)session.getAttribute(LOGIN_SESSION_KEY);
+        return  userInfoQueryService.getUserInfo(userId);
+    }
 
 //    @Operation(description = "로그인")
 //    @PostMapping("/api/login1")

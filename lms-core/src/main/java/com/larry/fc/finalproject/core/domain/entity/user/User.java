@@ -7,6 +7,7 @@ import com.larry.fc.finalproject.core.domain.entity.StudyTime;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
+import java.util.Set;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,10 +23,27 @@ import java.util.List;
 @Entity
 @Builder
 public class User extends BaseEntity {
-    private String name;
-    private String email;
+    private String username;
     private String password;
     private String role;
+
+    @Singular
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_authority",
+        joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+        inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+    private Set<Authority> authorities;
+
+    @Builder.Default
+    private Boolean accountNonExpired = true;
+    @Builder.Default
+    private Boolean accountNonLocked = true;
+    @Builder.Default
+    private Boolean credentialsNonExpired = true;
+    @Builder.Default
+    private Boolean enabled = true;
+
+    private String email;
     private Long attendStatus;
 
    // @OneToMany(mappedBy = "cadet",cascade = {CascadeType.REMOVE}, orphanRemoval = true)
@@ -44,8 +62,8 @@ public class User extends BaseEntity {
     private List<StatisticalChart> statisticalCharts = new ArrayList<>();
 
 
-    public User(String name, String email, String password, LocalDate bithday) { // attendStatus = 1 로 고정
-        this.name = name;
+    public User(String username, String email, String password, LocalDate bithday) { // attendStatus = 1 로 고정
+        this.username = username;
         this.email = email;
         this.password = password;
         this.attendStatus = 1L;

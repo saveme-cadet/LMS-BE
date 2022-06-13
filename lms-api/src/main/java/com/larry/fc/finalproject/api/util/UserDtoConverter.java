@@ -17,7 +17,7 @@ import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 public abstract class UserDtoConverter {
     public static UserDto fromUser(User user){
         return UserDto.builder()
-                .userName(user.getName())
+                .userName(user.getUsername())
                 .userId(user.getId())
                 .build();
     }
