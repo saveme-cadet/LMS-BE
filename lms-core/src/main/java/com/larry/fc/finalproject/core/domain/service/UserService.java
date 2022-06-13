@@ -50,7 +50,7 @@ public class UserService {
     }
 
     private void setUserDefaultStatus(User user) {
-        user.setRole(Role.ROLE_UNAUTHORIZED.name());
+        user.setRole(Role.ROLE_UNAUTHORIZED);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setNickName(user.getUsername());
         user.setAttendStatus(0L);

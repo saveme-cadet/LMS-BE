@@ -25,14 +25,14 @@ import java.util.List;
 public class User extends BaseEntity {
     private String username;
     private String password;
-    private String role;
+    private Role role;
 
-    @Singular
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_authority",
-        joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-        inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-    private Set<Authority> authorities;
+//    @Singular
+//    @ManyToMany(cascade = CascadeType.MERGE)
+//    @JoinTable(name = "user_authority",
+//        joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+//        inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+//    private Set<Authority> authorities;
 
     @Builder.Default
     private Boolean accountNonExpired = true;
