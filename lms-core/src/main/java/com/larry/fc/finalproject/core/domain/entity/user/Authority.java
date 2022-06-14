@@ -11,20 +11,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//@Entity
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Builder
-//public class Authority {
-//
-//    @Id
-//    @GeneratedValue
-//    private Integer id;
-//
-//    private String role;
-//
-//    @ManyToMany(mappedBy = "authorities")
-//    private Set<User> users;
-//}
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class Authority {
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    private String permission;
+
+    @ManyToMany(mappedBy = "authorities")
+    private Set<Role> roles;
+}

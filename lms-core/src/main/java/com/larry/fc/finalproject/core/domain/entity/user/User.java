@@ -8,6 +8,7 @@ import com.larry.fc.finalproject.core.domain.entity.Todo;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,14 +26,24 @@ import java.util.List;
 public class User extends BaseEntity {
     private String username;
     private String password;
-    private Role role;
 
-//    @Singular
-//    @ManyToMany(cascade = CascadeType.MERGE)
-//    @JoinTable(name = "user_authority",
-//        joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-//        inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-//    private Set<Authority> authorities;
+    @Singular
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(name = "user_role",
+        joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+        inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
+    private Set<Role> roles;
+
+    @Transient
+    private Set<Authority> authorities;
+
+    public Set<Authority> getAuthorities() {
+        return roles.stream()
+            .map((role)->
+                role.getAuthorities())
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
+    }
 
     @Builder.Default
     private Boolean accountNonExpired = true;

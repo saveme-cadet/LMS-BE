@@ -1,17 +1,25 @@
 package com.larry.fc.finalproject.core.domain.service;
 
-import com.larry.fc.finalproject.core.domain.entity.user.Role;
-import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
-import com.larry.fc.finalproject.core.domain.entity.repository.*;
+import com.larry.fc.finalproject.core.domain.entity.repository.AuthorityRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.DayTableRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.PlusVacationRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.RoleRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.TodoRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.UserInfoRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.UserStatisticalChartRepository;
+import com.larry.fc.finalproject.core.domain.entity.user.Role;
+import com.larry.fc.finalproject.core.domain.entity.user.RoleEnum;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
+import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +33,8 @@ public class UserService {
     private final TodoRepository todoRepository;
     private final UserStatisticalChartRepository userStatisticalChartRepository;
     private final PlusVacationRepository plusVacationRepository;
+    private final RoleRepository roleRepository;
+    private final AuthorityRepository authorityRepository;
 
 //    @Transactional
 //    public User create(UserCreateReq userCreateReq){
@@ -50,7 +60,9 @@ public class UserService {
     }
 
     private void setUserDefaultStatus(User user) {
-        user.setRole(Role.ROLE_UNAUTHORIZED);
+        Role defaultRole = roleRepository.findByName(RoleEnum.UNAUTHORIZED.name())
+            .orElseThrow(IllegalStateException::new);
+        user.setRoles(Set.of(defaultRole));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setNickName(user.getUsername());
         user.setAttendStatus(0L);

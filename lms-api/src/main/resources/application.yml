@@ -1,6 +1,9 @@
 spring:
   profiles:
     default: dev
+  properties:
+    hibernate:
+      default_batch_fetch_size: 100
 
   datasource:
     url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
@@ -14,4 +17,4 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
