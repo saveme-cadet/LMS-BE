@@ -4,6 +4,9 @@ spring:
   properties:
     hibernate:
       default_batch_fetch_size: 100
+  session:
+    store-type: jdbc
+    jdbc.initialize-schema: always
 
   datasource:
     url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul

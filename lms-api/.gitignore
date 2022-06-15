@@ -11,7 +11,6 @@ ivy-cache
 jxl.log
 jmx.log
 derby.log
-spring-test/test-output/
 .gradle
 argfile*
 pom.xml
@@ -38,7 +37,6 @@ spring-*/src/main/java/META-INF/MANIFEST.MF
 *.iws
 .idea
 out
-test-output
 atlassian-ide-plugin.xml
 .gradletasknamecache
 
