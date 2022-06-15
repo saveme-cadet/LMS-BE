@@ -34,16 +34,16 @@ public class LoginApiController {
     private final AllUserTableService allUserTableService;
     private final UserInfoQueryService userInfoQueryService;
 
-    @Operation(description = "회원 가입")
-    @PostMapping("/api/sign-up")
-    public ResponseEntity<Void> signUp(@RequestBody SignUpReq signUpReq, HttpSession httpSession){
-        //loginService.signUp(signUpReq, httpSession);
-        Long id = loginService.signUp1(signUpReq, httpSession);
-        userInfoService.create(AuthUser.of(id));
-        userStatisticalChartService.create(AuthUser.of(id));
-        allUserTableService.createUserDate(AuthUser.of(id));
-        return ResponseEntity.ok().build();
-    }
+//    @Operation(description = "회원 가입")
+//    @PostMapping("/api/sign-up")
+//    public ResponseEntity<Void> signUp(@RequestBody SignUpReq signUpReq, HttpSession httpSession){
+//        //loginService.signUp(signUpReq, httpSession);
+//        Long id = loginService.signUp1(signUpReq, httpSession);
+//        userInfoService.create(AuthUser.of(id));
+//        userStatisticalChartService.create(AuthUser.of(id));
+//        allUserTableService.createUserDate(AuthUser.of(id));
+//        return ResponseEntity.ok().build();
+//    }
 
     @Operation(description = "로그인")
     @PostMapping("/api/login")
@@ -60,10 +60,10 @@ public class LoginApiController {
 //        return ResponseEntity.ok().build();
 //    }
 
-    @Operation(description = "로그아웃")
-    @PostMapping("/api/logout")
-    public ResponseEntity<Void> logout(HttpSession session){
-        loginService.logout(session);
-        return ResponseEntity.ok().build();
-    }
+//    @Operation(description = "로그아웃")
+//    @PostMapping("/api/logout")
+//    public ResponseEntity<Void> logout(HttpSession session){
+//        loginService.logout(session);
+//        return ResponseEntity.ok().build();
+//    }
 }

@@ -3,7 +3,7 @@ package com.larry.fc.finalproject.api.service;
 import com.larry.fc.finalproject.api.dto.LoginReq;
 import com.larry.fc.finalproject.api.dto.SignUpReq;
 import com.larry.fc.finalproject.core.domain.dto.UserCreateReq;
-import com.larry.fc.finalproject.core.domain.entity.User;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,30 +17,30 @@ import java.util.Optional;
 public class LoginService {
     public final static String LOGIN_SESSION_KEY = "USER_ID";
     private final UserService userService;
-
-    @Transactional
-    public void signUp(SignUpReq signUpReq, HttpSession session){
-        final User user = userService.create(new UserCreateReq(
-                signUpReq.getName(),
-                signUpReq.getEmail(),
-                signUpReq.getPassword(),
-                signUpReq.getBirthday()
-        ));
-        session.setAttribute(LOGIN_SESSION_KEY, user.getId());
-    }
-
-    @Transactional
-    public Long signUp1(SignUpReq signUpReq, HttpSession session){
-        final User user = userService.create(new UserCreateReq(
-                signUpReq.getName(),
-                signUpReq.getEmail(),
-                signUpReq.getPassword(),
-                signUpReq.getBirthday()
-        ));
-
-        session.setAttribute(LOGIN_SESSION_KEY, user.getId());
-        return user.getId();
-    }
+//
+//    @Transactional
+//    public void signUp(SignUpReq signUpReq, HttpSession session){
+//        final User user = userService.create(new UserCreateReq(
+//                signUpReq.getName(),
+//                signUpReq.getEmail(),
+//                signUpReq.getPassword(),
+//                signUpReq.getBirthday()
+//        ));
+//        session.setAttribute(LOGIN_SESSION_KEY, user.getId());
+//    }
+//
+//    @Transactional
+//    public Long signUp1(SignUpReq signUpReq, HttpSession session){
+//        final User user = userService.create(new UserCreateReq(
+//                signUpReq.getName(),
+//                signUpReq.getEmail(),
+//                signUpReq.getPassword(),
+//                signUpReq.getBirthday()
+//        ));
+//
+//        session.setAttribute(LOGIN_SESSION_KEY, user.getId());
+//        return user.getId();
+//    }
 
     @Transactional
     public void login(LoginReq loginReq, HttpSession session){

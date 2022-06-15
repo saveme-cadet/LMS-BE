@@ -28,14 +28,14 @@ public class AllInfoController {
     private final UserStatisticalChartService userStatisticalChartService;
     private final AllUserTableService allUserTableService;
 
-    @Operation(description = "user id 생성과 동시에 userinfo, statisticalChart 생성 ")
-    @PostMapping("/user")
-    public ResponseEntity<Void> makeUserAndUserinfo(@Parameter @RequestBody SignUpReq signUpReq, HttpSession httpSession){
-        Long id = loginService.signUp1(signUpReq, httpSession);
-        userInfoService.create(AuthUser.of(id));
-        userStatisticalChartService.create(AuthUser.of(id));
-        allUserTableService.createUserDate(AuthUser.of(id));
-        return ResponseEntity.ok().build();
-
-    }
+//    @Operation(description = "user id 생성과 동시에 userinfo, statisticalChart 생성 ")
+//    @PostMapping("/user")
+//    public ResponseEntity<Void> makeUserAndUserinfo(@Parameter @RequestBody SignUpReq signUpReq, HttpSession httpSession){
+//        Long id = loginService.signUp1(signUpReq, httpSession);
+//        userInfoService.create(AuthUser.of(id));
+//        userStatisticalChartService.create(AuthUser.of(id));
+//        allUserTableService.createUserDate(AuthUser.of(id));
+//        return ResponseEntity.ok().build();
+//
+//    }
 }

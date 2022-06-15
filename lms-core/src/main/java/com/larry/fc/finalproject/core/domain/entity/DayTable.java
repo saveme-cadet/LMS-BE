@@ -1,6 +1,6 @@
 package com.larry.fc.finalproject.core.domain.entity;
 
-import com.larry.fc.finalproject.core.domain.ScheduleType;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.util.Period;
 import lombok.*;
 

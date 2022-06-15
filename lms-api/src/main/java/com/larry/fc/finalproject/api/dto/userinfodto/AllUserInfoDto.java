@@ -1,12 +1,8 @@
 package com.larry.fc.finalproject.api.dto.userinfodto;
 
-import com.larry.fc.finalproject.core.domain.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder

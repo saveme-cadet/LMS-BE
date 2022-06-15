@@ -1,15 +1,10 @@
 package com.larry.fc.finalproject.api.dto.tabledto;
 
-import com.larry.fc.finalproject.core.domain.entity.User;
-import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 

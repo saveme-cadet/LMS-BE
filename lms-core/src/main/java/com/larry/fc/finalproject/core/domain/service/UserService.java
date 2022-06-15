@@ -1,22 +1,31 @@
 package com.larry.fc.finalproject.core.domain.service;
 
-import com.larry.fc.finalproject.core.domain.dto.UserCreateReq;
-import com.larry.fc.finalproject.core.domain.entity.User;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
-import com.larry.fc.finalproject.core.domain.entity.repository.*;
-import com.larry.fc.finalproject.core.domain.util.BCryptEncryptor;
+import com.larry.fc.finalproject.core.domain.entity.repository.AuthorityRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.DayTableRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.PlusVacationRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.RoleRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.TodoRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.UserInfoRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
+import com.larry.fc.finalproject.core.domain.entity.repository.UserStatisticalChartRepository;
+import com.larry.fc.finalproject.core.domain.entity.user.Role;
+import com.larry.fc.finalproject.core.domain.entity.user.RoleEnum;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
+import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final Encryptor encryptor;
     private final UserRepository userRepository;
     private final UserInfoRepository userInfoRepository;
@@ -24,25 +33,52 @@ public class UserService {
     private final TodoRepository todoRepository;
     private final UserStatisticalChartRepository userStatisticalChartRepository;
     private final PlusVacationRepository plusVacationRepository;
+    private final RoleRepository roleRepository;
+    private final AuthorityRepository authorityRepository;
+
+//    @Transactional
+//    public User create(UserCreateReq userCreateReq){
+//        userRepository.findByUsername(userCreateReq.getName())
+//                .ifPresent(u -> {
+//                    throw new RuntimeException("user already exit!");
+//                });
+//        return userRepository.save(new User(
+//                userCreateReq.getName(),
+//                userCreateReq.getEmail(),
+//                encryptor.encrypt(userCreateReq.getPassword()),
+//                userCreateReq.getBirthday()
+//        ));
+//    }
 
     @Transactional
-    public User create(UserCreateReq userCreateReq){
-        userRepository.findByName(userCreateReq.getName())
-                .ifPresent(u -> {
-                    throw new RuntimeException("user already exit!");
+    public Long validateUserNameAndCreate(User user) {
+        validateUsernameDuplicate(user);
+        //첫 회원가입시 유저 상태 저장.
+        setUserDefaultStatus(user);
+        User savedUser = userRepository.save(user);
+        return savedUser.getId();
+    }
+
+    private void setUserDefaultStatus(User user) {
+        Role defaultRole = roleRepository.findByName(RoleEnum.UNAUTHORIZED.name())
+            .orElseThrow(IllegalStateException::new);
+        user.setRoles(Set.of(defaultRole));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setNickName(user.getUsername());
+        user.setAttendStatus(0L);
+    }
+
+    private void validateUsernameDuplicate(User user) {
+        userRepository.findByUsername(user.getUsername())
+            .ifPresent(u -> {
+                    throw new RuntimeException("Id : "+ u.getUsername()+"는 이미 사용중입니다.");
                 });
-        return userRepository.save(new User(
-                userCreateReq.getName(),
-                userCreateReq.getEmail(),
-                encryptor.encrypt(userCreateReq.getPassword()),
-                userCreateReq.getBirthday()
-        ));
     }
 
 
     @Transactional
     public Optional<User> findPwMatchUser(String email, String password) {
-        return userRepository.findByName(email)
+        return userRepository.findByUsername(email)
         //        .map(user -> user.getPassword().equals(password) ? user : null);
                 .map(user -> user.isMatch(encryptor, password) ? user : null);
     }

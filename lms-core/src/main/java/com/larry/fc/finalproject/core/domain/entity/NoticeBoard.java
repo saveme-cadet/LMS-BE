@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.core.domain.entity;
 
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import lombok.*;
 import org.hibernate.type.descriptor.sql.VarcharTypeDescriptor;
 

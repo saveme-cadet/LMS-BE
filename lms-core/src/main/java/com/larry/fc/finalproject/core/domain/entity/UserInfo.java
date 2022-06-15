@@ -1,17 +1,12 @@
 package com.larry.fc.finalproject.core.domain.entity;
 
-import com.larry.fc.finalproject.core.domain.ScheduleType;
+import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.util.Period;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -53,7 +48,7 @@ public class UserInfo extends BaseEntity{
                 .team("white")
                 .role("카뎃")
                 .participateScore(0.0)
-                .userName(writer.getName())
+                .userName(writer.getUsername())
                 .vacation(0.0)
                 .build();
     }
