@@ -8,10 +8,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//
+
 //@Component
 //@Order(Ordered.HIGHEST_PRECEDENCE)
-public class CorsFilter implements Filter {
+public class CorsLocalHostFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -22,8 +22,8 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        response.setHeader("Access-Control-Allow-Origin", "https://www.save9cadet.com");
-//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        //response.setHeader("Access-Control-Allow-Origin", "https://www.save9cadet.com");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
@@ -44,4 +44,3 @@ public class CorsFilter implements Filter {
         Filter.super.destroy();
     }
 }
-

@@ -20,6 +20,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://15.165.148.236:8080")
 @Tag(name = "유저 정보")
 @RequiredArgsConstructor
 @RequestMapping("/api/userinfo")

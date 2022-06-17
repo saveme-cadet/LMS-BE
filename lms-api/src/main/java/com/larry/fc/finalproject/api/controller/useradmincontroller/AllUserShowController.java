@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://15.165.148.236:8080")
 @Tag(name = "당일 모든 학생 정보")
 @RequiredArgsConstructor
 @RequestMapping("/api/alltable")

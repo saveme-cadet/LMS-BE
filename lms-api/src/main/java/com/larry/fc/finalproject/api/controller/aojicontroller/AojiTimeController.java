@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://15.165.148.236:8080")
 @Tag(name = "아오지 탄광")
 @RequiredArgsConstructor
 @RequestMapping("/api/aoji")
@@ -55,14 +56,15 @@ public class AojiTimeController {
 //        return aojiQuertService.getAojiTime2(userId.longValue());
 //    }
 
-    @Operation(description = "aoji 하는 사람")
-    @GetMapping("/studyuser")
+    //------- 현재 사용 안하는 api -------------//
+  //  @Operation(description = "aoji 하는 사람")
+ //   @GetMapping("/studyuser")
     public List<AojiUserDto> readAojiDoingUser(){
         return aojiQuertService.getAojiUser();
     }
 
-    @Operation(description = "aoji 삭제")
-    @DeleteMapping("/delete/{userId}/{aojiIndex}")
+  //  @Operation(description = "aoji 삭제")
+  //  @DeleteMapping("/delete/{userId}/{aojiIndex}")
     public ResponseEntity<Void> deleteAoji(@PathVariable(name = "userId") Integer userId, @PathVariable(name = "aojiIndex") Integer aojiIndex){
         try{
             aojiService.deleteAojiTime(userId.longValue(), aojiIndex.longValue());
@@ -72,8 +74,8 @@ public class AojiTimeController {
         }
     }
 
-    @Operation(description = "aoji 24시간 뒤에 삭제")
-    @DeleteMapping("test")
+ //   @Operation(description = "aoji 24시간 뒤에 삭제")
+ //   @DeleteMapping("test")
     public ResponseEntity<Void> delete() {
         try {
             aojiService.deleteAojiTimeAtDay();

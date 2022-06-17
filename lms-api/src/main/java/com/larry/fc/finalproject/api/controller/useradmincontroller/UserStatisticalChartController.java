@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://15.165.148.236:8080")
 @Tag(name = "유저 차트 보여주기")
 @RequiredArgsConstructor
 @RequestMapping("/api/userchart")
