@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @Tag(name = "유저 생성, 삭제")
 @RequiredArgsConstructor
 @RequestMapping("/api/user")

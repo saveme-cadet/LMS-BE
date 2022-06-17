@@ -3,11 +3,9 @@ package com.larry.fc.finalproject.api.controller.user;
 import com.larry.fc.finalproject.core.domain.entity.user.User;
 import com.larry.fc.finalproject.core.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor

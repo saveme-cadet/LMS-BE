@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @Tag(name = "아오지 탄광")
 @RequiredArgsConstructor
 @RequestMapping("/api/aoji")
