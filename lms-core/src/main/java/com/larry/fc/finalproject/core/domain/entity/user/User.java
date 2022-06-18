@@ -7,6 +7,7 @@ import com.larry.fc.finalproject.core.domain.entity.StudyTime;
 import com.larry.fc.finalproject.core.domain.entity.Todo;
 import com.larry.fc.finalproject.core.domain.entity.UserInfo;
 import com.larry.fc.finalproject.core.domain.util.Encryptor;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.*;
@@ -32,7 +33,7 @@ public class User extends BaseEntity {
     @JoinTable(name = "user_role",
         joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
         inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @Transient
     private Set<Authority> authorities;

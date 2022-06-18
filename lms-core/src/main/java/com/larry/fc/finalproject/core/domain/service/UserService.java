@@ -62,10 +62,10 @@ public class UserService {
     private void setUserDefaultStatus(User user) {
         Role defaultRole = roleRepository.findByName(RoleEnum.UNAUTHORIZED.name())
             .orElseThrow(IllegalStateException::new);
-        user.setRoles(Set.of(defaultRole));
+        user.getRoles().add(defaultRole);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setNickName(user.getUsername());
-        user.setAttendStatus(0L);
+        user.setAttendStatus(1L);
     }
 
     private void validateUsernameDuplicate(User user) {

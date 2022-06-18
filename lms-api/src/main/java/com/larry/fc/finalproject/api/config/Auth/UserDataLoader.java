@@ -7,10 +7,10 @@ import com.larry.fc.finalproject.core.domain.entity.user.Authority;
 import com.larry.fc.finalproject.core.domain.entity.user.Role;
 import com.larry.fc.finalproject.core.domain.entity.user.User;
 import java.util.Arrays;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Set;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -56,24 +56,29 @@ public class UserDataLoader implements CommandLineRunner {
             .username("admin")
             .password(passwordEncoder.encode("admin"))
             .role(adminRole)
+            .attendStatus(1L)
             .build());
 
         userRepository.save(User.builder()
             .username("manager")
             .password(passwordEncoder.encode("manager"))
             .role(managerRole)
+            .attendStatus(1L)
+
             .build());
 
         userRepository.save(User.builder()
             .username("user")
             .password(passwordEncoder.encode("user"))
             .role(userRole)
+            .attendStatus(1L)
             .build());
 
         userRepository.save(User.builder()
             .username("unAuthorized")
             .password(passwordEncoder.encode("unAuthorized"))
             .role(unAuthorizedRole)
+            .attendStatus(1L)
             .build());
 
         log.debug("Users Loaded: " + userRepository.count());
