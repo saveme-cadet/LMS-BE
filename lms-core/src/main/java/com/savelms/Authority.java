@@ -21,7 +21,7 @@ public class Authority {
 
     @Id
     @GeneratedValue
-    private Integer authorityId;
+    private Long authorityId;
 
     private String permission;
 

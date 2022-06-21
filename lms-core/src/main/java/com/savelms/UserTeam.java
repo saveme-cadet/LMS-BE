@@ -17,10 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "TEAM_USER")
+@Table(name = "USER_TEAM")
 @Entity
 @Builder
-public class TeamUser extends BaseEntity{
+public class UserTeam extends BaseEntity{
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -32,7 +32,7 @@ public class TeamUser extends BaseEntity{
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TEAM_USER_ID")
+    @Column(name = "USER_TEAM_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/

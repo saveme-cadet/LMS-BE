@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -82,37 +83,38 @@ public class User extends BaseEntity {
      * role
      */
     @Singular
-    @ManyToMany(cascade = {CascadeType.MERGE})
-    @JoinTable(name = "user_role",
-        joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-        inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
-    private Set<Role> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<UserRole> userRoles = new HashSet<>();
+
+    @Singular
+    @OneToMany(mappedBy = "team")
+    private Set<UserTeam> userTeams = new HashSet<>();
 
     /********************************* 비니지스 로직 *********************************/
 
-    /**
-     * 편의용 getter
-     * @return
-     */
-    public Set<Authority> getAuthorities() {
-        return roles.stream()
-            .map((role) ->
-                role.getAuthorities())
-            .flatMap(Set::stream)
-            .collect(Collectors.toSet());
-    }
-
-
-    /**
-     * 첫 회원가입시 디폴트 상태 정의
-     * @param defaultRole
-     * @param encodedPassword
-     */
-    public void setDefaultJoinStatus(Role defaultRole, String encodedPassword) {
-
-        roles.add(defaultRole);
-        password = password;
-        nickName = username;
-        email = username + User.emailSuffix;
-    }
+//    /**
+//     * 편의용 getter
+//     * @return
+//     */
+//    public Set<Authority> getAuthorities() {
+//        return roles.stream()
+//            .map((role) ->
+//                role.getAuthorities())
+//            .flatMap(Set::stream)
+//            .collect(Collectors.toSet());
+//    }
+//
+//
+//    /**
+//     * 첫 회원가입시 디폴트 상태 정의
+//     * @param defaultRole
+//     * @param encodedPassword
+//     */
+//    public void setDefaultJoinStatus(Role defaultRole, String encodedPassword) {
+//
+//        roles.add(defaultRole);
+//        password = password;
+//        nickName = username;
+//        email = username + User.emailSuffix;
+//    }
 }

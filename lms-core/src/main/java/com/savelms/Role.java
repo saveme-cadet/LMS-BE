@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ser.Serializers.Base;
 import com.larry.fc.finalproject.core.domain.entity.user.User;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,7 +30,8 @@ public class Role extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name="ROLE_ID")
+    private Long id;
 
     private String name;
 
@@ -38,7 +40,7 @@ public class Role extends BaseEntity {
 
     @Singular
     @ManyToMany(cascade = {CascadeType.MERGE})
-    @JoinTable(name = "role_authority",
+    @JoinTable(name = "ROLE_AUTHORITY",
         joinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")},
         inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
     private Set<Authority> authorities;
