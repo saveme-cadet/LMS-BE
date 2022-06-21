@@ -87,7 +87,7 @@ public class User extends BaseEntity {
     private Set<UserRole> userRoles = new HashSet<>();
 
     @Singular
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "user")
     private Set<UserTeam> userTeams = new HashSet<>();
 
     /********************************* 비니지스 로직 *********************************/

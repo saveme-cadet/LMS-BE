@@ -1,6 +1,5 @@
 package com.savelms;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,10 +17,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "STUDY_TIME")
+@Table(name = "DAY_STATISTICAL_DATA")
 @Entity
 @Builder
-public class StudyTime extends BaseEntity{
+public class DayStatisticalData {
+
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -34,30 +33,28 @@ public class StudyTime extends BaseEntity{
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="STUDY_TIME_ID")
+    @Column(name="DAY_STATISTICAL_DATA_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
 
-    LocalDateTime startTime;
-    LocalDateTime endTime;
-
-    /********************************* 연관관계 매핑 *********************************/
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn("ATTENDANCE_ID")
-    private Attendance attendance;
-
+    private int day;
+    private int attendanceDay;
 
 
     /********************************* 비영속 필드 *********************************/
 
 
+    /********************************* 연관관계 매핑 *********************************/
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn("USER_ID")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn("CALENDAR_ID")
+    private Calendar calendar;
 
     /********************************* 비니지스 로직 *********************************/
-
-
-
 
 }

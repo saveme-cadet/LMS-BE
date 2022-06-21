@@ -1,5 +1,7 @@
 package com.savelms;
 
+import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,31 +17,53 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Table(name = "TODO")
-@Entity
-@SequenceGenerator(
-    name = "TODO_GENERATOR",
-    sequenceName = "MEMBER_SEQ",
-    initialValue = 1,
-    allocationSize = 50)
+
+//@SequenceGenerator(
+//    name = "TODO_GENERATOR",
+//    sequenceName = "MEMBER_SEQ",
+//    initialValue = 1,
+//    allocationSize = 50)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "TODO")
+@Entity
 public class Todo extends BaseEntity{
 
+
+
+    //********************************* static final 상수 필드 *********************************/
+
+
+    /********************************* PK 필드 *********************************/
+
+    /**
+     * 기본 키
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long todoId;
+    @Column(name="TODO_ID")
+    private Long id;
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TODO_GENERATOR")
-    private Long seq;
+    /********************************* PK가 아닌 필드 *********************************/
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name="ATTENDANCE_ID")
+    private boolean complete;
+    private String title;
+
+    /********************************* 연관관계 매핑 *********************************/
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn("ATTENDANCE_ID")
     private Attendance attendance;
 
-    private String title;
-    private boolean titleCheck;
+
+
+    /********************************* 비영속 필드 *********************************/
+
+
+
+    /********************************* 비니지스 로직 *********************************/
+
 
 
 }
