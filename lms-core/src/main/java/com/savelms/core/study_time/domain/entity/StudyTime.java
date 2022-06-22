@@ -1,9 +1,7 @@
 package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
-import com.savelms.core.score.domain.entity.Score;
 import com.savelms.core.user.domain.entity.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -57,9 +55,6 @@ public class StudyTime extends BaseEntity {
     @JoinColumn(name = "CALENDAR_ID")
     private Calendar calendar;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="STUDY_TIME_ID")
-    private StudyTime studyTime;
 
 
 

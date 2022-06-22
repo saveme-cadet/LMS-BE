@@ -4,7 +4,6 @@ import com.savelms.core.BaseEntity;
 import com.savelms.core.attendance.domain.CheckIn;
 import com.savelms.core.attendance.domain.CheckOut;
 import com.savelms.core.calendar.domain.entity.Calendar;
-import com.savelms.core.score.domain.entity.Score;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import com.savelms.core.todo.domain.entity.Todo;
 import com.savelms.core.user.domain.entity.User;
@@ -54,11 +53,6 @@ public class Attendance extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CheckOut checkout;
 
-//    //하루 총 아오지 시간 저장
-//    //자료형 적절하게 추후 변경
-    //집계 테이블로 이동
-//    private Double aojiStudyTime;
-//    private Double todoCompleteRate;
 
 
     /********************************* 연관관계 매핑 *********************************/
@@ -72,16 +66,8 @@ public class Attendance extends BaseEntity {
     @JoinColumn(name="CALENDAR_ID")
     private Calendar calendar;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="SCORE_ID")
-    private com.savelms.core.score.domain.entity.Score Score;
 
 
-    @OneToMany(mappedBy = "attendance")
-    private List<Todo> todos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "attendance")
-    private List<StudyTime> studyTimes = new ArrayList<>();
 
     /********************************* 비영속 필드 *********************************/
 

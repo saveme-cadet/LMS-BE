@@ -2,7 +2,8 @@ package com.savelms.core.todo.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.attendance.domain.entity.Attendance;
-import com.savelms.core.score.domain.entity.Score;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,8 +49,9 @@ public class Todo extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
 
-    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "TODO_GENERATOR")
-    private Long order;
+//    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "TODO_GENERATOR")
+//    private Integer order;
+
     private boolean complete;
     private String title;
 
@@ -57,12 +59,14 @@ public class Todo extends BaseEntity {
     /********************************* 연관관계 매핑 *********************************/
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ATTENDANCE_ID")
-    private Attendance attendance;
+    @JoinColumn(name="USER_ID")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="SCORE_ID")
-    private Score score;
+    @JoinColumn(name = "CALENDAR_ID")
+    private Calendar calendar;
+
+
 
     /********************************* 비영속 필드 *********************************/
 

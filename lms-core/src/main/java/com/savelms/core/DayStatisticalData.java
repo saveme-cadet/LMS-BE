@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "DAY_STATISTICAL_DATA")
 @Entity
 @Builder
-public class DayStatisticalData {
+public class DayStatisticalData extends BaseEntity {
 
 
     //********************************* static final 상수 필드 *********************************/
@@ -40,8 +40,11 @@ public class DayStatisticalData {
 
     /********************************* PK가 아닌 필드 *********************************/
 
-    private int day;
-    private int attendanceDay;
+    private Double attendanceScore;
+    private Double absentScore;
+    private Double todoSuccessRate;
+    private Double studyTimeScore;
+    private Double totalScore;
 
 
     /********************************* 비영속 필드 *********************************/

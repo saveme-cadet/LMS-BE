@@ -7,10 +7,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-@SpringBootApplication(scanBasePackages = "com.savelms")
+@SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.savelms.core")
-@EntityScan("com.savelms.core")
-@ComponentScan("com.savelms.core")
+@EntityScan("com.savelms")
+//@ComponentScan("com.savelms")
 public class ApiApplication {
 
     public static void main(String[] args) {
