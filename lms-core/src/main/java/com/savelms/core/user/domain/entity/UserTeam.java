@@ -1,4 +1,4 @@
-package com.savelms.core.auth.domain.entity;
+package com.savelms.core.user.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import javax.persistence.Column;

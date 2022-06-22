@@ -1,8 +1,11 @@
-package com.savelms.core;
+package com.savelms.vacation.domain.entity;
 
-import com.savelms.core.auth.domain.entity.User;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.savelms.core.BaseEntity;
+import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.user.domain.entity.User;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +23,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
+@Table(name = "VACATION")
 @Entity
-@Table(name = "ATTENDANCE")
-public class Attendance extends BaseEntity {
+@Builder
+public class Vacation extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
+
 
     /********************************* PK 필드 *********************************/
 
@@ -36,16 +38,14 @@ public class Attendance extends BaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ATTENDANCE_ID")
+    @Column(name="VACATION_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
-    private Boolean CheckIn;
-    //하루 총 아오지 시간 저장
-    //자료형 적절하게 추후 변경
-    private Double aojiStudyTime;
-    private Double todoCompleteRate;
 
+    private int assignedDays;
+    private int usedDays;
+    private String reason;
 
     /********************************* 연관관계 매핑 *********************************/
 
@@ -54,24 +54,13 @@ public class Attendance extends BaseEntity {
     @JoinColumn(name="USER_ID")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="CALENDAR_ID")
-    private Calendar calendar;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="SCORE_ID")
-    private Score Score;
-
-
-    @OneToMany(mappedBy = "attendance")
-    private List<Todo> todos = new ArrayList<>();
-
-    @OneToMany(mappedBy = "attendance")
-    private List<StudyTime> studyTimes = new ArrayList<>();
-
     /********************************* 비영속 필드 *********************************/
 
+
+
     /********************************* 비니지스 로직 *********************************/
+
+
 
 
 }

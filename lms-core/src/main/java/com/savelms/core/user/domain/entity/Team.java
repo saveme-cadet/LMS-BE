@@ -1,8 +1,10 @@
-package com.savelms.core.auth.domain.entity;
+package com.savelms.core.user.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,7 +37,8 @@ public class Team extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
 
-    private String team;
+    @Enumerated(EnumType.STRING)
+    private TeamEnum teamEnum;
 
     /********************************* 비영속 필드 *********************************/
 

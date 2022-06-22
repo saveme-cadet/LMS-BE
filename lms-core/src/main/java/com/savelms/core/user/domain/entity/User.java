@@ -1,7 +1,6 @@
-package com.savelms.core.auth.domain.entity;
+package com.savelms.core.user.domain.entity;
 
 
-import com.savelms.core.Authority;
 import com.savelms.core.BaseEntity;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

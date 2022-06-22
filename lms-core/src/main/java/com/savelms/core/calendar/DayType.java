@@ -1,4 +1,4 @@
-package com.savelms.core;
+package com.savelms.core.calendar;
 
 public enum DayType {
     HOLIDAY, STUDYDAY

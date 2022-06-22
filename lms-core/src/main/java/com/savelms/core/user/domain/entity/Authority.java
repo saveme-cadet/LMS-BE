@@ -1,6 +1,6 @@
-package com.savelms.core;
+package com.savelms.core.user.domain.entity;
 
-import com.savelms.core.auth.domain.entity.Role;
+import com.savelms.core.user.domain.entity.Role;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;

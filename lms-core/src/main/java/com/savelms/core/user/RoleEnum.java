@@ -1,4 +1,4 @@
-package com.savelms.core.auth.domain.entity;
+package com.savelms.core.user;
 
 public enum RoleEnum {
     UNAUTHORIZED, USER, MANAGER, ADMIN

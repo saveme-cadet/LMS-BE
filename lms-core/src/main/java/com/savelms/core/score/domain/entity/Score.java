@@ -1,14 +1,12 @@
-package com.savelms.core;
+package com.savelms.core.score.domain.entity;
 
-import java.time.LocalDateTime;
+
+import com.savelms.core.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +16,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "STUDY_TIME")
-@Entity
 @Builder
-public class StudyTime extends BaseEntity{
+@Table(name = "SCORE")
+@Entity
+public class Score extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -33,29 +31,25 @@ public class StudyTime extends BaseEntity{
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="STUDY_TIME_ID")
+    @Column(name="SCORE_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
-
-    LocalDateTime startTime;
-    LocalDateTime endTime;
-
-    /********************************* 연관관계 매핑 *********************************/
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ATTENDANCE_ID")
-    private Attendance attendance;
-
+    private Double attendanceScore;
+    private Double absentScore;
+    private Double todoSuccessRate;
+    private Double studyTimeScore;
 
 
     /********************************* 비영속 필드 *********************************/
 
 
+    /********************************* 연관관계 매핑 *********************************/
+
+
+
 
     /********************************* 비니지스 로직 *********************************/
-
 
 
 

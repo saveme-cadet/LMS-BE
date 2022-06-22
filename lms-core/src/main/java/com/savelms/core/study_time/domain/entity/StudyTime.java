@@ -1,6 +1,11 @@
-package com.savelms.core.auth.domain.entity;
+package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.score.domain.entity.Score;
+import com.savelms.core.user.domain.entity.User;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,10 +23,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "USER_ROLE")
+@Table(name = "STUDY_TIME")
 @Entity
 @Builder
-public class UserRole extends BaseEntity {
+public class StudyTime extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -33,14 +38,13 @@ public class UserRole extends BaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ROLE_ID")
+    @Column(name="STUDY_TIME_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
 
-
-    /********************************* 비영속 필드 *********************************/
-
+    LocalDateTime startTime;
+    LocalDateTime endTime;
 
     /********************************* 연관관계 매핑 *********************************/
 
@@ -50,9 +54,24 @@ public class UserRole extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ROLE_ID")
-    private Role role;
+    @JoinColumn(name = "CALENDAR_ID")
+    private Calendar calendar;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="STUDY_TIME_ID")
+    private StudyTime studyTime;
+
+
+
+
+
+    /********************************* 비영속 필드 *********************************/
+
+
 
     /********************************* 비니지스 로직 *********************************/
+
+
+
 
 }
