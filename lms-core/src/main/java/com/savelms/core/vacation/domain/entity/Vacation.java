@@ -1,11 +1,8 @@
-package com.savelms.vacation.domain.entity;
+package com.savelms.core.vacation.domain.entity;
 
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.attendance.domain.entity.Attendance;
-import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.user.domain.entity.User;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

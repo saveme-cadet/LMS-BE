@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    default: dev
+  properties:
+    hibernate:
+      default_batch_fetch_size: 100
+  session:
+    store-type: jdbc
+    jdbc.initialize-schema: always
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: test
+    password: Test1234!
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create
