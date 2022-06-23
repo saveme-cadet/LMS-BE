@@ -6,7 +6,6 @@ import com.savelms.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor

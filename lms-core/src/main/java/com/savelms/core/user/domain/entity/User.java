@@ -61,7 +61,7 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false, length = 20)
     private String username;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false)
     private String password;
 
     @Column(unique = true, nullable = false, length = 20)
@@ -100,13 +100,13 @@ public class User extends BaseEntity {
     /**
      * role
      */
-    @Builder.Default
+    @Singular
     @OneToMany(mappedBy = "user")
-    private Set<UserRole> userRoles = new HashSet<>();
+    private final Set<UserRole> userRoles = new HashSet<>();
 
-    @Builder.Default
+    @Singular
     @OneToMany(mappedBy = "user")
-    private Set<UserTeam> userTeams = new HashSet<>();
+    private final Set<UserTeam> userTeams = new HashSet<>();
 
     /********************************* 비니지스 로직 *********************************/
 
@@ -125,16 +125,7 @@ public class User extends BaseEntity {
 
 
 
-    public static User createDefaultSignUpUser(String username, String password, String email, UserRole userRole) {
-        User user = User.builder()
-            .username(username)
-            .password(password)
-            .email(email)
-            .nickname(username)
-            .build();
-        userRole.setUserAndUserRoleToUser(user);
-        return user;
-    }
+
     /********************************* 연관관계 편의 메서드 *********************************/
 
 }

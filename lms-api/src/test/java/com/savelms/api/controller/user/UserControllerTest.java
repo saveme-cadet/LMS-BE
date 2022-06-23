@@ -4,7 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
 import com.larry.fc.finalproject.core.domain.entity.user.User;
+import com.savelms.api.user.controller.dto.UserSignUpRequest;
+import com.savelms.api.user.controller.dto.UserSignUpResponse;
 import com.savelms.api.user.service.UserService;
+import com.savelms.core.user.domain.entity.User;
+import com.savelms.core.user.domain.repository.UserRepository;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;

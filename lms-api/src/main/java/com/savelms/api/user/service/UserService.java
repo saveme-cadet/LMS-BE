@@ -6,6 +6,7 @@ import com.savelms.core.role.RoleEnum;
 import com.savelms.core.role.domain.entity.Role;
 import com.savelms.core.role.domain.entity.UserRole;
 import com.savelms.core.role.domain.repository.RoleRepository;
+import com.savelms.core.role.domain.repository.UserRoleRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
 
     /**
      * 회원가입
@@ -32,10 +34,16 @@ public class UserService {
         //첫 회원가입시 유저 상태 저장.
         UserRole userRole = createUnauthorizedUserRole();
         String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
-        User user = User.createDefaultSignUpUser(userSignUpRequest.getUsername(),
-            encodedPassword,
-            userSignUpRequest.getEmail(), userRole);
+        User user = User.builder()
+            .username(userSignUpRequest.getUsername())
+            .password(encodedPassword)
+            .email(userSignUpRequest.getEmail())
+            .nickname(userSignUpRequest.getUsername())
+            .build();
+
+        userRole.setUserAndUserRoleToUser(user);
         User savedUser = userRepository.save(user);
+        userRoleRepository.save(userRole);
         return savedUser.getId();
     }
 

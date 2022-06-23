@@ -4,6 +4,7 @@ import com.savelms.core.role.domain.entity.Role;
 import com.savelms.core.role.domain.entity.UserRole;
 import com.savelms.core.role.domain.repository.RoleRepository;
 import com.savelms.core.role.domain.repository.UserRoleRepository;
+import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.user.domain.entity.Authority;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.AuthorityRepository;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDataLoader implements CommandLineRunner {
 
     private final EntityManager em;
-
+    private final BCryptPasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     private void loadSecurityData() {
@@ -55,27 +56,33 @@ public class UserDataLoader implements CommandLineRunner {
         UserRole adminUserRole = UserRole.builder()
             .role(adminRole)
             .build();
-        User admin = User.createDefaultSignUpUser("admin", "admin", "admin@gmail.com",
+        User admin = createDefaultSignUpUser("admin", passwordEncoder.encode("admin"), "admin@gmail.com",
             adminUserRole);
+        adminUserRole.setUserAndUserRoleToUser(admin);
 
 
         UserRole managerUserRole = UserRole.builder()
             .role(managerRole)
             .build();
-        User manager = User.createDefaultSignUpUser("manager", "manager",
+        User manager = createDefaultSignUpUser("manager", passwordEncoder.encode("manager"),
             "manager@gmail.com", managerUserRole);
+        managerUserRole.setUserAndUserRoleToUser(manager);
 
         UserRole userUserRole = UserRole.builder()
             .role(userRole)
             .build();
-        User user = User.createDefaultSignUpUser("user", "user", "user@gmail.com",
+        User user = createDefaultSignUpUser("user", passwordEncoder.encode("user"), "user@gmail.com",
             userUserRole);
+
+        userUserRole.setUserAndUserRoleToUser(user);
 
         UserRole unauthorizedUserRole = UserRole.builder()
             .role(unauthorizedRole)
             .build();
-        User unauthorized = User.createDefaultSignUpUser("unauthorized", "unauthorized",
+        User unauthorized = createDefaultSignUpUser("unauthorized", passwordEncoder.encode("unauthorized"),
             "unauthorized@gmail.com", unauthorizedUserRole);
+        unauthorizedUserRole.setUserAndUserRoleToUser(unauthorized);
+
 
 
         userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
@@ -93,6 +100,16 @@ public class UserDataLoader implements CommandLineRunner {
     private Authority saveNewAuthority(String s) {
         return authorityRepository.save(
             Authority.builder().permission(s).build());
+    }
+
+    private User createDefaultSignUpUser(String username, String password, String email, UserRole userRole) {
+        User user = User.builder()
+            .username(username)
+            .password(password)
+            .email(email)
+            .nickname(username)
+            .build();
+        return user;
     }
 
     @Override
