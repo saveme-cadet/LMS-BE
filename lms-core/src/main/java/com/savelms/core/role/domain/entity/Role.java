@@ -49,19 +49,23 @@ public class Role extends BaseEntity {
 
     /********************************* 연관관계 매핑 *********************************/
 
-    @Singular
+    @Builder.Default
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "ROLE_AUTHORITY",
         joinColumns = {
             @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID", nullable = false)},
         inverseJoinColumns = {
             @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "AUTHORITY_ID", nullable = false)})
-    private Set<Authority> authorities;
+    private Set<Authority> authorities = new HashSet<>();
 
 
     /********************************* 비니지스 로직 *********************************/
 
-
+    public void addAuthorities(Authority... authorities) {
+        for (Authority authority : authorities) {
+            this.authorities.add(authority);
+        }
+    }
 
 
 
