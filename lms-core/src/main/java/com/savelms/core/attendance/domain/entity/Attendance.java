@@ -49,8 +49,11 @@ public class Attendance extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CheckIn checkIn;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CheckOut checkout;
 
 
@@ -59,11 +62,11 @@ public class Attendance extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="CALENDAR_ID")
+    @JoinColumn(name="CALENDAR_ID", nullable = false, updatable = false)
     private Calendar calendar;
 
 

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,11 @@ import lombok.Singular;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "USER")
+@Table(name = "USER", uniqueConstraints = {
+    @UniqueConstraint(name = "USERNAME_UNIQUE", columnNames = {"username"}),
+    @UniqueConstraint(name = "NICK_NAME_UNIQUE", columnNames = {"nick_name"})
+})
+
 @Entity
 @Builder
 public class User extends BaseEntity {
@@ -49,25 +54,33 @@ public class User extends BaseEntity {
      * AUTH에 필요한 필드
      */
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, updatable = false, length = 20)
     private String username;
-    private String password;
-    @Column(unique = true)
 
+    @Column(nullable = false, length = 15)
+    private String password;
+
+    @Column(unique = true, nullable = false, length = 20)
     private String nickName;
 
     @Builder.Default
+    @Column(nullable = false)
     private Boolean accountNonExpired = true;
+
     @Builder.Default
+    @Column(nullable = false)
     private Boolean accountNonLocked = true;
+
     @Builder.Default
+    @Column(nullable = false)
     private Boolean credentialsNonExpired = true;
+
     @Builder.Default
+    @Column(nullable = false)
     private Boolean enabled = true;
 
+    @Column(nullable = false, length = 40)
     private String email;
-
-    private Double vacation;
 
     /********************************* 비영속 필드 *********************************/
 

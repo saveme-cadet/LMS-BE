@@ -26,6 +26,7 @@ public class Authority {
     @Column(name="AUTHORITY_ID")
     private Long id;
 
+    @Column(nullable = false)
     private String permission;
 
     @ManyToMany(mappedBy = "authorities")

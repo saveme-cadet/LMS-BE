@@ -48,11 +48,11 @@ public class UserRole extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name="USER_ID", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ROLE_ID")
+    @JoinColumn(name="ROLE_ID", nullable = false)
     private Role role;
 
     /********************************* 비니지스 로직 *********************************/

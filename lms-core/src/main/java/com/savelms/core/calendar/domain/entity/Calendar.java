@@ -43,9 +43,11 @@ public class Calendar extends BaseEntity {
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
+
     LocalDate date;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     DayType dayType;
 
 

@@ -40,11 +40,21 @@ public class DayStatisticalData extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
 
+    @Column(nullable = false, updatable = false)
     private Double attendanceScore;
+
+    @Column(nullable = false, updatable = false)
     private Double absentScore;
+
+    @Column(nullable = false, updatable = false)
     private Double todoSuccessRate;
+
+    @Column(nullable = false, updatable = false)
     private Double studyTimeScore;
+
+    @Column(nullable = false, updatable = false)
     private Double totalScore;
+
 
 
     /********************************* 비영속 필드 *********************************/

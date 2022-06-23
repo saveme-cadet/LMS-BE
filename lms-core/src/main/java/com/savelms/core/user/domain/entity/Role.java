@@ -40,7 +40,7 @@ public class Role extends BaseEntity {
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
-
+    @Column(nullable = false)
     private String name;
 
     /********************************* 비영속 필드 *********************************/
@@ -50,9 +50,10 @@ public class Role extends BaseEntity {
     @Singular
     @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "ROLE_AUTHORITY",
-        joinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID")},
+        joinColumns = {
+            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID", nullable = false)},
         inverseJoinColumns = {
-            @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "AUTHORITY_ID")})
+            @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "AUTHORITY_ID", nullable = false)})
     private Set<Authority> authorities;
 
 

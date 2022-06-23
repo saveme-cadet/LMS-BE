@@ -45,11 +45,11 @@ public class UserTeam extends BaseEntity {
     /********************************* 연관관계 매핑 *********************************/
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name="USER_ID", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="TEAM_ID")
+    @JoinColumn(name="TEAM_ID", nullable = false)
     private Team team;
 
 

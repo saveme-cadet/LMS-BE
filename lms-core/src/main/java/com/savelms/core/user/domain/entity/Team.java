@@ -38,6 +38,7 @@ public class Team extends BaseEntity {
     /********************************* PK가 아닌 필드 *********************************/
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TeamEnum teamEnum;
 
     /********************************* 비영속 필드 *********************************/

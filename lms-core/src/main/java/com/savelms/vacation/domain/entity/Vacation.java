@@ -43,15 +43,19 @@ public class Vacation extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
 
+    @Column(nullable = false)
     private int assignedDays;
+
+    @Column(nullable = false)
     private int usedDays;
+
     private String reason;
 
     /********************************* 연관관계 매핑 *********************************/
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
     /********************************* 비영속 필드 *********************************/

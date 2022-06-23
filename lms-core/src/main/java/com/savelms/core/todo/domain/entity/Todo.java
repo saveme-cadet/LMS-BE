@@ -59,11 +59,11 @@ public class Todo extends BaseEntity {
     /********************************* 연관관계 매핑 *********************************/
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CALENDAR_ID")
+    @JoinColumn(name = "CALENDAR_ID", nullable = false, updatable = false)
     private Calendar calendar;
 
 
