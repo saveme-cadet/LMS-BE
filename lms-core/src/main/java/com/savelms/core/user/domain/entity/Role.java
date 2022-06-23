@@ -1,6 +1,7 @@
 package com.savelms.core.user.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

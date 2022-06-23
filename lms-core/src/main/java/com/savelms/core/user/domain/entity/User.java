@@ -24,7 +24,7 @@ import lombok.Singular;
 @Getter
 @Table(name = "USER", uniqueConstraints = {
     @UniqueConstraint(name = "USERNAME_UNIQUE", columnNames = {"username"}),
-    @UniqueConstraint(name = "NICK_NAME_UNIQUE", columnNames = {"nick_name"})
+    @UniqueConstraint(name = "NICK_NAME_UNIQUE", columnNames = {"nickname"})
 })
 
 @Entity
@@ -61,7 +61,7 @@ public class User extends BaseEntity {
     private String password;
 
     @Column(unique = true, nullable = false, length = 20)
-    private String nickName;
+    private String nickname;
 
     @Builder.Default
     @Column(nullable = false)
@@ -88,7 +88,7 @@ public class User extends BaseEntity {
      * authorities
      */
     @Transient
-    private Set<Authority> authorities = new HashSet<>();
+    private Set<Authority> authorities;
 
     /********************************* 연관관계 매핑 *********************************/
 
@@ -98,11 +98,11 @@ public class User extends BaseEntity {
      */
     @Singular
     @OneToMany(mappedBy = "user")
-    private Set<UserRole> userRoles = new HashSet<>();
+    private Set<UserRole> userRoles;
 
     @Singular
     @OneToMany(mappedBy = "user")
-    private Set<UserTeam> userTeams = new HashSet<>();
+    private Set<UserTeam> userTeams;
 
     /********************************* 비니지스 로직 *********************************/
 
