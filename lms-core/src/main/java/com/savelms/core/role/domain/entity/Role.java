@@ -1,26 +1,32 @@
-package com.savelms.core.user.domain.entity;
+package com.savelms.core.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.user.domain.entity.Authority;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 
+@Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Table(name = "TEAM")
-@Entity
 @Builder
-public class Team extends BaseEntity {
+@Table(name="ROLE")
+public class Role extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -32,24 +38,33 @@ public class Team extends BaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TEAM_ID")
+    @Column(name="ROLE_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TeamEnum teamEnum;
+    private String name;
 
     /********************************* 비영속 필드 *********************************/
 
-
     /********************************* 연관관계 매핑 *********************************/
 
-
+    @Singular
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(name = "ROLE_AUTHORITY",
+        joinColumns = {
+            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID", nullable = false)},
+        inverseJoinColumns = {
+            @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "AUTHORITY_ID", nullable = false)})
+    private Set<Authority> authorities;
 
 
     /********************************* 비니지스 로직 *********************************/
+
+
+
+
+
 
 
 

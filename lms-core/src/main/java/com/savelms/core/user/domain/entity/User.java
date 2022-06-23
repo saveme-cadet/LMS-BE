@@ -2,8 +2,12 @@ package com.savelms.core.user.domain.entity;
 
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.role.domain.entity.Role;
+import com.savelms.core.role.domain.entity.UserRole;
+import com.savelms.core.team.domain.entity.UserTeam;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -96,39 +100,41 @@ public class User extends BaseEntity {
     /**
      * role
      */
-    @Singular
+    @Builder.Default
     @OneToMany(mappedBy = "user")
-    private Set<UserRole> userRoles;
+    private Set<UserRole> userRoles = new HashSet<>();
 
-    @Singular
+    @Builder.Default
     @OneToMany(mappedBy = "user")
-    private Set<UserTeam> userTeams;
+    private Set<UserTeam> userTeams = new HashSet<>();
 
     /********************************* 비니지스 로직 *********************************/
 
-//    /**
-//     * 편의용 getter
-//     * @return
-//     */
-//    public Set<Authority> getAuthorities() {
-//        return roles.stream()
-//            .map((role) ->
-//                role.getAuthorities())
-//            .flatMap(Set::stream)
-//            .collect(Collectors.toSet());
-//    }
-//
-//
-//    /**
-//     * 첫 회원가입시 디폴트 상태 정의
-//     * @param defaultRole
-//     * @param encodedPassword
-//     */
-//    public void setDefaultJoinStatus(Role defaultRole, String encodedPassword) {
-//
-//        roles.add(defaultRole);
-//        password = password;
-//        nickName = username;
-//        email = username + User.emailSuffix;
-//    }
+    /**
+     * 편의용 getter
+     * @return
+     */
+    public Set<Authority> getAuthorities() {
+        return userRoles.stream()
+            .map((userRole -> userRole.getRole()))
+            .map((role) ->
+                role.getAuthorities())
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
+    }
+
+
+
+    public static User createDefaultSignUpUser(String username, String password, String email, UserRole userRole) {
+        User user = User.builder()
+            .username(username)
+            .password(password)
+            .email(email)
+            .nickname(username)
+            .build();
+        userRole.setUserAndUserRoleToUser(user);
+        return user;
+    }
+    /********************************* 연관관계 편의 메서드 *********************************/
+
 }

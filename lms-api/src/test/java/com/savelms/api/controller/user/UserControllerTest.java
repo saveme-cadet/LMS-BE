@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
 import com.larry.fc.finalproject.core.domain.entity.user.User;
-import com.savelms.UserService;
+import com.savelms.api.user.service.UserService;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
