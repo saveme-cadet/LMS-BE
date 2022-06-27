@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -56,8 +57,9 @@ public class Calendar extends BaseEntity {
 
     /********************************* 연관관계 매핑 *********************************/
 
+    @Singular
     @OneToMany(mappedBy = "calendar")
-    private List<Attendance> attendances = new ArrayList<>();
+    private final List<Attendance> attendances = new ArrayList<>();
 
     /********************************* 비니지스 로직 *********************************/
 

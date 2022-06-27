@@ -1,13 +1,15 @@
-package com.savelms.core.user.domain.entity;
+package com.savelms.core.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +19,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "TEAM")
+@Table(name = "USER_ROLE")
 @Entity
 @Builder
-public class Team extends BaseEntity {
+public class UserRole extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -32,14 +34,12 @@ public class Team extends BaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TEAM_ID")
+    @Column(name = "USER_ROLE_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TeamEnum teamEnum;
+    private String reason;
 
     /********************************* 비영속 필드 *********************************/
 
@@ -47,10 +47,20 @@ public class Team extends BaseEntity {
     /********************************* 연관관계 매핑 *********************************/
 
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="USER_ID", nullable = false)
+    private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ROLE_ID", nullable = false)
+    private Role role;
 
     /********************************* 비니지스 로직 *********************************/
 
 
-
+    /********************************* 연관관계 편의 메서드 *********************************/
+    public void setUserAndUserRoleToUser(User user) {
+        user.getUserRoles().add(this);
+        this.user = user;
+    }
 }

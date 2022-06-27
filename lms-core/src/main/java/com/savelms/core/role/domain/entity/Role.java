@@ -1,6 +1,7 @@
-package com.savelms.core.user.domain.entity;
+package com.savelms.core.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.user.domain.entity.Authority;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -55,12 +56,16 @@ public class Role extends BaseEntity {
             @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID", nullable = false)},
         inverseJoinColumns = {
             @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "AUTHORITY_ID", nullable = false)})
-    private Set<Authority> authorities;
+    private final Set<Authority> authorities = new HashSet<>();
 
 
     /********************************* 비니지스 로직 *********************************/
 
-
+    public void addAuthorities(Authority... authorities) {
+        for (Authority authority : authorities) {
+            this.authorities.add(authority);
+        }
+    }
 
 
 

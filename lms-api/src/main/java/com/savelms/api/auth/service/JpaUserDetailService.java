@@ -1,10 +1,6 @@
-//package com.savelms.auth.config;
+//package com.savelms.api.auth.service;
 //
-//import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
-//import com.larry.fc.finalproject.core.domain.entity.user.Authority;
-//import com.larry.fc.finalproject.core.domain.entity.user.User;
 //import java.util.Collection;
-//import java.util.Set;
 //import java.util.stream.Collectors;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.GrantedAuthority;
@@ -43,21 +39,21 @@
 //            .collect(Collectors.toSet());
 //    }
 //
-//    /*private Collection<? extends GrantedAuthority> convertToSpringAuthorityCollection(Role role) {
+//    private Collection<? extends GrantedAuthority> convertToSpringAuthorityCollection(Role role) {
 //        HashSet<SimpleGrantedAuthority> simpleGrantedAuthorities = new HashSet<>();
 //        simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role.name()));
 //        return simpleGrantedAuthorities;
-//    }*/
+//    }
 //
-////    private Collection<? extends GrantedAuthority> convertToSpringAuthorities(
-////        Set<Authority> authorities) {
-////        if (authorities != null && authorities.size() != 0) {
-////            return authorities.stream()
-////                  .map(Authority::getRole)
-////                .map(SimpleGrantedAuthority::new)
-////                .collect(Collectors.toSet());
-////        }else{
-////            return new HashSet<>();
-////        }
-////    }
+//    private Collection<? extends GrantedAuthority> convertToSpringAuthorities(
+//        Set<Authority> authorities) {
+//        if (authorities != null && authorities.size() != 0) {
+//            return authorities.stream()
+//                  .map(Authority::getRole)
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toSet());
+//        }else{
+//            return new HashSet<>();
+//        }
+//    }
 //}
