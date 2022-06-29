@@ -2,13 +2,16 @@ package com.savelms.api.user.service;
 
 
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
-import com.savelms.core.role.RoleEnum;
-import com.savelms.core.role.domain.entity.Role;
-import com.savelms.core.role.domain.entity.UserRole;
-import com.savelms.core.role.domain.repository.RoleRepository;
-import com.savelms.core.role.domain.repository.UserRoleRepository;
+import com.savelms.api.user.role.service.RoleService;
+import com.savelms.core.user.role.RoleEnum;
+import com.savelms.core.user.role.domain.entity.Role;
+import com.savelms.core.user.role.domain.entity.UserRole;
+import com.savelms.core.user.role.domain.repository.RoleRepository;
+import com.savelms.core.user.role.domain.repository.UserRoleRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
+import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+
+    private final RoleService roleService;
     private final UserRoleRepository userRoleRepository;
 
     /**
@@ -29,34 +33,31 @@ public class UserService {
      * @return
      */
     @Transactional
-    public Long validateUserNameAndSignUp(UserSignUpRequest userSignUpRequest) {
+    public String validateUserNameAndSignUp(UserSignUpRequest userSignUpRequest) {
         validateUsernameDuplicate(userSignUpRequest.getUsername());
-        //첫 회원가입시 유저 상태 저장.
-        UserRole userRole = createUnauthorizedUserRole();
-        String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
-        User user = User.builder()
-            .username(userSignUpRequest.getUsername())
-            .password(encodedPassword)
-            .email(userSignUpRequest.getEmail())
-            .nickname(userSignUpRequest.getUsername())
-            .build();
 
-        userRole.setUserAndUserRoleToUser(user);
-        User savedUser = userRepository.save(user);
+        Role defaultRole = roleService.findByName(RoleEnum.ROLE_UNAUTHORIZED.name());
+        UserRole userRole = createUnauthorizedUserRole(defaultRole);
+        String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
+        User defaultUser = User.createDefaultUser(userSignUpRequest.getUsername(), encodedPassword,
+            userSignUpRequest.getEmail());
+
+        userRole.setUserAndUserRoleToUser(defaultUser);
+
+        User savedUser = userRepository.save(defaultUser);
         userRoleRepository.save(userRole);
-        return savedUser.getId();
+        return savedUser.getApiId();
     }
 
     /**
      * 회원가입시 적절한 Role찾아옴.
      * @return
      */
-    private UserRole createUnauthorizedUserRole() {
-        Role defaultRole = roleRepository.findByName(RoleEnum.UNAUTHORIZED.name()).orElse(null);
-        UserRole userRole = UserRole.builder()
+    private UserRole createUnauthorizedUserRole(Role defaultRole) {
+
+        return UserRole.builder()
             .role(defaultRole)
             .build();
-        return userRole;
     }
 
     /**

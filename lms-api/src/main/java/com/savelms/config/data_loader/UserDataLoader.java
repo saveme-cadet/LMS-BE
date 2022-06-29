@@ -1,21 +1,21 @@
 package com.savelms.config.data_loader;
 
-import com.savelms.core.role.domain.entity.Role;
-import com.savelms.core.role.domain.entity.UserRole;
-import com.savelms.core.role.domain.repository.RoleRepository;
-import com.savelms.core.role.domain.repository.UserRoleRepository;
-import com.savelms.core.team.domain.entity.UserTeam;
-import com.savelms.core.user.domain.entity.Authority;
+import com.savelms.core.user.role.RoleEnum;
+import com.savelms.core.user.role.domain.entity.Role;
+import com.savelms.core.user.role.domain.entity.UserRole;
+import com.savelms.core.user.role.domain.repository.RoleRepository;
+import com.savelms.core.user.role.domain.repository.UserRoleRepository;
+import com.savelms.core.user.authority.domain.entity.Authority;
 import com.savelms.core.user.domain.entity.User;
-import com.savelms.core.user.domain.repository.AuthorityRepository;
+import com.savelms.core.user.authority.domain.repository.AuthorityRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
 import java.util.Arrays;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +33,7 @@ public class UserDataLoader implements CommandLineRunner {
     private final UserRoleRepository userRoleRepository;
 
     @Transactional
-    private void loadSecurityData() {
+    public void loadSecurityData() {
         // Authority 생성
         Authority createUser = saveNewAuthority("user.create");
         Authority updateUser = saveNewAuthority("user.update");
@@ -41,10 +41,10 @@ public class UserDataLoader implements CommandLineRunner {
         Authority deleteUser = saveNewAuthority("user.delete");
 
         //Role 생성
-        Role adminRole = saveNewRole("ADMIN");
-        Role managerRole = saveNewRole("MANAGER");
-        Role userRole = saveNewRole("USER");
-        Role unauthorizedRole = saveNewRole("UNAUTHORIZED");
+        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN.name());
+        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER.name());
+        Role userRole = saveNewRole(RoleEnum.ROLE_USER.name());
+        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED.name());
 
         adminRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
         managerRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
@@ -56,31 +56,32 @@ public class UserDataLoader implements CommandLineRunner {
         UserRole adminUserRole = UserRole.builder()
             .role(adminRole)
             .build();
-        User admin = createDefaultSignUpUser("admin", passwordEncoder.encode("admin"), "admin@gmail.com",
-            adminUserRole);
+        User admin = User.createDefaultUser("admin", passwordEncoder.encode("admin"),
+            "admin@gmail.com");
         adminUserRole.setUserAndUserRoleToUser(admin);
 
 
         UserRole managerUserRole = UserRole.builder()
             .role(managerRole)
             .build();
-        User manager = createDefaultSignUpUser("manager", passwordEncoder.encode("manager"),
-            "manager@gmail.com", managerUserRole);
+        User manager = User.createDefaultUser("manager", passwordEncoder.encode("manager"),
+            "manager@gmail.com");
         managerUserRole.setUserAndUserRoleToUser(manager);
 
         UserRole userUserRole = UserRole.builder()
             .role(userRole)
             .build();
-        User user = createDefaultSignUpUser("user", passwordEncoder.encode("user"), "user@gmail.com",
-            userUserRole);
+        User user = User.createDefaultUser("user", passwordEncoder.encode("user"),
+            "user@gmail.com");
 
         userUserRole.setUserAndUserRoleToUser(user);
 
         UserRole unauthorizedUserRole = UserRole.builder()
             .role(unauthorizedRole)
             .build();
-        User unauthorized = createDefaultSignUpUser("unauthorized", passwordEncoder.encode("unauthorized"),
-            "unauthorized@gmail.com", unauthorizedUserRole);
+        User unauthorized = User.createDefaultUser("unauthorized",
+            passwordEncoder.encode("unauthorized"),
+            "unauthorized@gmail.com");
         unauthorizedUserRole.setUserAndUserRoleToUser(unauthorized);
 
 
@@ -102,15 +103,6 @@ public class UserDataLoader implements CommandLineRunner {
             Authority.builder().permission(s).build());
     }
 
-    private User createDefaultSignUpUser(String username, String password, String email, UserRole userRole) {
-        User user = User.builder()
-            .username(username)
-            .password(password)
-            .email(email)
-            .nickname(username)
-            .build();
-        return user;
-    }
 
     @Override
     public void run(String... args) throws Exception {

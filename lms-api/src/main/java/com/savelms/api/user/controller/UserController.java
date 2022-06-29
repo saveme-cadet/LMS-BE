@@ -13,14 +13,17 @@ public class UserController {
 
     private final UserService userService;
 
+
+
     //@PreAuthorize("hasAuthority('user.create')")
     @PostMapping("/users")
     public UserSignUpResponse signUp(@RequestBody UserSignUpRequest request) {
 
-        Long signUpId = userService.validateUserNameAndSignUp(request);
+        String apiId = userService.validateUserNameAndSignUp(request);
         UserSignUpResponse response = new UserSignUpResponse();
-        response.setUserId(signUpId);
+        response.setApiId(apiId);
         return response;
     }
+
 
 }
