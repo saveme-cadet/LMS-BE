@@ -1,6 +1,8 @@
 package com.savelms.core;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -13,16 +15,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 //@NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private String createId;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
     private String UpdateId;
 
 }

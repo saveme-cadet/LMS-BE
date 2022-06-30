@@ -1,10 +1,12 @@
 package com.savelms.core.user.authority.domain.entity;
 
 import com.savelms.core.user.role.domain.entity.Role;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -21,7 +23,7 @@ import lombok.Singular;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Authority {
+public class Authority implements Serializable {
 
     @Id
     @GeneratedValue
@@ -32,6 +34,6 @@ public class Authority {
     private String permission;
 
     @Singular
-    @ManyToMany(mappedBy = "authorities")
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.EAGER)
     private final Set<Role> roles = new HashSet<>();
 }

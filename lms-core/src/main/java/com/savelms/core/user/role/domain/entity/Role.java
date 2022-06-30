@@ -2,6 +2,7 @@ package com.savelms.core.user.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.user.authority.domain.entity.Authority;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +30,7 @@ import lombok.Singular;
 @NoArgsConstructor
 @Builder
 @Table(name="ROLE")
-public class Role extends BaseEntity {
+public class Role extends BaseEntity implements Serializable {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -52,7 +54,7 @@ public class Role extends BaseEntity {
     /********************************* 연관관계 매핑 *********************************/
 
     @Singular
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "ROLE_AUTHORITY",
         joinColumns = {
             @JoinColumn(name = "ROLE_ID", referencedColumnName = "ROLE_ID", nullable = false)},

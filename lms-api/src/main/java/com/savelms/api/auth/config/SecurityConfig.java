@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             .usernameParameter("username")//form tag의 key값 default 는 username
             .loginProcessingUrl("/api/auth/login"); //url로 들어올시 security 가 요청을 낚아채서 대신 로그인 처리를 해줌.
+
     }
 
     //인증 방식 수동 지정. userDetailsService, passwordEncoder 하나일때는 상관없음.

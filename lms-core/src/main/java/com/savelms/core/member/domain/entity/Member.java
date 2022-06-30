@@ -1,9 +1,8 @@
-package com.savelms.core.user.domain.entity;
-
+package com.savelms.core.member.domain.entity;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.team.domain.entity.UserTeam;
+import com.savelms.core.user.role.domain.entity.UserRole;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +36,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Builder
-public class User extends BaseEntity implements UserDetails, CredentialsContainer, Serializable {
+public class Member extends BaseEntity implements UserDetails, CredentialsContainer {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -154,8 +153,8 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
         return this.enabled;
     }
 
-    public static User createDefaultUser(String username, String encodedPassword, String email) {
-        return User.builder()
+    public static com.savelms.core.user.domain.entity.User createDefaultUser(String username, String encodedPassword, String email) {
+        return com.savelms.core.user.domain.entity.User.builder()
             .username(username)
             .password(encodedPassword)
             .email(email)

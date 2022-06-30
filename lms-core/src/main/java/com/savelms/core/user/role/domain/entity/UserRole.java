@@ -2,6 +2,7 @@ package com.savelms.core.user.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.user.domain.entity.User;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "USER_ROLE")
 @Entity
 @Builder
-public class UserRole extends BaseEntity {
+public class UserRole extends BaseEntity implements Serializable    {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -47,11 +48,11 @@ public class UserRole extends BaseEntity {
     /********************************* 연관관계 매핑 *********************************/
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="USER_ID", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ROLE_ID", nullable = false)
     private Role role;
 
