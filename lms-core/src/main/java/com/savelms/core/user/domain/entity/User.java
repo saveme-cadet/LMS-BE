@@ -2,26 +2,35 @@ package com.savelms.core.user.domain.entity;
 
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.role.domain.entity.Role;
-import com.savelms.core.role.domain.entity.UserRole;
+import com.savelms.core.team.domain.entity.Team;
+import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.team.domain.entity.UserTeam;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
+import org.springframework.security.core.CredentialsContainer;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,7 +42,7 @@ import lombok.Singular;
 
 @Entity
 @Builder
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails, CredentialsContainer, Serializable {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -58,7 +67,7 @@ public class User extends BaseEntity {
      * AUTH에 필요한 필드
      */
 
-    @Column(unique = true, nullable = false, updatable = false, length = 20)
+    @Column(unique = true, nullable = false, updatable = false, length = 30)
     private String username;
 
     @Column(nullable = false)
@@ -83,16 +92,16 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private Boolean enabled = true;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 80)
     private String email;
 
-    /********************************* 비영속 필드 *********************************/
+    @Column(nullable = false)
+    private String apiId;
 
-    /**
-     * authorities
-     */
-    @Transient
-    private Set<Authority> authorities;
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean attendStatus = true;
+    /********************************* 비영속 필드 *********************************/
 
     /********************************* 연관관계 매핑 *********************************/
 
@@ -101,31 +110,69 @@ public class User extends BaseEntity {
      * role
      */
     @Singular
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private final Set<UserRole> userRoles = new HashSet<>();
 
-    @Singular
-    @OneToMany(mappedBy = "user")
-    private final Set<UserTeam> userTeams = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_TEAM_ID")
+    private UserTeam userTeam;
 
     /********************************* 비니지스 로직 *********************************/
 
     /**
-     * 편의용 getter
+     *
      * @return
      */
-    public Set<Authority> getAuthorities() {
+    public Set<SimpleGrantedAuthority> getAuthorities() {
         return userRoles.stream()
             .map((userRole -> userRole.getRole()))
             .map((role) ->
                 role.getAuthorities())
             .flatMap(Set::stream)
+            .map((authority) ->
+                new SimpleGrantedAuthority(authority.getPermission()))
             .collect(Collectors.toSet());
     }
 
+    @Override
+    public void eraseCredentials() {
+        this.password = null;
+    }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.accountNonExpired;
+    }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.accountNonLocked;
+    }
 
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public static User createDefaultUser(String username, String encodedPassword, String email) {
+        return User.builder()
+            .username(username)
+            .password(encodedPassword)
+            .email(email)
+            .nickname(username)
+            .apiId(UUID.randomUUID().toString())
+            .build();
+    }
+
+    public void changeTeam(UserTeam userTeam
+    ) {
+        this.userTeam = userTeam;
+    }
     /********************************* 연관관계 편의 메서드 *********************************/
 
 }

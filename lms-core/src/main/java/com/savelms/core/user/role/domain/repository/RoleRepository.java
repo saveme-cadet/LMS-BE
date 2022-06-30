@@ -1,6 +1,6 @@
-package com.savelms.core.role.domain.repository;
+package com.savelms.core.user.role.domain.repository;
 
-import com.savelms.core.role.domain.entity.Role;
+import com.savelms.core.user.role.domain.entity.Role;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

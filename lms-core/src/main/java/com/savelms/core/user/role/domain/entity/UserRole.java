@@ -1,7 +1,8 @@
-package com.savelms.core.team.domain.entity;
+package com.savelms.core.user.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.user.domain.entity.User;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +20,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "USER_TEAM")
+@Table(name = "USER_ROLE")
 @Entity
 @Builder
-public class UserTeam extends BaseEntity {
+public class UserRole extends BaseEntity implements Serializable    {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -34,28 +35,33 @@ public class UserTeam extends BaseEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_TEAM_ID")
+    @Column(name = "USER_ROLE_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
 
+    private String reason;
 
     /********************************* 비영속 필드 *********************************/
 
 
     /********************************* 연관관계 매핑 *********************************/
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="TEAM_ID", nullable = false)
-    private Team team;
 
-    private String reason;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="USER_ID", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="ROLE_ID", nullable = false)
+    private Role role;
 
     /********************************* 비니지스 로직 *********************************/
 
 
-
-
-
-
+    /********************************* 연관관계 편의 메서드 *********************************/
+    public void setUserAndUserRoleToUser(User user) {
+        user.getUserRoles().add(this);
+        this.user = user;
+    }
 }

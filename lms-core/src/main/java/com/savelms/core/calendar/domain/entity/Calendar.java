@@ -64,4 +64,15 @@ public class Calendar extends BaseEntity {
     /********************************* 비니지스 로직 *********************************/
 
 
+    public void changeDayType(DayType dayType) {
+        this.dayType = dayType;
+    }
+
+    public boolean isStudyDay() {
+        if (this.dayType == DayType.STUDYDAY) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

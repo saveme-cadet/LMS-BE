@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.savelms")
 @EnableJpaRepositories(basePackages = "com.savelms.core")
 @EntityScan("com.savelms")
 @EnableJpaAuditing
