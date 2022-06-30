@@ -1,8 +1,16 @@
 package com.savelms.api.user.service;
 
 
+import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
+import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
+import com.savelms.core.exception.RequestBodyValueException;
+import com.savelms.core.team.TeamEnum;
+import com.savelms.core.team.domain.entity.Team;
+import com.savelms.core.team.domain.entity.UserTeam;
+import com.savelms.core.team.domain.repository.TeamRepository;
+import com.savelms.core.team.domain.repository.UserTeamRepository;
 import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
 import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.user.domain.repository.UserCustomRepository;
@@ -13,6 +21,8 @@ import com.savelms.core.user.role.domain.repository.UserRoleRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +39,9 @@ public class UserService {
     private final RoleService roleService;
     private final UserRoleRepository userRoleRepository;
 
+    private final TeamRepository teamRepository;
+
+    private final UserTeamRepository userTeamRepository;
     /**
      * 회원가입
      *
@@ -76,10 +89,6 @@ public class UserService {
             });
     }
 
-    @Transactional
-    public void update() {
-
-    }
 
     public UserSendUserListResponse findUserList(Boolean attendStatus, Long offset, Long size,
         String sortRule) {
@@ -88,9 +97,38 @@ public class UserService {
 
         List<User> users = userCustomRepository.findAllAndSortAndPage(attendStatus, offset, size,
             userSortRuleDto);
+
+        List<UserResponseDto> userDtos = users.stream()
+            .map((u) ->
+                UserResponseDto.builder()
+                    .nickname(u.getNickname())
+                    .apiId(u.getApiId())
+                    .build())
+            .collect(Collectors.toList());
         return UserSendUserListResponse.builder()
-            .users(users)
-            .count(users.size())
+            .users(userDtos)
+            .count(userDtos.size())
             .build();
+    }
+
+    @Transactional
+    public String changeTeam(String apiId, UserChangeTeamRequest request) {
+        User user = userRepository.findByApiId(apiId).orElseThrow(() ->
+            new EntityNotFoundException("apiId에 해당하는 user가 없습니다."));
+        TeamEnum teamEnum;
+        try {
+            teamEnum = TeamEnum.findBy(request.getTeamName());
+        } catch (RuntimeException re) {
+            throw new RequestBodyValueException("request 의 team 이름에 해당하는 teamEnum을 찾을 수 없습니다.", re);
+        }
+
+        Team team = teamRepository.findByTeamEnum(teamEnum).orElseThrow(() ->
+            new EntityNotFoundException(teamEnum.name() + "에 해당하는 team이 없습니다."));
+        UserTeam userTeam = UserTeam.builder()
+            .team(team)
+            .build();
+        userTeamRepository.save(userTeam);
+        user.changeTeam(userTeam);
+        return user.getApiId();
     }
 }

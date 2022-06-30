@@ -2,10 +2,13 @@ package com.savelms.core.user.domain.entity;
 
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.team.domain.entity.Team;
 import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.team.domain.entity.UserTeam;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -15,7 +18,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -108,9 +113,9 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private final Set<UserRole> userRoles = new HashSet<>();
 
-    @Singular
-    @OneToMany(mappedBy = "user")
-    private final Set<UserTeam> userTeams = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_TEAM_ID")
+    private UserTeam userTeam;
 
     /********************************* 비니지스 로직 *********************************/
 
@@ -162,6 +167,11 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
             .nickname(username)
             .apiId(UUID.randomUUID().toString())
             .build();
+    }
+
+    public void changeTeam(UserTeam userTeam
+    ) {
+        this.userTeam = userTeam;
     }
     /********************************* 연관관계 편의 메서드 *********************************/
 

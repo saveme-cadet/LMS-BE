@@ -12,5 +12,5 @@ import lombok.Setter;
 public class UserSendUserListResponse {
 
     public Integer count;
-    public List<User> users;
+    public List<UserResponseDto> users;
 }

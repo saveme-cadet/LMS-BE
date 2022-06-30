@@ -1,5 +1,7 @@
 package com.savelms.api.user.controller;
 
+import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
+import com.savelms.api.user.controller.dto.UserChangeTeamResponse;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
@@ -40,5 +42,11 @@ public class UserController {
         return response;
     }
 
+    @PatchMapping("/users/{id}/team")
+    public UserChangeTeamResponse changeTeam(@PathVariable("id") String apiId,
+        @RequestBody UserChangeTeamRequest request) {
+
+        return new UserChangeTeamResponse(userService.changeTeam(apiId, request));
+    }
 
 }
