@@ -3,6 +3,8 @@ package com.savelms.core.study_time.domain.entity;
 import com.savelms.core.BaseEntity;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.user.domain.entity.User;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,28 +29,31 @@ import lombok.NoArgsConstructor;
 public class StudyTime extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
+    public static final String TIME_FORMAT = "HH:mm:ss";
 
 
     /********************************* PK 필드 *********************************/
-
-    /**
-     * 기본 키
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="STUDY_TIME_ID")
     private Long id;
 
+
     /********************************* PK가 아닌 필드 *********************************/
     @Column(nullable = false)
-    LocalDateTime startTime;
+    private LocalDateTime beginTime;
 
     @Column(nullable = false)
-    LocalDateTime endTime;
+    private LocalDateTime endTime;
+
+    @Column(nullable = false)
+    private String finalStudyTime;
+
+    @Column(nullable = false)
+    private Boolean isStudying;
+
 
     /********************************* 연관관계 매핑 *********************************/
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
@@ -58,17 +63,34 @@ public class StudyTime extends BaseEntity {
     private Calendar calendar;
 
 
-
-
-
-
     /********************************* 비영속 필드 *********************************/
 
 
-
     /********************************* 비니지스 로직 *********************************/
+    public static StudyTime create(User user) {
+        return StudyTime.builder()
+                .user(user)
+                .beginTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now())
+                .isStudying(true)
+                .finalStudyTime("00:00:00")
+                .build();
+    }
 
+    public void endStudy() {
+        this.endTime = LocalDateTime.now();
+        this.isStudying = false;
 
+        this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
+    }
 
+    private String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+        Duration between = Duration.between(beginTime, endTime);
+
+        return String.format("%02d:%02d:%02d",
+                between.toHours(),
+                between.toMinutesPart(),
+                between.toSecondsPart());
+    }
 
 }
