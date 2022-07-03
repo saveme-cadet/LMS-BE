@@ -1,4 +1,5 @@
 rootProject.name = 'lmsSave'
 include 'lms-core'
 include 'lms-api'
+include 'lms-batch'
 
