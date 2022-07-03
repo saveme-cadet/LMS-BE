@@ -1,16 +1,25 @@
 spring:
+  profiles:
+    active: local
   batch:
     job:
       names: ${job.name:NONE}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 5131
+  batch:
     jdbc:
-      initialize-schema: never
-    datasource:
-      url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      username: test
-      password: Test1234!
-    main:
-      web-application-type: none
+      initialize-schema: always   
+  main:
+    web-application-type: none
 
 logging:
   level:
