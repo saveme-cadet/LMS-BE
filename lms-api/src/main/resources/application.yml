@@ -11,8 +11,8 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 5131
+    username: test
+    password: Test1234!
   jpa:
     open-in-view: false
     show-sql: true
