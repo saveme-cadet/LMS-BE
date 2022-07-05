@@ -1,5 +1,6 @@
 package com.larry.fc.finalproject.api.config.Auth;
 
+import com.larry.fc.finalproject.api.controller.user.UserController;
 import com.larry.fc.finalproject.core.domain.entity.repository.AuthorityRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.RoleRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
@@ -23,6 +24,7 @@ public class UserDataLoader implements CommandLineRunner {
 
     private final EntityManager em;
 
+    private final UserController userController;
     private final AuthorityRepository authorityRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
@@ -80,6 +82,7 @@ public class UserDataLoader implements CommandLineRunner {
             .role(unAuthorizedRole)
             .attendStatus(1L)
             .build());
+
 
         log.debug("Users Loaded: " + userRepository.count());
     }
