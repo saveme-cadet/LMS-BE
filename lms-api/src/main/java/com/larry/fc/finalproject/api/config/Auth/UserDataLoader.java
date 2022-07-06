@@ -1,6 +1,7 @@
 package com.larry.fc.finalproject.api.config.Auth;
 
 import com.larry.fc.finalproject.api.controller.user.UserController;
+import com.larry.fc.finalproject.api.controller.user.UserSignUpRequest;
 import com.larry.fc.finalproject.core.domain.entity.repository.AuthorityRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.RoleRepository;
 import com.larry.fc.finalproject.core.domain.entity.repository.UserRepository;
@@ -54,35 +55,40 @@ public class UserDataLoader implements CommandLineRunner {
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole));
 
-        userRepository.save(User.builder()
-            .username("admin")
-            .password(passwordEncoder.encode("admin"))
-            .role(adminRole)
-            .attendStatus(1L)
-            .build());
-
-        userRepository.save(User.builder()
-            .username("manager")
-            .password(passwordEncoder.encode("manager"))
-            .role(managerRole)
-            .attendStatus(1L)
-
-            .build());
-
-        userRepository.save(User.builder()
-            .username("user")
-            .password(passwordEncoder.encode("user"))
-            .role(userRole)
-            .attendStatus(1L)
-            .build());
-
-        userRepository.save(User.builder()
-            .username("unAuthorized")
-            .password(passwordEncoder.encode("unAuthorized"))
-            .role(unAuthorizedRole)
-            .attendStatus(1L)
-            .build());
-
+        userController.signUp(initUserSignUpRequest("admin", "admin", "admin@gmail.com"));
+        userController.signUp(initUserSignUpRequest("manager", "manager", "manager@gmail.com"));
+        userController.signUp(initUserSignUpRequest("user", "user", "user@gmail.com"));
+        userController.signUp(initUserSignUpRequest("unAuthorized", "unAuthorized", "unAuthorized@gmail.com"));
+//
+//        userRepository.save(User.builder()
+//            .username("admin")
+//            .password(passwordEncoder.encode("admin"))
+//            .role(adminRole)
+//            .attendStatus(1L)
+//            .build());
+//
+//        userRepository.save(User.builder()
+//            .username("manager")
+//            .password(passwordEncoder.encode("manager"))
+//            .role(managerRole)
+//            .attendStatus(1L)
+//
+//            .build());
+//
+//        userRepository.save(User.builder()
+//            .username("user")
+//            .password(passwordEncoder.encode("user"))
+//            .role(userRole)
+//            .attendStatus(1L)
+//            .build());
+//
+//        userRepository.save(User.builder()
+//            .username("unAuthorized")
+//            .password(passwordEncoder.encode("unAuthorized"))
+//            .role(unAuthorizedRole)
+//            .attendStatus(1L)
+//            .build());
+//
 
         log.debug("Users Loaded: " + userRepository.count());
     }
@@ -92,5 +98,13 @@ public class UserDataLoader implements CommandLineRunner {
         if (authorityRepository.count() == 0) {
             loadSecurityData();
         }
+    }
+
+    private UserSignUpRequest initUserSignUpRequest(String username, String password, String email) {
+        UserSignUpRequest userSignUpRequest = new UserSignUpRequest();
+        userSignUpRequest.setUsername(username);
+        userSignUpRequest.setPassword(password);
+        userSignUpRequest.setEmail(email);
+        return userSignUpRequest;
     }
 }
