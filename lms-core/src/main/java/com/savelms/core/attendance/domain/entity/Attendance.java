@@ -3,6 +3,7 @@ package com.savelms.core.attendance.domain.entity;
 import com.savelms.core.BaseEntity;
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.user.domain.entity.User;
 import lombok.*;
 
@@ -13,9 +14,9 @@ import static com.savelms.core.attendance.domain.AttendanceStatus.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
 @Entity
 @Table(name = "ATTENDANCE")
+@Builder
 public class Attendance extends BaseEntity {
 
     /********************************* PK 필드 *********************************/
@@ -26,11 +27,13 @@ public class Attendance extends BaseEntity {
     /********************************* PK가 아닌 필드 *********************************/
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AttendanceStatus checkInStatus;
+    @Builder.Default
+    private AttendanceStatus checkInStatus = NONE;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AttendanceStatus checkOutStatus;
+    @Builder.Default
+    private AttendanceStatus checkOutStatus = NONE;
 
     /********************************* FK 연관관계 매핑 *********************************/
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,6 +43,10 @@ public class Attendance extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="CALENDAR_ID", nullable = false, updatable = false)
     private Calendar calendar;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "DAY_STATISTICAL_DATA_ID")
+//    private DayStatisticalData statisticalData;
 
     //==연관관계 편의 메서드==//
     private void setCalendar(Calendar calendar) {
