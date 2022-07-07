@@ -1,5 +1,7 @@
 package com.savelms.api.user.controller;
 
+import com.savelms.api.user.controller.dto.UserChangeRoleRequest;
+import com.savelms.api.user.controller.dto.UserChangeRoleResponse;
 import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
 import com.savelms.api.user.controller.dto.UserChangeTeamResponse;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
@@ -47,6 +49,12 @@ public class UserController {
         @RequestBody UserChangeTeamRequest request) {
 
         return new UserChangeTeamResponse(userService.changeTeam(apiId, request));
+    }
+    @PatchMapping("/users/{id}/role")
+    public UserChangeRoleResponse changeRole(@PathVariable("id") String apiId,
+        @RequestBody UserChangeRoleRequest request) {
+
+        return new UserChangeRoleResponse(userService.changeRole(apiId, request));
     }
 
 }

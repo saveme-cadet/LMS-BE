@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UserChangeTeamRequest {
+public class UserChangeRoleRequest {
 
-    String team;
+    String role;
 }

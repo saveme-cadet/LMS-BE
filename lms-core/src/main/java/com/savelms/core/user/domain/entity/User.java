@@ -113,6 +113,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private final Set<UserRole> userRoles = new HashSet<>();
 
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_TEAM_ID")
     private UserTeam userTeam;
@@ -169,9 +170,13 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
             .build();
     }
 
-    public void changeTeam(UserTeam userTeam
-    ) {
+    public void changeUserTeam(UserTeam userTeam) {
         this.userTeam = userTeam;
+    }
+
+    public void changeUserRole(UserRole userRole) {
+        this.userRoles.clear();
+        userRole.setUserAndUserRoleToUser(this);
     }
     /********************************* 연관관계 편의 메서드 *********************************/
 
