@@ -6,12 +6,16 @@ import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
+import com.savelms.core.user.role.domain.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,12 +41,13 @@ public class AttendanceServiceImpl implements AttendanceService{
                     } else { //변경 권한이 없는 유저가 조작 시 예외 발생
                         log.info("Check-In Fail: try_user={}, user={}, checkIn={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
-                        throw new NoPermissionException("Attempt to Check-In without permission.");
+                        throw new NoPermissionException("Attempt to Check-In without permission");
                     }
                 },
                 //출석표가 없는 경우 -> 잘못된 attendanceId 입력 시
                 () -> {
                     log.info("Check-In Fail: Attendance Not Found");
+                    throw new NoSuchElementException("Attendance Not Found");
                 });
     }
 
@@ -55,18 +60,24 @@ public class AttendanceServiceImpl implements AttendanceService{
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
                     if (validateUserAndDatePermission(findAttendance, user)) {
+                        //체크인을 하지 않고 체크아웃을 시도하는 경우 예외 발생
+                        if (findAttendance.getCheckInStatus() == AttendanceStatus.NONE) {
+                            log.info("Check-Out Fail: Must try Check-In first");
+                            throw new IllegalStateException("Must try Check-In first");
+                        }
                         findAttendance.checkOut(status);
                         log.info("Check-Out Success: try_user={}, user={}, checkOut={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
                     } else { //변경 권한이 없는 유저가 조작 시 예외 발생
                         log.info("Check-Out Fail: try_user={}, user={}, checkOut={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
-                        throw new NoPermissionException("Attempt to Check-Out without permission.");
+                        throw new NoPermissionException("Attempt to Check-Out without permission");
                     }
                 },
                 //출석표가 없는 경우 -> 잘못된 attendanceId 입력 시
                 () -> {
                     log.info("Check-Out Fail: Attendance Not Found");
+                    throw new NoSuchElementException("Attendance Not Found");
                 });
     }
 
@@ -77,8 +88,19 @@ public class AttendanceServiceImpl implements AttendanceService{
         //본인의 출결만 변경 가능
         boolean isUserSelf = attendance.getUser().getUsername().equals(user.getUsername());
 
-        //머슴인 경우 다른 유저 출결 변경 가능
-        boolean isManager = user.getUserRoles().equals(RoleEnum.ROLE_MANAGER);
+        //시도하려는 유저의 가장 최근에 기록(createdAt)된 역할을 가져온다.
+        UserRole userRole = user.getUserRoles().stream()
+                .max(Comparator.comparing(UserRole::getCreatedAt))
+                .get();
+
+        //현재는 문자열로 비교하지만, Enum 타입으로 바뀌면 다른 방법 사용
+        //일단 String이라서 equals로 비교했습니다. Enum으로 바꾼다면 == 비교로 변경해도 괜찮습니다.
+        //아래 주석 코드 사용하기
+        String tryUserRole = userRole.getRole().getName();
+        boolean isManager = (tryUserRole.equals(RoleEnum.ROLE_MANAGER.name()));
+
+//        RoleEnum tryUserRole = userRole.getRole().get  /*RoleEnum 필드 get메서드*/  ();
+//        boolean isManager = (tryUserRole == RoleEnum.ROLE_MANAGER);
 
         //오늘 날짜이면서, 변경 권한이 있는 유저
         return isToday && (isUserSelf || isManager);
