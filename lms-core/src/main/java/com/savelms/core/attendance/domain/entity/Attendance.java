@@ -44,10 +44,6 @@ public class Attendance extends BaseEntity {
     @JoinColumn(name="CALENDAR_ID", nullable = false, updatable = false)
     private Calendar calendar;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "DAY_STATISTICAL_DATA_ID")
-//    private DayStatisticalData statisticalData;
-
     //==연관관계 편의 메서드==//
     private void setCalendar(Calendar calendar) {
         this.calendar = calendar;
