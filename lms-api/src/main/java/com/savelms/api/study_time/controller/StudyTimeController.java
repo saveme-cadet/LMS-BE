@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +33,8 @@ public class StudyTimeController {
      * */
     @Operation(description = "스터디 시작")
     @PostMapping("/study_times")
-    public ResponseEntity<StudyTimeResponse> startStudy(@RequestParam(name = "userId") Long userId) {
-        StudyTimeResponse studyTime = studyTimeService.startStudy(userId);
+    public ResponseEntity<StudyTimeResponse> startStudy(@AuthenticationPrincipal User user) {
+        StudyTimeResponse studyTime = studyTimeService.startStudy(user.getUsername());
 
         return ResponseEntity.ok().body(studyTime);
     }
@@ -43,25 +45,25 @@ public class StudyTimeController {
      * */
     @Operation(description = "전체 날짜 스터디 조회")
     @GetMapping("/study_times")
-    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@RequestParam Long userId) {
-        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(userId);
+    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@AuthenticationPrincipal User user) {
+        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(user.getUsername());
 
         return ResponseEntity.ok().body(studyTime);
     }
 
     @Operation(description = "당일 스터디 조회")
     @GetMapping("/study_times/today")
-    public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@RequestParam Long userId) {
-        List<StudyTimeResponse> studyTime = studyTimeService.getTodayStudyTimes(userId);
+    public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@AuthenticationPrincipal User user) {
+        List<StudyTimeResponse> studyTime = studyTimeService.getTodayStudyTimes(user.getUsername());
 
         return ResponseEntity.ok().body(studyTime);
     }
 
     @Operation(description = "특정 날짜 스터디 조회")
     @GetMapping("/study_times/{createDate}") //createDate : 'yyyy-MM-dd' 포맷
-    public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(@RequestParam Long userId,
+    public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(@AuthenticationPrincipal User user,
                                                                        @PathVariable String createDate) throws ParseException {
-        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimesByDate(userId, createDate);
+        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimesByDate(user.getUsername(), createDate);
 
         return ResponseEntity.ok().body(studyTime);
     }
@@ -72,8 +74,8 @@ public class StudyTimeController {
      * */
     @Operation(description = "스터디 종료")
     @PutMapping("/study_times")
-    public ResponseEntity<List<StudyTimeResponse>> endStudy(@RequestParam Long userId) {
-        List<StudyTimeResponse> studyTimeResponses = studyTimeService.endStudy(userId);
+    public ResponseEntity<List<StudyTimeResponse>> endStudy(@AuthenticationPrincipal User user) {
+        List<StudyTimeResponse> studyTimeResponses = studyTimeService.endStudy(user.getUsername());
 
         return ResponseEntity.ok().body(studyTimeResponses);
     }

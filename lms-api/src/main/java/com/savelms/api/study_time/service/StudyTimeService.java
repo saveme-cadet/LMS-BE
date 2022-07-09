@@ -34,8 +34,8 @@ public class StudyTimeService {
      * 생성
      * */
     @Transactional
-    public StudyTimeResponse startStudy(Long userId) {
-        User user = userRepository.findById(userId)
+    public StudyTimeResponse startStudy(String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         StudyTime studyTime = StudyTime.createStudyTime(user);
@@ -48,8 +48,8 @@ public class StudyTimeService {
     /**
      * 조회
      * */
-    public List<StudyTimeResponse> getStudyTimes(Long userId) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUserId(userId)
+    public List<StudyTimeResponse> getStudyTimes(String username) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUsername(username)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
@@ -57,10 +57,10 @@ public class StudyTimeService {
                 .collect(Collectors.toList());
     }
 
-    public List<StudyTimeResponse> getTodayStudyTimes(Long userId) {
+    public List<StudyTimeResponse> getTodayStudyTimes(String username) {
         String createdDate = DateTimeFormatter.ofPattern(CREATED_DATE_FORMAT).format(LocalDateTime.now());
 
-        List<StudyTime> studyTimes = studyTimeRepository.findByUserIdAndCreatedDate(userId, createdDate)
+        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndCreatedDate(username, createdDate)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
@@ -68,10 +68,10 @@ public class StudyTimeService {
                 .collect(Collectors.toList());
     }
 
-    public List<StudyTimeResponse> getStudyTimesByDate(Long userId, String createdDate) throws ParseException {
+    public List<StudyTimeResponse> getStudyTimesByDate(String username, String createdDate) throws ParseException {
         validateDateFormat(createdDate);
 
-        List<StudyTime> studyTimes = studyTimeRepository.findByUserIdAndCreatedDate(userId, createdDate)
+        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndCreatedDate(username, createdDate)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
@@ -90,11 +90,9 @@ public class StudyTimeService {
      * 수정
      * */
     @Transactional
-    public List<StudyTimeResponse> endStudy(Long userId) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUserIdAndIsStudying(userId, true)
-                .orElseThrow(() -> {
-                    throw new StudyTimeNotFoundException("공부 중이 아닙니다.");
-                });
+    public List<StudyTimeResponse> endStudy(String username) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndIsStudying(username, true)
+                .orElseThrow(() -> {throw new StudyTimeNotFoundException("공부 중이 아닙니다.");});
 
         studyTimes.forEach(StudyTime::endStudyTime);
 
