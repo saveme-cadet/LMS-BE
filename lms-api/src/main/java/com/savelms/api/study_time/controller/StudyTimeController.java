@@ -129,7 +129,7 @@ public class StudyTimeController {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage("날짜 포맷이 맞지 않습니다.");
+        exceptionResponse.setMessage("존재하는 공부내역이 없습니다.");
         exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
         exceptionResponse.setPath(request.getRequestURI());
 
