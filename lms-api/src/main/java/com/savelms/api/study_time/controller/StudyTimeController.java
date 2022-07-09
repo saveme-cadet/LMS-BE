@@ -1,6 +1,7 @@
 package com.savelms.api.study_time.controller;
 
 import com.savelms.api.study_time.dto.StudyTimeResponse;
+import com.savelms.api.study_time.dto.StudyingUserResponse;
 import com.savelms.api.study_time.dto.UpdateStudyTimeRequest;
 import com.savelms.core.exception.ExceptionResponse;
 import com.savelms.core.exception.StudyTimeNotFoundException;
@@ -43,14 +44,6 @@ public class StudyTimeController {
     /**
      * 조회
      * */
-    @Operation(description = "전체 날짜 스터디 조회")
-    @GetMapping("/study_times")
-    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@AuthenticationPrincipal User user) {
-        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(user.getUsername());
-
-        return ResponseEntity.ok().body(studyTime);
-    }
-
     @Operation(description = "당일 스터디 조회")
     @GetMapping("/study_times/today")
     public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@AuthenticationPrincipal User user) {
@@ -67,6 +60,23 @@ public class StudyTimeController {
 
         return ResponseEntity.ok().body(studyTime);
     }
+
+    @Operation(description = "전체 날짜 스터디 조회")
+    @GetMapping("/study_times")
+    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@AuthenticationPrincipal User user) {
+        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(user.getUsername());
+
+        return ResponseEntity.ok().body(studyTime);
+    }
+
+    @Operation(description = "현재 스터디 중인 회원 조회")
+    @GetMapping("/study_times/study-user")
+    public ResponseEntity<List<StudyingUserResponse>> getStudyingUser() {
+        List<StudyingUserResponse> studyingUserResponse = studyTimeService.getStudyingUser();
+
+        return ResponseEntity.ok().body(studyingUserResponse);
+    }
+
 
 
     /**
@@ -131,7 +141,7 @@ public class StudyTimeController {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage("존재하는 공부내역이 없습니다.");
+        exceptionResponse.setMessage(e.getMessage());
         exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
         exceptionResponse.setPath(request.getRequestURI());
 
