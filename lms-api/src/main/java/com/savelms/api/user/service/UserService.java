@@ -68,17 +68,6 @@ public class UserService {
         return savedUser.getApiId();
     }
 
-    /**
-     * 회원가입시 적절한 Role찾아옴.
-     *
-     * @return
-     */
-    private UserRole createUnauthorizedUserRole(Role defaultRole) {
-
-        return UserRole.builder()
-            .role(defaultRole)
-            .build();
-    }
 
     /**
      * 중복 아이디일경우 예외 발생
