@@ -1,6 +1,7 @@
 package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.study_time.domain.exception.StudyTimeTooLongException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
@@ -93,7 +94,7 @@ public class StudyTime extends BaseEntity {
         Duration between = Duration.between(beginTime, endTime);
 
         if (between.toHours() >= 24) {
-            throw new IllegalArgumentException("24시간 이상은 측정이 불가능합니다.");
+            throw new StudyTimeTooLongException("24시간 이상은 측정이 불가능합니다.");
         }
 
         return String.format("%02d:%02d:%02d",
