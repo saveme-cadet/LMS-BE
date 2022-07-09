@@ -1,7 +1,6 @@
 package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
@@ -58,16 +57,16 @@ public class StudyTime extends BaseEntity {
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CALENDAR_ID", nullable = false, updatable = false)
-    private Calendar calendar;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "CALENDAR_ID", nullable = false, updatable = false)
+//    private Calendar calendar;
 
 
     /********************************* 비영속 필드 *********************************/
 
 
     /********************************* 비니지스 로직 *********************************/
-    public static StudyTime create(User user) {
+    public static StudyTime createStudyTime(User user) {
         return StudyTime.builder()
                 .user(user)
                 .beginTime(LocalDateTime.now())
@@ -77,7 +76,13 @@ public class StudyTime extends BaseEntity {
                 .build();
     }
 
-    public void endStudy() {
+    public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
+    }
+
+    public void endStudyTime() {
         this.endTime = LocalDateTime.now();
         this.isStudying = false;
 
@@ -86,6 +91,10 @@ public class StudyTime extends BaseEntity {
 
     private String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
+
+        if (between.toHours() >= 24) {
+            throw new IllegalArgumentException("24시간 이상은 측정이 불가능합니다.");
+        }
 
         return String.format("%02d:%02d:%02d",
                 between.toHours(),
