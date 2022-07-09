@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserChangeRoleResponse {
+public class UserChangeAttendStatusResponse {
 
     String id;
 }

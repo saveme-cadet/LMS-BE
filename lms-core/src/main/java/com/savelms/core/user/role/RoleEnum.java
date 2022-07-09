@@ -1,25 +1,14 @@
 package com.savelms.core.user.role;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum RoleEnum {
-    ROLE_UNAUTHORIZED("unAuthorized"), ROLE_USER("user"), ROLE_MANAGER("manager"), ROLE_ADMIN("admin");
+    ROLE_UNAUTHORIZED, ROLE_USER, ROLE_MANAGER, ROLE_ADMIN;
+    private static final String prefix = "ROLE_";
 
-    private final String value;
-
-    private static final Map<String, RoleEnum> map = new HashMap<>();
-
-    static{
-        for (RoleEnum roleEnum : values()) {
-            map.put(roleEnum.value, roleEnum);
-        }
-    }
-    RoleEnum(String value) {
-        this.value = value;
-    }
-
-    public static RoleEnum findBy(String value) {
-        return map.get(value);
+    @JsonCreator
+    public static RoleEnum from(String s) {
+        String target = prefix + s.toUpperCase();
+        return RoleEnum.valueOf(target);
     }
 }

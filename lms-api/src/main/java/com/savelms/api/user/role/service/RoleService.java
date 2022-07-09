@@ -15,8 +15,8 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    public Role findByName(String name) {
-        return roleRepository.findByName(RoleEnum.ROLE_UNAUTHORIZED.name())
+    public Role findByValue(RoleEnum roleEnum) {
+        return roleRepository.findByValue(roleEnum)
             .orElseThrow(()->
                 new EntityNotFoundException("해당하는 role이 없습니다."));
     }

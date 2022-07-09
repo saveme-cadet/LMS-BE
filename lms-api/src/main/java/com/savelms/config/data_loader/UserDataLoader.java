@@ -1,5 +1,13 @@
 package com.savelms.config.data_loader;
 
+import com.savelms.core.calendar.DayType;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.team.TeamEnum;
+import com.savelms.core.team.domain.entity.Team;
+import com.savelms.core.team.domain.entity.UserTeam;
+import com.savelms.core.team.domain.repository.TeamRepository;
+import com.savelms.core.team.domain.repository.UserTeamRepository;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
@@ -9,6 +17,8 @@ import com.savelms.core.user.authority.domain.entity.Authority;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.authority.domain.repository.AuthorityRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.persistence.EntityManager;
@@ -32,6 +42,11 @@ public class UserDataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
 
+    private final TeamRepository teamRepository;
+    private final UserTeamRepository userTeamRepository;
+
+    private final CalendarRepository calendarRepository;
+
     @Transactional
     public void loadSecurityData() {
         // Authority 생성
@@ -40,11 +55,12 @@ public class UserDataLoader implements CommandLineRunner {
         Authority readUser = saveNewAuthority("user.read");
         Authority deleteUser = saveNewAuthority("user.delete");
 
+        authorityRepository.saveAll(Arrays.asList(createUser, updateUser, readUser, deleteUser));
         //Role 생성
-        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN.name());
-        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER.name());
-        Role userRole = saveNewRole(RoleEnum.ROLE_USER.name());
-        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED.name());
+        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN);
+        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER);
+        Role userRole = saveNewRole(RoleEnum.ROLE_USER);
+        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
 
         adminRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
         managerRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
@@ -52,49 +68,51 @@ public class UserDataLoader implements CommandLineRunner {
         unauthorizedRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
-
-        UserRole adminUserRole = UserRole.builder()
-            .role(adminRole)
+        //Team 생성
+        Team red = Team.builder()
+            .value(TeamEnum.RED)
             .build();
+        Team blue = Team.builder()
+            .value(TeamEnum.BLUE)
+            .build();
+
+        teamRepository.saveAll(Arrays.asList(red, blue));
+
+
+        //유저 생성
         User admin = User.createDefaultUser("admin", passwordEncoder.encode("admin"),
             "admin@gmail.com");
-        adminUserRole.setUserAndUserRoleToUser(admin);
 
-
-        UserRole managerUserRole = UserRole.builder()
-            .role(managerRole)
-            .build();
         User manager = User.createDefaultUser("manager", passwordEncoder.encode("manager"),
             "manager@gmail.com");
-        managerUserRole.setUserAndUserRoleToUser(manager);
 
-        UserRole userUserRole = UserRole.builder()
-            .role(userRole)
-            .build();
         User user = User.createDefaultUser("user", passwordEncoder.encode("user"),
             "user@gmail.com");
 
-        userUserRole.setUserAndUserRoleToUser(user);
-
-        UserRole unauthorizedUserRole = UserRole.builder()
-            .role(unauthorizedRole)
-            .build();
         User unauthorized = User.createDefaultUser("unauthorized",
             passwordEncoder.encode("unauthorized"),
             "unauthorized@gmail.com");
-        unauthorizedUserRole.setUserAndUserRoleToUser(unauthorized);
 
+        //UserTeam 생성
+        UserTeam.createUserTeam(admin, red, "initial", true);
+        UserTeam.createUserTeam(manager, red, "initial", true);
+        UserTeam.createUserTeam(user, red, "initial", true);
+        UserTeam.createUserTeam(unauthorized, red, "initial", true);
 
+        //UserRole 생성
+        UserRole.createUserRole(admin, adminRole, "initial", true);
+        UserRole.createUserRole(manager, managerRole, "initial", true);
+        UserRole.createUserRole(user, userRole, "initial", true);
+        UserRole.createUserRole(unauthorized, unauthorizedRole, "initial", true);
 
         userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
-        userRoleRepository.saveAll(
-            Arrays.asList(adminUserRole, managerUserRole, userUserRole, unauthorizedUserRole));
 
+        캘린더_생성_7월();
     }
 
 
-    private Role saveNewRole(String admin) {
-        Role role = Role.builder().name(admin).build();
+    private Role saveNewRole(RoleEnum roleEnum) {
+        Role role = Role.builder().value(roleEnum).build();
         return roleRepository.save(role);
     }
 
@@ -103,6 +121,21 @@ public class UserDataLoader implements CommandLineRunner {
             Authority.builder().permission(s).build());
     }
 
+    private void 캘린더_생성_7월() {
+        //캘린더 데이터 저장
+        LocalDate startDate = LocalDate.of(2022, 7, 1);
+        LocalDate endDate = LocalDate.of(2022, 10, 1);
+
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+            Calendar calendar = Calendar.builder()
+                .date(date)
+                .dayType( date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                    date.getDayOfWeek() == DayOfWeek.SUNDAY ?
+                    DayType.HOLIDAY : DayType.STUDYDAY)
+                .build();
+            calendarRepository.save(calendar);
+        }
+    }
 
     @Override
     public void run(String... args) throws Exception {

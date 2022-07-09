@@ -39,6 +39,10 @@ public class UserTeam extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
 
+    private String reason;
+
+    @Column(nullable = false)
+    private Boolean currentlyUsed;
 
     /********************************* 비영속 필드 *********************************/
 
@@ -49,9 +53,32 @@ public class UserTeam extends BaseEntity {
     @JoinColumn(name="TEAM_ID", nullable = false)
     private Team team;
 
-    private String reason;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="USER_ID", nullable = false)
+    private User user;
+
+    public void setUserAndAddUserTeamToUser(User user) {
+        this.user = user;
+        user.getUserTeams().add(this);
+    }
+
+    /********************************* 생성메서드 *********************************/
+
+    public static UserTeam createUserTeam(User user, Team team, String reason, Boolean currentlyUsed) {
+        UserTeam userTeam = UserTeam.builder()
+                .team(team)
+                .reason(reason)
+                .currentlyUsed(currentlyUsed)
+                .build();
+        userTeam.setUserAndAddUserTeamToUser(user);
+        return userTeam;
+    }
+
 
     /********************************* 비니지스 로직 *********************************/
+    public void notCurrentlyUsed() {
+        this.currentlyUsed = false;
+    }
 
 
 
