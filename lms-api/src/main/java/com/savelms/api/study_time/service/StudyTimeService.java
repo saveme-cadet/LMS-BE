@@ -2,7 +2,7 @@ package com.savelms.api.study_time.service;
 
 import com.savelms.api.study_time.dto.StudyTimeResponse;
 import com.savelms.api.study_time.dto.UpdateStudyTimeRequest;
-import com.savelms.api.study_time.exception.StudyTimeNotFoundException;
+import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import com.savelms.core.study_time.domain.repository.StudyTimeRepository;
 import com.savelms.core.user.domain.entity.User;

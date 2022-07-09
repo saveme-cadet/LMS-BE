@@ -2,8 +2,8 @@ package com.savelms.api.study_time.controller;
 
 import com.savelms.api.study_time.dto.StudyTimeResponse;
 import com.savelms.api.study_time.dto.UpdateStudyTimeRequest;
-import com.savelms.api.study_time.exception.ExceptionResponse;
-import com.savelms.api.study_time.exception.StudyTimeNotFoundException;
+import com.savelms.core.exception.ExceptionResponse;
+import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.api.study_time.service.StudyTimeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

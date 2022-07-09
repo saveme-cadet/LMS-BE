@@ -29,28 +29,21 @@ public class Vacation extends BaseEntity {
 
 
     /********************************* PK 필드 *********************************/
-
-    /**
-     * 기본 키
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="VACATION_ID")
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
+    @Column(nullable = false)
+    private Long assignedDays;
 
     @Column(nullable = false)
-    private int assignedDays;
-
-    @Column(nullable = false)
-    private int usedDays;
+    private Long usedDays;
 
     private String reason;
 
     /********************************* 연관관계 매핑 *********************************/
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;

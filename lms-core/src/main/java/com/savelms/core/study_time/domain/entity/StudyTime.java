@@ -1,7 +1,7 @@
 package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.study_time.domain.exception.StudyTimeTooLongException;
+import com.savelms.core.exception.StudyTimeTooLongException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;

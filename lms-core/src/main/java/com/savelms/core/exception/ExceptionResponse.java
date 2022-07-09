@@ -1,4 +1,4 @@
-package com.savelms.api.study_time.exception;
+package com.savelms.core.exception;
 
 import lombok.Data;
 

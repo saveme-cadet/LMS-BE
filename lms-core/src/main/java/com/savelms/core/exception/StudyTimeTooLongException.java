@@ -1,4 +1,4 @@
-package com.savelms.core.study_time.domain.exception;
+package com.savelms.core.exception;
 
 public class StudyTimeTooLongException extends RuntimeException {
     public StudyTimeTooLongException() {
