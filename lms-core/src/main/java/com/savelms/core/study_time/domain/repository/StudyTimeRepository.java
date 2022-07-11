@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
 
-
     Optional<List<StudyTime>> findByUserId(Long userId);
 
     @Query("select s from StudyTime s join fetch s.user u where s.isStudying =:isStudying")
@@ -22,8 +21,8 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     @Query("select s from StudyTime s inner join s.user u where u.username =:username")
     Optional<List<StudyTime>> findByUsername(String username);
 
-    @Query(value = "SELECT s.* FROM study_time s WHERE s.user_id = :userId AND DATE(s.created_at) = DATE(:createAt)",
-            nativeQuery = true)
+    @Query(value = "SELECT s.* FROM study_time s WHERE s.user_id = :userId " +
+            "AND DATE(s.created_at) = DATE(:createAt)", nativeQuery = true)
     Optional<List<StudyTime>> findByUserIdAndCreatedDate(@Param("userId") Long userId,
                                                          @Param("createAt") String createAt);
 

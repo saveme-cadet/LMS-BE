@@ -1,6 +1,5 @@
 package com.savelms.core.vacation.domain.entity;
 
-
 import com.savelms.core.BaseEntity;
 import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
@@ -25,36 +24,56 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Vacation extends BaseEntity {
 
-    //********************************* static final 상수 필드 *********************************/
-
-
-    /********************************* PK 필드 *********************************/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="VACATION_ID")
     private Long id;
 
-    /********************************* PK가 아닌 필드 *********************************/
     @Column(nullable = false)
-    private Long assignedDays;
+    private Long remainingDays;
 
     @Column(nullable = false)
     private Long usedDays;
 
     private String reason;
 
-    /********************************* 연관관계 매핑 *********************************/
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
-    /********************************* 비영속 필드 *********************************/
+
+    /**
+     * 생성 메서드
+     * */
+    public static Vacation createVacation(Long remainingDays, Long usedDays, String reason, User user) {
+        return Vacation.builder()
+                .remainingDays(remainingDays)
+                .usedDays(usedDays)
+                .reason(reason)
+                .user(user)
+                .build();
+    }
 
 
+    /**
+     * 비즈니스 로직
+     * */
+    public void addVacationDays(Long vacationDays) {
+        this.remainingDays += vacationDays;
+    }
 
-    /********************************* 비니지스 로직 *********************************/
+    public void useVacationDays(Long usedDays, String reason) {
+        if ((this.remainingDays - usedDays) < 0) {
+            throw new IllegalArgumentException("사용할 휴가가 부족합니다.");
+        }
 
+        this.remainingDays -= usedDays;
+        this.usedDays += usedDays;
+        this.reason = reason;
+    }
 
-
+    public void updateReason(String reason) {
+        this.reason = reason;
+    }
 
 }
