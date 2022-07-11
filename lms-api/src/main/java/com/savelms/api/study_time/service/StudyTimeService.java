@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -42,7 +43,7 @@ public class StudyTimeService {
         StudyTime studyTime = StudyTime.createStudyTime(user);
         studyTimeRepository.save(studyTime);
         
-        return new StudyTimeResponse(studyTime);
+        return new StudyTimeResponse(studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
     }
 
 
@@ -53,8 +54,11 @@ public class StudyTimeService {
         List<StudyTime> studyTimes = studyTimeRepository.findByUsername(username)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
+
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(studyTime -> new StudyTimeResponse(
+                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
+                        ))
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +69,9 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(studyTime -> new StudyTimeResponse(
+                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -76,14 +82,10 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(studyTime -> new StudyTimeResponse(
+                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
+                ))
                 .collect(Collectors.toList());
-    }
-
-    private void validateDateFormat(String createAt) throws ParseException {
-        SimpleDateFormat dateFormatParser = new SimpleDateFormat(CREATED_DATE_FORMAT); //검증할 날짜 포맷 설정
-        dateFormatParser.setLenient(false); //false일경우 처리시 입력한 값이 잘못된 형식일 시 오류가 발생
-        dateFormatParser.parse(createAt); //대상 값 포맷에 적용되는지 확인
     }
 
     public List<StudyingUserResponse> getStudyingUser() {
@@ -94,6 +96,21 @@ public class StudyTimeService {
                 .map(StudyingUserResponse::new)
                 .collect(Collectors.toList());
     }
+
+    private Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
+        double second = (double) Duration.between(beginTime, endTime).getSeconds();
+
+        return (double) Math.round(second / (8 * 60 * 60));
+    }
+
+    private void validateDateFormat(String createAt) throws ParseException {
+        SimpleDateFormat dateFormatParser = new SimpleDateFormat(CREATED_DATE_FORMAT); //검증할 날짜 포맷 설정
+        dateFormatParser.setLenient(false); //false일경우 처리시 입력한 값이 잘못된 형식일 시 오류가 발생
+        dateFormatParser.parse(createAt); //대상 값 포맷에 적용되는지 확인
+    }
+
+
+
 
 
     /**
@@ -107,7 +124,9 @@ public class StudyTimeService {
         studyTimes.forEach(StudyTime::endStudyTime);
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(studyTime -> new StudyTimeResponse(
+                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -123,7 +142,7 @@ public class StudyTimeService {
 
         studyTime.updateStudyTime(beginTime, endTime);
 
-        return new StudyTimeResponse(studyTime);
+        return new StudyTimeResponse(studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
     }
 
     private LocalDateTime stringToLocalDateTime(String dateTime) {

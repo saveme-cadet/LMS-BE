@@ -12,8 +12,9 @@ public class StudyTimeResponse {
     private String beginTime;
     private String endTime;
     private String finalStudyTime;
+    private Double studyTimeScore;
 
-    public StudyTimeResponse(StudyTime studyTime) {
+    public StudyTimeResponse(StudyTime studyTime, Double studyTimeScore) {
         this.studyTimeId = studyTime.getId();
         this.beginTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getBeginTime());
         this.endTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getEndTime());
