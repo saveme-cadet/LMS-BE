@@ -138,10 +138,12 @@ public class UserService {
         return user.getApiId();
     }
 
+    @Transactional
     public String changeAttendStatus(String apiId, UserChangeAttendStatusRequest request) {
         User user = userRepository.findByApiId(apiId).orElseThrow(() ->
             new EntityNotFoundException("apiId에 해당하는 user가 없습니다."));
         user.changeAttendStatus(request.getAttendStatus());
         return user.getApiId();
     }
+
 }

@@ -2,10 +2,11 @@ package com.savelms.core.user.domain.entity;
 
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.team.domain.entity.UserTeam;
+import com.savelms.core.todo.domain.entity.Todo;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
-import com.savelms.core.team.domain.entity.UserTeam;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -120,6 +121,10 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @Singular
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
     private final List<UserTeam> userTeams = new ArrayList<>();
+
+    @Singular
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
+    private final List<Todo> todos = new ArrayList<>();
 
     /********************************* 연관관계 편의 메서드 *********************************/
 
