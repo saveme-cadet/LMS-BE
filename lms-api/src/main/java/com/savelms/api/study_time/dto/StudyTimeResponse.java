@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 public class StudyTimeResponse {
 
     private Long studyTimeId;
+    private String createdDate;
     private String beginTime;
     private String endTime;
     private String finalStudyTime;
@@ -16,9 +17,11 @@ public class StudyTimeResponse {
 
     public StudyTimeResponse(StudyTime studyTime, Double studyTimeScore) {
         this.studyTimeId = studyTime.getId();
+        this.createdDate = DateTimeFormatter.ofPattern(StudyTime.CREATED_DATE_FORMAT).format(studyTime.getCreatedAt());
         this.beginTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getBeginTime());
         this.endTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getEndTime());
         this.finalStudyTime = studyTime.getFinalStudyTime();
+        this.studyTimeScore = studyTimeScore;
     }
 
 }

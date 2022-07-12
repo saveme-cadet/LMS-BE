@@ -4,6 +4,7 @@ import com.savelms.api.vacation.dto.AddVacationRequest;
 import com.savelms.api.vacation.dto.UseVacationRequest;
 import com.savelms.api.vacation.dto.VacationReasonResponse;
 import com.savelms.api.vacation.dto.VacationResponse;
+import com.savelms.core.exception.VacationNotFoundException;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.vacation.domain.entity.Vacation;
@@ -50,7 +51,7 @@ public class VacationService {
 
     public VacationResponse useVacation(UseVacationRequest vacationRequest, String username) {
         Vacation vacation = vacationRepository.findFirstByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("존재하는 휴가가 없습니다."));
+                .orElseThrow(() -> new VacationNotFoundException("존재하는 휴가가 없습니다."));
 
         checkRemainingDays(vacation.getRemainingDays(), vacationRequest.getUsedDays());
         long remainingDays = vacation.getRemainingDays() - vacationRequest.getUsedDays();
@@ -60,7 +61,7 @@ public class VacationService {
 
     private void checkRemainingDays(Long remainingDays, Long usedDays) {
         if ((remainingDays - usedDays) < 0) {
-            throw new IllegalArgumentException("사용할 휴가가 부족합니다.");
+            throw new VacationNotFoundException("사용할 휴가가 부족합니다.");
         }
     }
 
@@ -82,7 +83,7 @@ public class VacationService {
 
     public List<VacationReasonResponse> getUsedVacation(String username) {
         List<Vacation> vacations = vacationRepository.findByUsernameAndUsedDaysNotZero(username)
-                .orElseThrow(() -> new IllegalArgumentException("사용한 휴가가 없습니다."));
+                .orElseThrow(() -> new VacationNotFoundException("사용한 휴가가 없습니다."));
 
         return vacations.stream()
                 .map(VacationReasonResponse::new)

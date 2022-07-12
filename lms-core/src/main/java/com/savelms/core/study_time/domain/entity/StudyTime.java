@@ -30,7 +30,7 @@ public class StudyTime extends BaseEntity {
 
     //********************************* static final 상수 필드 *********************************/
     public static final String TIME_FORMAT = "HH:mm:ss";
-
+    public static final String CREATED_DATE_FORMAT = "yyyy-MM-dd";
 
     /********************************* PK 필드 *********************************/
     @Id

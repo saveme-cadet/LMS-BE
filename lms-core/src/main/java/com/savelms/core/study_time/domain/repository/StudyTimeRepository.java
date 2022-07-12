@@ -26,8 +26,8 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     Optional<List<StudyTime>> findByUserIdAndCreatedDate(@Param("userId") Long userId,
                                                          @Param("createAt") String createAt);
 
-    @Query(value = "SELECT s.* FROM study_time s JOIN user u WHERE u.username = :username " +
-            "AND DATE(s.created_at) = DATE(:createAt)", nativeQuery = true)
+    @Query(value = "SELECT s.* FROM study_time s JOIN user u ON s.user_id = u.user_id " +
+            "WHERE u.username = :username AND DATE(s.created_at) = DATE(:createAt)", nativeQuery = true)
     Optional<List<StudyTime>> findByUsernameAndCreatedDate(@Param("username") String username,
                                                            @Param("createAt") String createAt);
 
