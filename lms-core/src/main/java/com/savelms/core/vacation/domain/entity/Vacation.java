@@ -11,19 +11,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.Objects;
+
 @Getter
-@Table(name = "VACATION")
-@Entity
 @Builder
+@Entity
+@Table(name = "VACATION")
+@AllArgsConstructor
 public class Vacation extends BaseEntity {
 
+    /**
+     * 필드
+     * */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="VACATION_ID")
@@ -43,9 +47,11 @@ public class Vacation extends BaseEntity {
 
 
     /**
-     * 생성 메서드
+     * 생성자
      * */
-    public static Vacation createVacation(Long remainingDays, Long usedDays, String reason, User user) {
+    protected Vacation() {}
+
+    public static Vacation of(Long remainingDays, Long usedDays, String reason, User user) {
         return Vacation.builder()
                 .remainingDays(remainingDays)
                 .usedDays(usedDays)
@@ -74,6 +80,23 @@ public class Vacation extends BaseEntity {
 
     public void updateReason(String reason) {
         this.reason = reason;
+    }
+
+
+    /**
+     * equals AND hashCode
+     * */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacation vacation = (Vacation) o;
+        return id != null && id.equals(vacation.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }
