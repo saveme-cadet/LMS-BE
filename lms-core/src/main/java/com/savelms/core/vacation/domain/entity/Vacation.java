@@ -1,6 +1,5 @@
 package com.savelms.core.vacation.domain.entity;
 
-
 import com.savelms.core.BaseEntity;
 import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
@@ -12,56 +11,92 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.Objects;
+
 @Getter
-@Table(name = "VACATION")
-@Entity
 @Builder
+@Entity
+@Table(name = "VACATION")
+@AllArgsConstructor
 public class Vacation extends BaseEntity {
 
-    //********************************* static final 상수 필드 *********************************/
-
-
-    /********************************* PK 필드 *********************************/
-
     /**
-     * 기본 키
-     */
+     * 필드
+     * */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="VACATION_ID")
     private Long id;
 
-    /********************************* PK가 아닌 필드 *********************************/
+    @Column(nullable = false)
+    private Long remainingDays;
 
     @Column(nullable = false)
-    private int assignedDays;
-
-    @Column(nullable = false)
-    private int usedDays;
+    private Long usedDays;
 
     private String reason;
-
-    /********************************* 연관관계 매핑 *********************************/
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
-    /********************************* 비영속 필드 *********************************/
+
+    /**
+     * 생성자
+     * */
+    protected Vacation() {}
+
+    public static Vacation of(Long remainingDays, Long usedDays, String reason, User user) {
+        return Vacation.builder()
+                .remainingDays(remainingDays)
+                .usedDays(usedDays)
+                .reason(reason)
+                .user(user)
+                .build();
+    }
 
 
+    /**
+     * 비즈니스 로직
+     * */
+    public void addVacationDays(Long vacationDays) {
+        this.remainingDays += vacationDays;
+    }
 
-    /********************************* 비니지스 로직 *********************************/
+    public void useVacationDays(Long usedDays, String reason) {
+        if ((this.remainingDays - usedDays) < 0) {
+            throw new IllegalArgumentException("사용할 휴가가 부족합니다.");
+        }
+
+        this.remainingDays -= usedDays;
+        this.usedDays += usedDays;
+        this.reason = reason;
+    }
+
+    public void updateReason(String reason) {
+        this.reason = reason;
+    }
 
 
+    /**
+     * equals AND hashCode
+     * */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacation vacation = (Vacation) o;
+        return id != null && id.equals(vacation.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
 }
