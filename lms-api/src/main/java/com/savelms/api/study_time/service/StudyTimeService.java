@@ -39,10 +39,10 @@ public class StudyTimeService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        StudyTime studyTime = StudyTime.createStudyTime(user);
+        StudyTime studyTime = StudyTime.of(user);
         studyTimeRepository.save(studyTime);
         
-        return new StudyTimeResponse(studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
+        return new StudyTimeResponse(studyTime);
     }
 
 
@@ -55,9 +55,7 @@ public class StudyTimeService {
 
 
         return studyTimes.stream()
-                .map(studyTime -> new StudyTimeResponse(
-                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
-                        ))
+                .map(StudyTimeResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -70,9 +68,7 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(studyTime -> new StudyTimeResponse(
-                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
-                ))
+                .map(StudyTimeResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -83,9 +79,7 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(studyTime -> new StudyTimeResponse(
-                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
-                ))
+                .map(StudyTimeResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -123,9 +117,7 @@ public class StudyTimeService {
         studyTimes.forEach(StudyTime::endStudyTime);
 
         return studyTimes.stream()
-                .map(studyTime -> new StudyTimeResponse(
-                        studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime())
-                ))
+                .map(StudyTimeResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -141,7 +133,7 @@ public class StudyTimeService {
 
         studyTime.updateStudyTime(beginTime, endTime);
 
-        return new StudyTimeResponse(studyTime, getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
+        return new StudyTimeResponse(studyTime);
     }
 
     private LocalDateTime stringToLocalDateTime(String dateTime) {
