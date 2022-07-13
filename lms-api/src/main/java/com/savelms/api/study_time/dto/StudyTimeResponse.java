@@ -15,13 +15,13 @@ public class StudyTimeResponse {
     private String finalStudyTime;
     private Double studyTimeScore;
 
-    public StudyTimeResponse(StudyTime studyTime, Double studyTimeScore) {
+    public StudyTimeResponse(StudyTime studyTime) {
         this.studyTimeId = studyTime.getId();
         this.createdDate = DateTimeFormatter.ofPattern(StudyTime.CREATED_DATE_FORMAT).format(studyTime.getCreatedAt());
         this.beginTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getBeginTime());
         this.endTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getEndTime());
         this.finalStudyTime = studyTime.getFinalStudyTime();
-        this.studyTimeScore = studyTimeScore;
+        this.studyTimeScore = StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime());
     }
 
 }
