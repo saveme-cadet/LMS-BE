@@ -4,6 +4,7 @@ import com.savelms.core.BaseEntity;
 import com.savelms.core.calendar.DayType;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -74,5 +75,14 @@ public class Calendar extends BaseEntity {
         } else {
             return false;
         }
+    }
+
+    public Calendar(LocalDate now, DayType holiday, LocalDateTime now1, LocalDateTime now2, String create_Id, String update_Id) {
+        super.setCreatedAt(now1);
+        super.setCreateId(create_Id);
+        super.setUpdatedAt(now2);
+        super.setUpdateId(update_Id);
+        this.date = now;
+        this.dayType = holiday;
     }
 }

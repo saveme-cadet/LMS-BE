@@ -14,6 +14,7 @@ import static com.savelms.core.attendance.domain.AttendanceStatus.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity
 @Table(name = "ATTENDANCE")
 @Builder

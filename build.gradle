@@ -62,3 +62,9 @@ project(':lms-api') {
     }
 }
 
+
+project(':lms-batch') {
+    dependencies {
+        implementation project(':lms-core')
+    }
+}

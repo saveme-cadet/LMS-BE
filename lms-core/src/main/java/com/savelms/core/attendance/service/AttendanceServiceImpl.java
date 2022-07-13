@@ -96,7 +96,7 @@ public class AttendanceServiceImpl implements AttendanceService{
         //현재는 문자열로 비교하지만, Enum 타입으로 바뀌면 다른 방법 사용
         //일단 String이라서 equals로 비교했습니다. Enum으로 바꾼다면 == 비교로 변경해도 괜찮습니다.
         //아래 주석 코드 사용하기
-        String tryUserRole = userRole.getRole().getName();
+        String tryUserRole = userRole.getRole().getValue().name();
         boolean isManager = (tryUserRole.equals(RoleEnum.ROLE_MANAGER.name()));
 
 //        RoleEnum tryUserRole = userRole.getRole().get  /*RoleEnum 필드 get메서드*/  ();

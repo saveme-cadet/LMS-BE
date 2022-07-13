@@ -9,5 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
     Optional<Calendar> findByDate(LocalDate date);
+    Calendar findAllByDate(LocalDate date);
 }
 

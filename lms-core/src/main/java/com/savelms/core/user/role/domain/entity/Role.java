@@ -33,7 +33,8 @@ import lombok.Singular;
 @NoArgsConstructor
 @Builder
 @Table(name="ROLE")
-public class Role extends BaseEntity implements Serializable {
+public class
+Role extends BaseEntity implements Serializable {
 
     //********************************* static final 상수 필드 *********************************/
 
