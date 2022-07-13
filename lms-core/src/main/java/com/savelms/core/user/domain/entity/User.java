@@ -2,9 +2,11 @@ package com.savelms.core.user.domain.entity;
 
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.team.domain.entity.Team;
-import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.team.domain.entity.UserTeam;
+import com.savelms.core.todo.domain.entity.Todo;
+import com.savelms.core.user.AttendStatus;
+import com.savelms.core.user.role.domain.entity.Role;
+import com.savelms.core.user.role.domain.entity.UserRole;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,15 +14,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -98,9 +101,10 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @Column(nullable = false)
     private String apiId;
 
+    @Enumerated(EnumType.STRING)
     @Builder.Default
     @Column(nullable = false)
-    private Boolean attendStatus = true;
+    private AttendStatus attendStatus = AttendStatus.PARTICIPATED;
     /********************************* 비영속 필드 *********************************/
 
     /********************************* 연관관계 매핑 *********************************/
@@ -110,13 +114,31 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
      * role
      */
     @Singular
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private final Set<UserRole> userRoles = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_TEAM_ID")
-    private UserTeam userTeam;
 
+    @Singular
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
+    private final List<UserTeam> userTeams = new ArrayList<>();
+
+    @Singular
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
+    private final List<Todo> todos = new ArrayList<>();
+
+    /********************************* 연관관계 편의 메서드 *********************************/
+
+    /********************************* 생성 메서드 *********************************/
+
+    public static User createDefaultUser(String username, String encodedPassword, String email) {
+        return User.builder()
+            .username(username)
+            .password(encodedPassword)
+            .email(email)
+            .nickname(username)
+            .apiId(UUID.randomUUID().toString())
+            .build();
+    }
     /********************************* 비니지스 로직 *********************************/
 
     /**
@@ -125,11 +147,11 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
      */
     public Set<SimpleGrantedAuthority> getAuthorities() {
         return userRoles.stream()
-            .map((userRole -> userRole.getRole()))
-            .map((role) ->
-                role.getAuthorities())
+            .filter(UserRole::getCurrentlyUsed)
+            .map((UserRole::getRole))
+            .map(Role::getAuthorities)
             .flatMap(Set::stream)
-            .map((authority) ->
+            .map(authority ->
                 new SimpleGrantedAuthority(authority.getPermission()))
             .collect(Collectors.toSet());
     }
@@ -159,20 +181,27 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
         return this.enabled;
     }
 
-    public static User createDefaultUser(String username, String encodedPassword, String email) {
-        return User.builder()
-            .username(username)
-            .password(encodedPassword)
-            .email(email)
-            .nickname(username)
-            .apiId(UUID.randomUUID().toString())
-            .build();
+
+    public void setNewCurrentlyUsedUserTeam(UserTeam newUserTeam) {
+        newUserTeam.setUserAndAddUserTeamToUser(this);
     }
 
-    public void changeTeam(UserTeam userTeam
-    ) {
-        this.userTeam = userTeam;
+    public void originalUserTeamsCurrentlyUsedToFalse(List<UserTeam> originalUserTeams) {
+        originalUserTeams.forEach(UserTeam::notCurrentlyUsed);
     }
-    /********************************* 연관관계 편의 메서드 *********************************/
+
+
+    public void changeAttendStatus(AttendStatus attendStatus) {
+        this.attendStatus = attendStatus;
+    }
+
+    public void setNewCurrentlyUsedUserRole(UserRole newUserRole) {
+        newUserRole.setUserAndAddUserRoleToUser(this);
+    }
+
+    public void originalUserRolesCurrentlyUsedToFalse(List<UserRole> originalUserRoles) {
+        originalUserRoles.forEach(UserRole::notCurrentlyUsed);
+    }
+
 
 }

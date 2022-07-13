@@ -1,6 +1,6 @@
 package com.savelms.api.user.controller.dto;
 
-import com.savelms.core.team.TeamEnum;
+import com.savelms.core.user.role.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserChangeTeamRequest {
+public class UserChangeRoleRequest {
 
-    TeamEnum team;
+    RoleEnum role;
     String reason;
 }

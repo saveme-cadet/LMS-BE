@@ -12,17 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "USER_ROLE")
 @Entity
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 public class UserRole extends BaseEntity implements Serializable    {
 
     //********************************* static final 상수 필드 *********************************/
@@ -42,6 +43,8 @@ public class UserRole extends BaseEntity implements Serializable    {
 
     private String reason;
 
+    @Column(nullable = false)
+    private Boolean currentlyUsed;
     /********************************* 비영속 필드 *********************************/
 
 
@@ -56,12 +59,28 @@ public class UserRole extends BaseEntity implements Serializable    {
     @JoinColumn(name="ROLE_ID", nullable = false)
     private Role role;
 
-    /********************************* 비니지스 로직 *********************************/
-
-
     /********************************* 연관관계 편의 메서드 *********************************/
-    public void setUserAndUserRoleToUser(User user) {
+    public void setUserAndAddUserRoleToUser(User user) {
         user.getUserRoles().add(this);
         this.user = user;
     }
+    /********************************* 생성 메서드 *********************************/
+    public static UserRole createUserRole(User user, Role role, String reason, Boolean currentlyUsed) {
+        UserRole userRole = UserRole.builder()
+            .role(role)
+            .reason(reason)
+            .currentlyUsed(currentlyUsed)
+            .build();
+        userRole.setUserAndAddUserRoleToUser(user);
+        return userRole;
+    }
+
+
+
+    /********************************* 비니지스 로직 *********************************/
+
+    public void notCurrentlyUsed() {
+        this.currentlyUsed = false;
+    }
+
 }

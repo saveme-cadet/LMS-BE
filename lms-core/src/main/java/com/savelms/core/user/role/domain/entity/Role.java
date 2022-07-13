@@ -2,6 +2,7 @@ package com.savelms.core.user.role.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.user.authority.domain.entity.Authority;
+import com.savelms.core.user.role.RoleEnum;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -10,6 +11,8 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,8 +49,9 @@ public class Role extends BaseEntity implements Serializable {
     private Long id;
 
     /********************************* PK가 아닌 필드 *********************************/
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private String name;
+    private RoleEnum value;
 
     /********************************* 비영속 필드 *********************************/
 

@@ -1,7 +1,6 @@
 package com.savelms.core.todo.domain.entity;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
@@ -52,7 +51,7 @@ public class Todo extends BaseEntity {
 //    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "TODO_GENERATOR")
 //    private Integer order;
 
-    private boolean complete;
+    private Boolean complete;
     private String title;
 
 
@@ -67,13 +66,34 @@ public class Todo extends BaseEntity {
     private Calendar calendar;
 
 
+    /********************************* 생성 메서드 *********************************/
+    public static Todo createTodo(Boolean complete, String title, User user, Calendar calendar) {
+        Todo todo = Todo.builder()
+            .complete(complete)
+            .title(title)
+            .calendar(calendar)
+            .build();
+        todo.setUser(user);
+        return todo;
+    }
+
+    public void setUser(User user) {
+        user.getTodos().add(this);
+        this.user = user;
+
+    }
+
 
     /********************************* 비영속 필드 *********************************/
 
 
 
     /********************************* 비니지스 로직 *********************************/
-
+    public Long changeTitleAndComplete(String title, Boolean titleCheck) {
+        this.title = title;
+        this.complete = titleCheck;
+        return this.id;
+    }
 
 
 }
