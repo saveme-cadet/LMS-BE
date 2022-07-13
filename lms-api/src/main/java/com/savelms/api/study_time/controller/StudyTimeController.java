@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @Slf4j
 @RestController
 @RequestMapping("/api")

@@ -11,10 +11,10 @@ spring:
     activate:
       on-profile: local
   datasource:
-    url: jdbc:mysql://localhost:3306/savedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://savedb.ciauqxcnc0ry.ap-northeast-2.rds.amazonaws.com:3306/mysql?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 5131
+    username: admin
+    password: adminadmin
   batch:
     jdbc:
       initialize-schema: never
