@@ -33,7 +33,7 @@ public class VacationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
-        Vacation vacation = Vacation.createVacation(remainingDays, usedDays, reason, user);
+        Vacation vacation = Vacation.of(remainingDays, usedDays, reason, user);
         vacationRepository.save(vacation);
 
         return new VacationResponse(vacation);
@@ -43,7 +43,7 @@ public class VacationService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
-        Vacation vacation = Vacation.createVacation(remainingDays, usedDays, reason, user);
+        Vacation vacation = Vacation.of(remainingDays, usedDays, reason, user);
         vacationRepository.save(vacation);
 
         return new VacationResponse(vacation);
