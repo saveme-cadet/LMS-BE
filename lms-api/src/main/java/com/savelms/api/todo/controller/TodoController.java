@@ -83,7 +83,7 @@ public class TodoController {
         @RequestParam(required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        return todoService.getTorogress(date == null ? LocalDate.now() : date);
+        return todoService.getTodoProgress(date == null ? LocalDate.now() : date);
     }
 
 

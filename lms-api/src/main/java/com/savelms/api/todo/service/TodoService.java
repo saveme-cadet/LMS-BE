@@ -123,6 +123,7 @@ public class TodoService {
                 .build();
             response.getContent().add(dto);
         });
+        response.setCount(response.getContent().size());
 
         return response;
 
