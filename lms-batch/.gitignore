@@ -41,5 +41,5 @@ atlassian-ide-plugin.xml
 .gradletasknamecache
 
 # src/main/resources/application.*
-
+src/main/resources/application.yml
 *.yml
