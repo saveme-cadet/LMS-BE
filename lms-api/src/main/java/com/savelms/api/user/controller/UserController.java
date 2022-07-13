@@ -10,11 +10,16 @@ import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
 import com.savelms.api.user.service.UserService;
-import com.savelms.core.exception.QueryStringFormatException;
-import com.savelms.core.user.role.RoleEnum;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
@@ -38,7 +43,7 @@ public class UserController {
 
     //@PreAuthorize("hasAuthority('user.create')")
     @PostMapping("/users")
-    public UserSignUpResponse signUp(@RequestBody UserSignUpRequest request) {
+    public UserSignUpResponse signUp(@Validated @RequestBody UserSignUpRequest request) {
 
         String apiId = userService.validateUserNameAndSignUp(request);
         UserSignUpResponse response = new UserSignUpResponse();
@@ -48,7 +53,7 @@ public class UserController {
 
     @PatchMapping("/users/{id}/team")
     public UserChangeTeamResponse changeTeam(@PathVariable("id") String apiId,
-        @RequestBody UserChangeTeamRequest request) {
+        @Validated @RequestBody UserChangeTeamRequest request) {
 
         return new UserChangeTeamResponse(userService.changeTeam(apiId, request));
     }
@@ -56,14 +61,14 @@ public class UserController {
 
     @PatchMapping("/users/{id}/role")
     public UserChangeRoleResponse changeRole(@PathVariable("id") String apiId,
-        @RequestBody UserChangeRoleRequest request) {
+        @Validated @RequestBody UserChangeRoleRequest request) {
 
         return new UserChangeRoleResponse(userService.changeRole(apiId, request));
     }
 
     @PatchMapping("/users/{id}/attendStatus")
     public UserChangeAttendStatusResponse changeAttendStatus(@PathVariable("id") String apiId,
-        @RequestBody UserChangeAttendStatusRequest request) {
+        @Validated @RequestBody UserChangeAttendStatusRequest request) {
 
         return new UserChangeAttendStatusResponse(userService.changeAttendStatus(apiId, request));
     }

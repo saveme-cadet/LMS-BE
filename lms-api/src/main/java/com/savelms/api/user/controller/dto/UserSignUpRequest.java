@@ -1,5 +1,7 @@
 package com.savelms.api.user.controller.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,15 @@ import lombok.Setter;
 @Setter
 public class UserSignUpRequest {
 
+    @Schema(name= "username" , example = "intraId로 입력하지 않으면 42 이메일 인증 불가")
+    @NotNull
     private String username;
+
+    @Schema(name= "password" , example = "asdfer222")
+    @NotNull
     private String password;
+
+    @Schema(name= "email" , example = "test@gmail.com(이메일 인증에 사용되지 않음.)")
+    @NotNull
     private String email;
 }

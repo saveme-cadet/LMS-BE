@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class AllUserTodoDto {
-    @Schema(name = "writer_id", example = "user id = 1 or 2..")
+    @Schema(name = "writer_id", example = "4f3dda35-3739-406c-ad22-eed438831d66")
     private final String writerId;
     @Schema(description = "참여자 이름" , example = "진성대")
     private final String username;

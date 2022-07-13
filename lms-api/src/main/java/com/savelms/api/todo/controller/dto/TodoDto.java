@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 public class TodoDto {
 
-    @Schema(name= "writerId" , example = "1")
+    @Schema(name= "writerId" , example = "4f3dda35-3739-406c-ad22-eed438831d66")
     @NotNull
     @Min(1)
     private final String writerId;
