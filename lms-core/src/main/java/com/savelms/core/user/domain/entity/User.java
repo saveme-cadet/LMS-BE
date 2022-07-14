@@ -79,6 +79,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @Column(unique = true, nullable = false, length = 20)
     private String nickname;
 
+
     @Builder.Default
     @Column(nullable = false)
     private Boolean accountNonExpired = true;
