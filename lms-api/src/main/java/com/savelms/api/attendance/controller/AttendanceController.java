@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
+@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @RestController
 @RequestMapping("/api/attendance")
 @RequiredArgsConstructor
