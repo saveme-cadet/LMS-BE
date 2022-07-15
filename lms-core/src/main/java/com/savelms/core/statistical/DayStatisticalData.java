@@ -38,28 +38,23 @@ public class DayStatisticalData extends BaseEntity {
 
     /********************************* PK가 아닌 필드 *********************************/
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Double attendanceScore;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Double absentScore;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Double todoSuccessRate;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Double studyTimeScore;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private Double totalScore;
 
 
-
-    /********************************* 비영속 필드 *********************************/
-
-
     /********************************* 연관관계 매핑 *********************************/
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID")
     private User user;
@@ -68,27 +63,9 @@ public class DayStatisticalData extends BaseEntity {
     @JoinColumn(name="CALENDAR_ID")
     private Calendar calendar;
 
-    //연관관계를 todo, attendance, study_time 이랑 1대1로 묶는건 어떨까?
-
-//    @OneToOne(mappedBy = "statisticalData", fetch = FetchType.LAZY)
-//    private Attendance attendance;
-//
-//    @OneToMany
-//    private List<Todo> todos;
-//
-//    @OneToMany
-//    private List<StudyTime> studyTimes;
-
     /********************************* 비니지스 로직 *********************************/
+    public void updateStudyTimeScore(Double studyTimeScore) {
+        this.studyTimeScore = studyTimeScore;
+    }
 
-
-//    public void markAttendance(AttendanceStatus status) {
-//        //계속 반복해서 찍는거 제외해야함
-//        //아그냥 배치돌리고 오늘건 쿼리로 뽑아내는게 나을지도?
-//
-//        if (status == AttendanceStatus.PRESENT) {
-//            attendanceScore += 0.5;
-//        }
-//
-//    } -> 기각~~~~ 기존방식대로 하는게 더 좋을 듯
 }
