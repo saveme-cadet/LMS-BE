@@ -2,6 +2,7 @@ package com.savelms.core.attendance.service;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.domain.entity.User;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -105,4 +107,12 @@ public class AttendanceServiceImpl implements AttendanceService{
         //오늘 날짜이면서, 변경 권한이 있는 유저
         return isToday && (isUserSelf || isManager);
     }
+
+    public AttendanceDto getAttendanceByDate(String username, LocalDate date) {
+        Attendance attendance = attendanceRepository.findByUsernameAndDate(username, date)
+                .orElseThrow(() -> new EntityNotFoundException("출석정보를 찾지 못하였습니다."));
+
+        return new AttendanceDto(attendance);
+    }
+
 }
