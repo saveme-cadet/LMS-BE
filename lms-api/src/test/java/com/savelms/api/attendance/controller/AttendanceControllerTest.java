@@ -11,6 +11,7 @@ import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ import javax.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+@Disabled
 @SpringBootTest
 @Transactional
 class AttendanceControllerTest {
