@@ -17,7 +17,7 @@ public class StudyTimeResponse {
 
     public StudyTimeResponse(StudyTime studyTime) {
         this.studyTimeId = studyTime.getId();
-        this.createdDate = DateTimeFormatter.ofPattern(StudyTime.CREATED_DATE_FORMAT).format(studyTime.getCreatedAt());
+        this.createdDate = DateTimeFormatter.ofPattern(StudyTime.DATE_FORMAT).format(studyTime.getCreatedAt());
         this.beginTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getBeginTime());
         this.endTime = DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getEndTime());
         this.finalStudyTime = studyTime.getFinalStudyTime();
