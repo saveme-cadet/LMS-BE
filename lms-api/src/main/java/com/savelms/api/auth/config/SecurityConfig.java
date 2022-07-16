@@ -1,19 +1,14 @@
 package com.savelms.api.auth.config;
 
-import com.savelms.api.auth.service.JpaUserDetailService;
-import com.savelms.core.user.domain.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 // spring security 필터를 스프링 필터체인에 동록
 @Configuration
@@ -30,10 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests(
-            authorize -> authorize
-                .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/users").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
+                authorize -> authorize
+                    //.antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/users").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
                 //.mvcMatchers(HttpMethod.GET, "/").hasRole("USER")
                 //.mvcMatchers(HttpMethod.GET, "/api/userinfos").hasAnyRole("USER", "MEMBER")
             )
@@ -43,9 +38,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .anyRequest().authenticated()
             .and()
-            .formLogin()
-            .usernameParameter("username")//form tag의 key값 default 는 username
-            .loginProcessingUrl("/api/auth/login"); //url로 들어올시 security 가 요청을 낚아채서 대신 로그인 처리를 해줌.
+            .formLogin(loginConfigurer ->
+                loginConfigurer
+                    .successHandler((req, res, auth) -> {
+                        res.setStatus(200);
+                        res.getWriter().write(auth.getName());
+                    })
+                    .failureHandler((req, res, e) -> {
+                        res.setStatus(401);
+                    })
+                    .usernameParameter("username")
+                    .loginProcessingUrl("/api/auth/login")
+                    .permitAll()
+            )
+            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout"))
+            .deleteCookies("JSESSIONID")
+            .invalidateHttpSession(true);
+
     }
 
     //인증 방식 수동 지정. userDetailsService, passwordEncoder 하나일때는 상관없음.
