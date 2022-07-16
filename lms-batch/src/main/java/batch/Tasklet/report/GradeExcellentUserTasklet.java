@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GradeExcellentUserTasklet implements Tasklet {
@@ -46,8 +47,8 @@ public class GradeExcellentUserTasklet implements Tasklet {
                         dayStatisticalData1
                                 .getCalendar()
                                 .getDate()
-                                .equals(LocalDate.now())
-                );
+                                .equals(LocalDate.now()))
+                .collect(Collectors.toList());
 
         for (int i = 1; i < 4; i++){
             monthReportList.add(MonthReport.builder()
