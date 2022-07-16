@@ -22,21 +22,13 @@ import java.util.List;
 @Builder
 public class DayStatisticalData extends BaseEntity {
 
-
     //********************************* static final 상수 필드 *********************************/
 
-
-    /********************************* PK 필드 *********************************/
-
-    /**
-     * 기본 키
-     */
+    /********************************* 컬럼 *********************************/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="DAY_STATISTICAL_DATA_ID")
     private Long id;
-
-    /********************************* PK가 아닌 필드 *********************************/
 
     @Column(nullable = false)
     private Double attendanceScore;
@@ -53,8 +45,6 @@ public class DayStatisticalData extends BaseEntity {
     @Column(nullable = false)
     private Double totalScore;
 
-
-    /********************************* 연관관계 매핑 *********************************/
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID")
     private User user;
@@ -63,7 +53,20 @@ public class DayStatisticalData extends BaseEntity {
     @JoinColumn(name="CALENDAR_ID")
     private Calendar calendar;
 
+
     /********************************* 비니지스 로직 *********************************/
+    public void updateAttendanceScore(Double attendanceScore) {
+        this.attendanceScore += attendanceScore;
+    }
+
+    public void updateAbsentScore(Double absentScore) {
+        this.absentScore += absentScore;
+    }
+
+    public void updateTodoSuccessRate(Double todoSuccessRate) {
+        this.absentScore = todoSuccessRate;
+    }
+
     public void updateStudyTimeScore(Double studyTimeScore) {
         this.studyTimeScore = studyTimeScore;
     }
