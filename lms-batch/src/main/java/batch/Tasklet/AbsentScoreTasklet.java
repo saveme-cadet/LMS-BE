@@ -56,7 +56,7 @@ public class AbsentScoreTasklet implements Tasklet {
                 score += 0.5;
             }
             final double Score = score;
-            Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUserIdAndCalendarID(x, day.getId());
+            Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(x, day.getId());
             dayStatisticalData.ifPresent(dayStatisticalData1 -> {
                 dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + Score);
                 dayStatisticalDataRepository.save(dayStatisticalData1);
