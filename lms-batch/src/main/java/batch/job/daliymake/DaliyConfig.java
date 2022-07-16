@@ -1,9 +1,9 @@
-package batch.job;
+package batch.job.daliymake;
 
-import batch.job.Tasklet.AttendanceTasklet;
-import batch.job.Tasklet.SaveDayStatisticalDataTasklet;
-import batch.job.Tasklet.SaveUserTasklet;
-import batch.job.custom.CustomItemReader;
+import batch.Tasklet.attendance.AttendanceTasklet;
+import batch.Tasklet.statistical.SaveDayStatisticalDataTasklet;
+import batch.Tasklet.user.SaveUserTasklet;
+import batch.custom.CustomItemReader;
 import batch.validation.DayOfWeek;
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.calendar.DayType;
@@ -63,8 +63,8 @@ public class DaliyConfig {
                 .incrementer(new RunIdIncrementer())
                 //.start(this.ItemDailyWriterStep())
                // .start(saveUserStep())
-                //.start(saveDayStatisticalDataStep())
-                .start(saveAttendanceStep())
+                //.start(this.saveDayStatisticalDataStep())
+                .start(this.saveAttendanceStep())
                 .build();
     }
 
@@ -117,6 +117,7 @@ public class DaliyConfig {
                 .tasklet(new SaveUserTasklet(userRepository))
                 .build();
     }
+
 
 
     @Bean

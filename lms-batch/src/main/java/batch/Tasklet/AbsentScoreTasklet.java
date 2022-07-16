@@ -1,11 +1,12 @@
-package batch.job.Tasklet;
-
+package batch.Tasklet;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.statistical.DayStatisticalData;
+import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.repository.UserRepository;
 import org.springframework.batch.core.StepContribution;
@@ -17,47 +18,50 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class CheckInTasklet implements Tasklet {
+public class AbsentScoreTasklet implements Tasklet {
     private final AttendanceRepository attendanceRepository;
     private final CalendarRepository calendarRepository;
     private final UserRepository userRepository;
+    private final DayStatisticalDataRepository dayStatisticalDataRepository;
 
-    public CheckInTasklet(AttendanceRepository attendanceRepository, CalendarRepository calendarRepository, UserRepository userRepository) {
+    public AbsentScoreTasklet(AttendanceRepository attendanceRepository,
+                              CalendarRepository calendarRepository,
+                              UserRepository userRepository,
+                              DayStatisticalDataRepository dayStatisticalDataRepository) {
         this.attendanceRepository = attendanceRepository;
         this.calendarRepository = calendarRepository;
         this.userRepository = userRepository;
+        this.dayStatisticalDataRepository = dayStatisticalDataRepository;
     }
 
+
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution,
+                                ChunkContext chunkContext)
+            throws Exception {
+
         Stream<Long> attendUser = userRepository
                 .findAllByAttendStatus(AttendStatus.PARTICIPATED)
                 .stream()
                 .map(x -> x.getId());
         Long[] attendUserList = attendUser.toArray(Long[]::new);
-
-        // calendar에서 요일 뽑아내기
+        double score = 0;
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
         for (Long x : attendUserList) {
             Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
-            if (attendances.get().getCheckInStatus().equals(AttendanceStatus.NONE)) {
-                attendances.ifPresent(attendance -> {
-                    attendance.setCheckInStatus(AttendanceStatus.ABSENT);
-                    attendanceRepository.save(attendance);
-                });
+            if (attendances.get().getCheckInStatus().equals(AttendanceStatus.ABSENT)) {
+                score += 0.5;
             }
+            if (attendances.get().getCheckOutStatus().equals(AttendanceStatus.ABSENT)) {
+                score += 0.5;
+            }
+            final double Score = score;
+            Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUserIdAndCalendarID(x, day.getId());
+            dayStatisticalData.ifPresent(dayStatisticalData1 -> {
+                dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + Score);
+                dayStatisticalDataRepository.save(dayStatisticalData1);
+            });
         }
-        return RepeatStatus.FINISHED;
+        return null;
     }
-
-    /* update
-      final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), tableCheckOutDto.getTableDay());
-            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
-                    .ifPresent(allUser -> {
-                        allUser.setAttendScore(result);
-                        allUser.setParticipateScore(participateResult);
-                        dayTableRepository.save(allUser);
-                    });
-     */
-
 }

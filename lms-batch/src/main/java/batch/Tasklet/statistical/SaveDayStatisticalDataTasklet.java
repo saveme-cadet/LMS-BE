@@ -1,4 +1,4 @@
-package batch.job.Tasklet;
+package batch.Tasklet.statistical;
 
 
 import com.savelms.core.calendar.domain.entity.Calendar;
@@ -34,7 +34,9 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution,
+                                ChunkContext chunkContext)
+            throws Exception {
 
         List<DayStatisticalData> dayStatisticalDataRepositories = createDayStatisticalData();
 

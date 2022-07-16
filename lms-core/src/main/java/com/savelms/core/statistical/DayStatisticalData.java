@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Table(name = "DAY_STATISTICAL_DATA")
 @Entity
 @Builder
@@ -52,6 +53,9 @@ public class DayStatisticalData extends BaseEntity {
 
     @Column(nullable = false, updatable = false)
     private Double totalScore;
+
+    @Column(nullable = false, updatable = false)
+    private Double weekAbsentScore;                         // 매주 결석 체크
 
 
 
