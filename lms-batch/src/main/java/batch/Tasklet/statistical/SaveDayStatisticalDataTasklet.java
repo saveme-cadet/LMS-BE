@@ -79,7 +79,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
             // ===================================== !(매일 1일 0으로 초기화) ========================= //
             for (Long x : attendUserList) {
                 System.out.println("=============================" + x + "===================");
-                DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar(x, day.getId());
+                DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
                 data.add(DayStatisticalData.builder()
                         .absentScore(dayStatisticalData.getAbsentScore())
                         .attendanceScore(dayStatisticalData.getAttendanceScore())

@@ -1,10 +1,8 @@
 package batch.job.month;
 
 import batch.Tasklet.report.GradeExcellentUserTasklet;
-import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.monthreport.MonthReportRepository;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
-import com.savelms.core.user.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

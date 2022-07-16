@@ -66,7 +66,7 @@ public class CheckOutTasklet implements Tasklet {
                 AttendanceStatus 상태가 None에서 ABSENT로 변경됨에 따라 점수도 동시에 변경을 해준다.
                 */
 
-                Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUserIdAndCalendarID(x, day.getId());
+                Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(x, day.getId());
                 dayStatisticalData.ifPresent(dayStatisticalData1 -> {
                     dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + 0.5);
                     dayStatisticalData1.setTotalScore(dayStatisticalData1.getAbsentScore() - dayStatisticalData1.getStudyTimeScore());
