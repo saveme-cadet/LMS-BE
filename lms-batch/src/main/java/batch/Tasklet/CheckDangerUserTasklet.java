@@ -45,6 +45,7 @@ public class CheckDangerUserTasklet implements Tasklet {
             throws Exception {
 
         List<Report> userList = checkUser();
+        reportRepository.deleteAll();;
         reportRepository.saveAll(userList);
         return RepeatStatus.FINISHED;
     }
@@ -55,12 +56,7 @@ public class CheckDangerUserTasklet implements Tasklet {
         List<User> users = userRepository.findAllByAttendStatus(AttendStatus.PARTICIPATED);
         Calendar calendar = calendarRepository.findAllByDate(LocalDate.now());
 
-        int day = DayOfWeek.getDayOfWeek();
-        if (day == 1)
-            day = 7;
-        else
-            day -= 1;
-
+        
 
 
         return reportList;
