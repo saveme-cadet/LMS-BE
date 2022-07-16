@@ -1,12 +1,8 @@
 package com.savelms.api.report.service;
 
 import com.savelms.api.report.dto.ReportResponse;
-import com.savelms.api.study_time.dto.StudyTimeResponse;
-import com.savelms.core.exception.StudyTimeNotFoundException;
-import com.savelms.core.report.Report;
-import com.savelms.core.report.ReportRepository;
-import com.savelms.core.statistical.DayStatisticalDataRepository;
-import com.savelms.core.study_time.domain.entity.StudyTime;
+import com.savelms.core.weekreport.WeekReport;
+import com.savelms.core.weekreport.WeekReportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,11 +17,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReportService {
 
-    private final ReportRepository reportRepository;
+    private final WeekReportRepository weekReportRepository;
 
 
     public List<ReportResponse> getDagerUser() {
-        List<Report> reportList = reportRepository.findAll();
+        List<WeekReport> reportList = weekReportRepository.findAll();
 
         return reportList.stream()
                 .map(ReportResponse::new)

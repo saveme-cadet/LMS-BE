@@ -45,10 +45,16 @@ public class CheckInTasklet implements Tasklet {
                 .map(x -> x.getId());
         Long[] attendUserList = attendUser.toArray(Long[]::new);
 
-
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
         for (Long x : attendUserList) {
+
+            /*
+            AttendStatus를 NONE에서 ABSENT 변경
+            체크를 안해줬으니 자동으로 ABSENT로 변경해준다.
+            혹은 진짜 결석일 수도 있으니
+             */
+
             Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
             if (attendances.get().getCheckInStatus().equals(AttendanceStatus.NONE)) {
                 attendances.ifPresent(attendance -> {
@@ -56,6 +62,11 @@ public class CheckInTasklet implements Tasklet {
                     attendanceRepository.save(attendance);
                 });
             }
+
+            /*
+            AttendanceStatus 상태가 None에서 ABSENT로 변경됨에 따라 점수도 동시에 변경을 해준다.
+             */
+
             Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUserIdAndCalendarID(x, day.getId());
             dayStatisticalData.ifPresent(dayStatisticalData1 -> {
                 dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + 0.5);
@@ -65,15 +76,5 @@ public class CheckInTasklet implements Tasklet {
         }
         return RepeatStatus.FINISHED;
     }
-
-    /* update
-      final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), tableCheckOutDto.getTableDay());
-            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
-                    .ifPresent(allUser -> {
-                        allUser.setAttendScore(result);
-                        allUser.setParticipateScore(participateResult);
-                        dayTableRepository.save(allUser);
-                    });
-     */
 
 }

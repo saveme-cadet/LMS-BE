@@ -1,9 +1,8 @@
 package batch.job.daliymake;
 
 import batch.Tasklet.report.CheckDangerUserTasklet;
-import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
-import com.savelms.core.report.ReportRepository;
+import com.savelms.core.weekreport.WeekReportRepository;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +21,20 @@ public class ReportConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final DayStatisticalDataRepository dayStatisticalDataRepository;
     private final UserRepository userRepository;
-    private final ReportRepository reportRepository;
+    private final WeekReportRepository weekReportRepository;
     private final CalendarRepository calendarRepositor;
 
     public ReportConfig(JobBuilderFactory jobBuilderFactory,
                         StepBuilderFactory stepBuilderFactory,
                         DayStatisticalDataRepository dayStatisticalDataRepository,
                         UserRepository userRepository,
-                        ReportRepository reportRepository,
+                        WeekReportRepository weekReportRepository,
                         CalendarRepository calendarRepositor) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dayStatisticalDataRepository = dayStatisticalDataRepository;
         this.userRepository = userRepository;
-        this.reportRepository = reportRepository;
+        this.weekReportRepository = weekReportRepository;
         this.calendarRepositor = calendarRepositor;
     }
 
@@ -56,7 +55,7 @@ public class ReportConfig {
         return this.stepBuilderFactory.get("ReportStep")
                 .tasklet(new CheckDangerUserTasklet(dayStatisticalDataRepository,
                         userRepository,
-                        reportRepository,
+                        weekReportRepository,
                         calendarRepositor))
                 .build();
     }

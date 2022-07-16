@@ -68,8 +68,6 @@ public class AttendanceTasklet implements Tasklet {
                             .build());
         }
 
-
-
         return attendanceData;
     }
 

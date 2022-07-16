@@ -47,13 +47,25 @@ public class CheckOutTasklet implements Tasklet {
 
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
+
+
         for (Long x : attendUserList) {
             Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
+            /*
+            AttendStatus를 NONE에서 ABSENT 변경
+            체크를 안해줬으니 자동으로 ABSENT로 변경해준다.
+            혹은 진짜 결석일 수도 있으니
+             */
             if (attendances.get().getCheckOutStatus().equals(AttendanceStatus.NONE)) {
                 attendances.ifPresent(attendance -> {
                     attendance.setCheckOutStatus(AttendanceStatus.ABSENT);
                     attendanceRepository.save(attendance);
                 });
+
+                /*
+                AttendanceStatus 상태가 None에서 ABSENT로 변경됨에 따라 점수도 동시에 변경을 해준다.
+                */
+
                 Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUserIdAndCalendarID(x, day.getId());
                 dayStatisticalData.ifPresent(dayStatisticalData1 -> {
                     dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + 0.5);

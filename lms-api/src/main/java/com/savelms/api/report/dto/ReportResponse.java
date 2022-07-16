@@ -1,6 +1,6 @@
 package com.savelms.api.report.dto;
 
-import com.savelms.core.report.Report;
+import com.savelms.core.weekreport.WeekReport;
 import lombok.Data;
 
 
@@ -10,7 +10,7 @@ public class ReportResponse {
     String UserName;
     String UserNickName;
 
-    public ReportResponse(Report report) {
+    public ReportResponse(WeekReport report) {
         this.UserName = report.getUserName();
         this.UserNickName = report.getUserNickName();
     }

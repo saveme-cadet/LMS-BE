@@ -1,15 +1,12 @@
 package batch.Tasklet.report;
 
-import batch.validation.DayOfWeek;
-import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
-import com.savelms.core.report.Report;
-import com.savelms.core.report.ReportRepository;
+import com.savelms.core.weekreport.WeekReport;
+import com.savelms.core.weekreport.WeekReportRepository;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.AttendStatus;
-import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -25,16 +22,16 @@ public class CheckDangerUserTasklet implements Tasklet {
 
     private final DayStatisticalDataRepository dayStatisticalDataRepository;
     private final UserRepository userRepository;
-    private final ReportRepository reportRepository;
+    private final WeekReportRepository weekReportRepository;
     private final CalendarRepository calendarRepository;
 
     public CheckDangerUserTasklet(DayStatisticalDataRepository dayStatisticalDataRepository,
                                   UserRepository userRepository,
-                                  ReportRepository reportRepository,
+                                  WeekReportRepository weekReportRepository,
                                   CalendarRepository calendarRepository) {
         this.dayStatisticalDataRepository = dayStatisticalDataRepository;
         this.userRepository = userRepository;
-        this.reportRepository = reportRepository;
+        this.weekReportRepository = weekReportRepository;
         this.calendarRepository = calendarRepository;
     }
 
@@ -43,14 +40,14 @@ public class CheckDangerUserTasklet implements Tasklet {
                                 ChunkContext chunkContext)
             throws Exception {
 
-        List<Report> userList = checkUser();
-        reportRepository.deleteAll();;
-        reportRepository.saveAll(userList);
+        List<WeekReport> userList = checkUser();
+        weekReportRepository.deleteAll();;
+        weekReportRepository.saveAll(userList);
         return RepeatStatus.FINISHED;
     }
 
-    private List<Report> checkUser() {
-        List<Report> reportList = new ArrayList<>();
+    private List<WeekReport> checkUser() {
+        List<WeekReport> reportList = new ArrayList<>();
 
         Stream<Long> attendUser = userRepository
                 .findAllByAttendStatus(AttendStatus.PARTICIPATED)
@@ -66,7 +63,7 @@ public class CheckDangerUserTasklet implements Tasklet {
             if (dataRepository.getWeekAbsentScore() >= 3) {
                 String userName = userRepository.findById(x).get().getUsername();
                 String userNickName = userRepository.findById(x).get().getNickname();
-                reportList.add(Report.builder()
+                reportList.add(WeekReport.builder()
                         .UserName(userName)
                         .UserNickName(userNickName)
                         .build());
