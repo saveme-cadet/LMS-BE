@@ -1,16 +1,14 @@
-package com.savelms.api.attendance.Service;
+package com.savelms.api.attendance.service;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.repository.AttendanceRepository;
-import com.savelms.core.attendance.service.AttendanceServiceImpl;
 import com.savelms.core.calendar.DayType;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.user.domain.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

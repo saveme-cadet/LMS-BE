@@ -1,4 +1,4 @@
-package com.savelms.core.attendance.service;
+package com.savelms.api.attendance.service;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.dto.AttendanceDto;

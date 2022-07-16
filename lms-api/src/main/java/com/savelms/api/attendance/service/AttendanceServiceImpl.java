@@ -1,10 +1,13 @@
-package com.savelms.core.attendance.service;
+package com.savelms.api.attendance.service;
 
+import com.savelms.api.statistical.service.DayStatisticalDataService;
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
+import com.savelms.core.statistical.DayStatisticalData;
+import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
@@ -16,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -27,17 +29,20 @@ import java.util.Optional;
 public class AttendanceServiceImpl implements AttendanceService{
 
     private final AttendanceRepository attendanceRepository;
+    private final DayStatisticalDataService statisticalDataRepositoryService;
 
     @Override
     @Transactional
     public void checkIn(Long attendanceId, User user, AttendanceStatus status) throws NoPermissionException {
-        //디비에서 찾기
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
 
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
                     if (validateUserAndDatePermission(findAttendance, user)) {
                         findAttendance.checkIn(status);
+
+                        statisticalDataRepositoryService.updateAttendanceAndAbsentScore(user.getUsername(), status);
+
                         log.info("Check-In Success: try_user={}, user={}, checkIn={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
                     } else { //변경 권한이 없는 유저가 조작 시 예외 발생
@@ -56,7 +61,6 @@ public class AttendanceServiceImpl implements AttendanceService{
     @Override
     @Transactional
     public void checkOut(Long attendanceId, User user, AttendanceStatus status) throws NoPermissionException {
-        //디비에서 찾기
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
 
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
@@ -65,6 +69,9 @@ public class AttendanceServiceImpl implements AttendanceService{
                         //체크인을 하지 않고 체크아웃을 시도하는 경우 예외 발생
                         if (findAttendance.getCheckInStatus() == AttendanceStatus.NONE) {
                             log.info("Check-Out Fail: Must try Check-In first");
+
+                            statisticalDataRepositoryService.updateAttendanceAndAbsentScore(user.getUsername(), status);
+
                             throw new IllegalStateException("Must try Check-In first");
                         }
                         findAttendance.checkOut(status);
