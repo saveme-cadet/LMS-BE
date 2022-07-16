@@ -1,5 +1,9 @@
 package batch.job.daliymake;
 
+import batch.Tasklet.report.CheckDangerUserTasklet;
+import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.report.ReportRepository;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +22,21 @@ public class ReportConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final DayStatisticalDataRepository dayStatisticalDataRepository;
     private final UserRepository userRepository;
+    private final ReportRepository reportRepository;
+    private final CalendarRepository calendarRepositor;
 
     public ReportConfig(JobBuilderFactory jobBuilderFactory,
                         StepBuilderFactory stepBuilderFactory,
                         DayStatisticalDataRepository dayStatisticalDataRepository,
-                        UserRepository userRepository) {
+                        UserRepository userRepository,
+                        ReportRepository reportRepository,
+                        CalendarRepository calendarRepositor) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.dayStatisticalDataRepository = dayStatisticalDataRepository;
         this.userRepository = userRepository;
+        this.reportRepository = reportRepository;
+        this.calendarRepositor = calendarRepositor;
     }
 
     @Bean
@@ -37,10 +47,17 @@ public class ReportConfig {
                 .build();
     }
 
+    /*
+     위험한 유저 day_statistial_data 에서 Report table로 저장
+     */
+
     @Bean
     public Step ReportStep() {
         return this.stepBuilderFactory.get("ReportStep")
-                .tasklet()
+                .tasklet(new CheckDangerUserTasklet(dayStatisticalDataRepository,
+                        userRepository,
+                        reportRepository,
+                        calendarRepositor))
                 .build();
     }
 
