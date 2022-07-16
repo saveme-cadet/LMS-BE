@@ -8,6 +8,7 @@ import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.api.study_time.service.StudyTimeService;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin(originPatterns = "http://3.38.226.166:8080")
+@Tag(name = "아오지 API")
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -58,7 +60,7 @@ public class StudyTimeController {
     }
 
     @Operation(description = "특정 날짜 스터디 조회")
-    @GetMapping("/study_times/{date}") //createDate : 'yyyy-MM-dd' 포맷
+    @GetMapping("/study_times/{date}") //'yyyy-MM-dd'
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(
             @AuthenticationPrincipal User user,
             @PathVariable @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date
@@ -121,8 +123,7 @@ public class StudyTimeController {
 
     /**
      * 예외처리
-     * 임시로 API 컨트롤로에서 처리
-     * 나중에 ControllerAdvice에서 처리하도록 변경
+     * TODO: 임시로 API 컨트롤러 클래스에서 처리, 나중에 ControllerAdvice 만들고 거기에서 처리하도록 변경
      * */
     @ExceptionHandler(ParseException.class)
     public ResponseEntity<String> handle(ParseException e, HttpServletRequest request) {

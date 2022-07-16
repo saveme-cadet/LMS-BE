@@ -1,5 +1,6 @@
 package com.savelms.api.study_time.service;
 
+import com.savelms.api.statistical.service.DayStatisticalDataService;
 import com.savelms.api.study_time.dto.StudyTimeResponse;
 import com.savelms.api.study_time.dto.StudyingUserResponse;
 import com.savelms.api.study_time.dto.UpdateStudyTimeRequest;
@@ -31,7 +32,7 @@ public class StudyTimeService {
     private final UserRepository userRepository;
     private final StudyTimeRepository studyTimeRepository;
     private final CalendarRepository calendarRepository;
-    private final DayStatisticalDataRepository statisticalDataRepository;
+    private final DayStatisticalDataService statisticalDataService;
 
 
     /**
@@ -102,10 +103,8 @@ public class StudyTimeService {
 
         studyTime.endStudyTime();
 
-        statisticalDataRepository.findByUsernameAndDate(username, LocalDate.now())
-            .ifPresent(dayStatisticalData -> {
-                dayStatisticalData.updateStudyTimeScore(StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
-            });
+        statisticalDataService.updateStudyTimeScore(username,
+                StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
 
         return new StudyTimeResponse(studyTime);
     }

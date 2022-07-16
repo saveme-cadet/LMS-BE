@@ -3,6 +3,7 @@ package com.savelms.api.study_time.repository;
 import com.savelms.api.ApiApplication;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import com.savelms.core.study_time.domain.repository.StudyTimeRepository;
 import com.savelms.core.user.domain.entity.User;

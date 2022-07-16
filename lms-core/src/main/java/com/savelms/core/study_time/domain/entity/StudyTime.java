@@ -30,7 +30,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StudyTime extends BaseEntity {
 
-
     /**
      * static final 상수 필드
      * */
