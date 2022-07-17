@@ -12,6 +12,6 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
 
     DayStatisticalData findByuser_idAndCalendar_id(Long id, Long calendar_id);
 
-    @Query("select e from DayStatisticalData e where User = :aLong and Calendar = :calendar_id")
+    //@Query("select e from DayStatisticalData e where User = :aLong and Calendar = :calendar_id")
     Optional<DayStatisticalData> findAllByUser_idAndCalendar_id(Long aLong, Long calendar_id);
 }

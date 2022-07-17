@@ -102,19 +102,11 @@ public class DaliyConfig {
         List<Calendar> items = new ArrayList<>();
         if (DayOfWeek.getDayOfWeek() == 1 || DayOfWeek.getDayOfWeek() == 7)
             items.add(new Calendar(LocalDate.now(),
-                    DayType.HOLIDAY,
-                    LocalDateTime.now().withNano(0),
-                    LocalDateTime.now().withNano(0),
-                    "admin",
-                    "admin"
+                    DayType.HOLIDAY
             ));
         else
             items.add(new Calendar(LocalDate.now(),
-                    DayType.STUDYDAY,
-                    LocalDateTime.now().withNano(0),
-                    LocalDateTime.now().withNano(0),
-                    "admin",
-                    "admin"
+                    DayType.STUDYDAY
             ));
         return items;
     }
