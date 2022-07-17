@@ -1,13 +1,9 @@
 package batch.Tasklet.report;
 
-import com.savelms.core.calendar.domain.entity.Calendar;
-import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.monthreport.MonthReport;
 import com.savelms.core.monthreport.MonthReportRepository;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
-import com.savelms.core.user.AttendStatus;
-import com.savelms.core.user.domain.repository.UserRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -18,7 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class GradeExcellentUserTasklet implements Tasklet {
 
