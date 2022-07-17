@@ -1,4 +1,4 @@
-package batch.job.Tasklet;
+package batch.Tasklet.user;
 
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;

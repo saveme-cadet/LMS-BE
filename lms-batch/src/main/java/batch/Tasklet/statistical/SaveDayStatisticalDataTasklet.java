@@ -1,4 +1,4 @@
-package batch.job.Tasklet;
+package batch.Tasklet.statistical;
 
 
 import com.savelms.core.calendar.domain.entity.Calendar;
@@ -34,7 +34,9 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution,
+                                ChunkContext chunkContext)
+            throws Exception {
 
         List<DayStatisticalData> dayStatisticalDataRepositories = createDayStatisticalData();
 
@@ -77,7 +79,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
             // ===================================== !(매일 1일 0으로 초기화) ========================= //
             for (Long x : attendUserList) {
                 System.out.println("=============================" + x + "===================");
-                DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar(x, day.getId());
+                DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
                 data.add(DayStatisticalData.builder()
                         .absentScore(dayStatisticalData.getAbsentScore())
                         .attendanceScore(dayStatisticalData.getAttendanceScore())

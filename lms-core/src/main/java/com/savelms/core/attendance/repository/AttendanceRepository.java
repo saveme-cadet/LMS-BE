@@ -22,4 +22,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "where a.user.username =:username and a.calendar.date =:date")
     Optional<Attendance> findByUsernameAndDate(@Param("username") String username, @Param("date") LocalDate date);
 
+    Optional<Attendance> findAllByCalendar(Long calendarId);
+    List<Attendance> findAllByUser(Long userId);
+
 }

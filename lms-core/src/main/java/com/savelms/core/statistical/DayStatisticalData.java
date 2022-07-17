@@ -22,7 +22,9 @@ import java.util.List;
 @Builder
 public class DayStatisticalData extends BaseEntity {
 
+
     //********************************* static final 상수 필드 *********************************/
+
 
     /********************************* 컬럼 *********************************/
     @Id
@@ -44,6 +46,16 @@ public class DayStatisticalData extends BaseEntity {
 
     @Column(nullable = false)
     private Double totalScore;
+
+    @Column(nullable = false)
+    private Double weekAbsentScore;                         // 매주 결석 체크
+
+
+
+    /********************************* 비영속 필드 *********************************/
+
+
+    /********************************* 연관관계 매핑 *********************************/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID")

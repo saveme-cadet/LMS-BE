@@ -2,9 +2,11 @@ package com.savelms.api.user.service;
 
 
 import com.savelms.api.team.service.TeamService;
+import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusRequest;
 import com.savelms.api.user.controller.dto.UserChangeRoleRequest;
 import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
+import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
 import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
@@ -13,6 +15,7 @@ import com.savelms.core.team.domain.entity.Team;
 import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.team.domain.repository.TeamRepository;
 import com.savelms.core.team.domain.repository.UserTeamRepository;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
 import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.user.domain.repository.UserCustomRepository;
@@ -146,4 +149,20 @@ public class UserService {
         return user.getApiId();
     }
 
+    public ListResponse<UserParticipatingIdResponse> findParticipatingUserList() {
+
+        List<UserParticipatingIdResponse> responseContents = userRepository.findAllByAttendStatus(
+                AttendStatus.PARTICIPATED)
+            .stream()
+            .map((u) ->
+                UserParticipatingIdResponse.builder()
+                    .id(u.getApiId())
+                    .username(u.getUsername())
+                    .build())
+            .collect(Collectors.toList());
+        return ListResponse.<UserParticipatingIdResponse>builder()
+            .count(responseContents.size())
+            .content(responseContents)
+            .build();
+    }
 }

@@ -1,4 +1,4 @@
-package batch.job.Tasklet;
+package batch.Tasklet.attendance;
 
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
@@ -6,6 +6,8 @@ import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.statistical.DayStatisticalData;
+import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.repository.UserRepository;
 import org.springframework.batch.core.StepContribution;
@@ -21,15 +23,22 @@ public class CheckInTasklet implements Tasklet {
     private final AttendanceRepository attendanceRepository;
     private final CalendarRepository calendarRepository;
     private final UserRepository userRepository;
+    private final DayStatisticalDataRepository dayStatisticalDataRepository;
 
-    public CheckInTasklet(AttendanceRepository attendanceRepository, CalendarRepository calendarRepository, UserRepository userRepository) {
+    public CheckInTasklet(AttendanceRepository attendanceRepository,
+                          CalendarRepository calendarRepository,
+                          UserRepository userRepository,
+                          DayStatisticalDataRepository dayStatisticalDataRepository) {
         this.attendanceRepository = attendanceRepository;
         this.calendarRepository = calendarRepository;
         this.userRepository = userRepository;
+        this.dayStatisticalDataRepository = dayStatisticalDataRepository;
     }
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution,
+                                ChunkContext chunkContext)
+            throws Exception {
         Stream<Long> attendUser = userRepository
                 .findAllByAttendStatus(AttendStatus.PARTICIPATED)
                 .stream()
@@ -39,6 +48,13 @@ public class CheckInTasklet implements Tasklet {
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
         for (Long x : attendUserList) {
+
+            /*
+            AttendStatus를 NONE에서 ABSENT 변경
+            체크를 안해줬으니 자동으로 ABSENT로 변경해준다.
+            혹은 진짜 결석일 수도 있으니
+             */
+
             Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
             if (attendances.get().getCheckInStatus().equals(AttendanceStatus.NONE)) {
                 attendances.ifPresent(attendance -> {
@@ -46,18 +62,19 @@ public class CheckInTasklet implements Tasklet {
                     attendanceRepository.save(attendance);
                 });
             }
+
+            /*
+            AttendanceStatus 상태가 None에서 ABSENT로 변경됨에 따라 점수도 동시에 변경을 해준다.
+             */
+
+            Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(x, day.getId());
+            dayStatisticalData.ifPresent(dayStatisticalData1 -> {
+                dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + 0.5);
+                dayStatisticalData1.setTotalScore(dayStatisticalData1.getAbsentScore() - dayStatisticalData1.getStudyTimeScore());
+                dayStatisticalDataRepository.save(dayStatisticalData1);
+            });
         }
         return RepeatStatus.FINISHED;
     }
-
-    /* update
-      final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckOutDto.getUserId(), tableCheckOutDto.getTableDay());
-            original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckOutDto.getTableDay().getMonth()))
-                    .ifPresent(allUser -> {
-                        allUser.setAttendScore(result);
-                        allUser.setParticipateScore(participateResult);
-                        dayTableRepository.save(allUser);
-                    });
-     */
 
 }

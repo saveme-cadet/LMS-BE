@@ -1,11 +1,13 @@
 package com.savelms.api.user.controller;
 
+import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusRequest;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusResponse;
 import com.savelms.api.user.controller.dto.UserChangeRoleRequest;
 import com.savelms.api.user.controller.dto.UserChangeRoleResponse;
 import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
 import com.savelms.api.user.controller.dto.UserChangeTeamResponse;
+import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
@@ -33,7 +35,10 @@ public class UserController {
         return userService.findUserList(attendStatus, offset, size, sortRule);
     }
 
-
+    @GetMapping("/users/participating-this-month")
+    public ListResponse<UserParticipatingIdResponse> sendParticipatingUserListUserId() {
+        return userService.findParticipatingUserList();
+    }
 
     //@PreAuthorize("hasAuthority('user.create')")
     @PostMapping("/users")
@@ -66,5 +71,6 @@ public class UserController {
 
         return new UserChangeAttendStatusResponse(userService.changeAttendStatus(apiId, request));
     }
+
 
 }

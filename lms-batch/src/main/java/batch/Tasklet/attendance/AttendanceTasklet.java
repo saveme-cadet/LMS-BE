@@ -1,4 +1,4 @@
-package batch.job.Tasklet;
+package batch.Tasklet.attendance;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
@@ -32,7 +32,9 @@ public class AttendanceTasklet implements Tasklet {
     }
 
     @Override
-    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+    public RepeatStatus execute(StepContribution contribution,
+                                ChunkContext chunkContext)
+            throws Exception {
         List<Attendance> attendances = createAttendance();
 
         Collections.shuffle(attendances);
@@ -40,6 +42,7 @@ public class AttendanceTasklet implements Tasklet {
         return RepeatStatus.FINISHED;
     }
 
+    // 매일 출석 테이블 생성
     private List<Attendance> createAttendance() {
         List<Attendance> attendanceData = new ArrayList<>();
 
@@ -64,8 +67,6 @@ public class AttendanceTasklet implements Tasklet {
                             .checkOutStatus(AttendanceStatus.NONE)
                             .build());
         }
-
-
 
         return attendanceData;
     }

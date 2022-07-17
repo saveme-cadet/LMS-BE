@@ -1,9 +1,10 @@
-package batch.job.checkincheckout;
+package batch.job.daliycheck;
 
-import batch.job.Tasklet.CheckInTasklet;
+import batch.Tasklet.attendance.CheckInTasklet;
 
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -24,18 +25,21 @@ public class CheckInConfig {
     private final AttendanceRepository attendanceRepository;
     private final CalendarRepository calendarRepository;
     private final UserRepository userRepository;
+    private final DayStatisticalDataRepository dayStatisticalDataRepository;
 
     public CheckInConfig(JobBuilderFactory jobBuilderFactory,
                          StepBuilderFactory stepBuilderFactory,
                          EntityManagerFactory entityManagerFactory,
                          AttendanceRepository attendanceRepository,
                          CalendarRepository calendarRepository,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         DayStatisticalDataRepository dayStatisticalDataRepository) {
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.attendanceRepository = attendanceRepository;
         this.calendarRepository = calendarRepository;
         this.userRepository = userRepository;
+        this.dayStatisticalDataRepository = dayStatisticalDataRepository;
     }
 
     // 10시 30분 실행
@@ -50,7 +54,11 @@ public class CheckInConfig {
     @Bean
     public Step checkInStep() {
         return this.stepBuilderFactory.get("checkInStep")
-                .tasklet(new CheckInTasklet(attendanceRepository, calendarRepository, userRepository))
+                .tasklet(new CheckInTasklet(attendanceRepository,
+                        calendarRepository,
+                        userRepository,
+                        dayStatisticalDataRepository
+                ))
                 .build();
     }
 
