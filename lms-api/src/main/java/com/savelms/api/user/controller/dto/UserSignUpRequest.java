@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class UserSignUpRequest {
 
-    @Schema(name= "username" , example = "intraId로 입력하지 않으면 42 이메일 인증 불가")
+    @Schema(name= "username" , example = "intraId로 무조건 입력해야함. 이메일인증에 활용. 입력하지 않으면 42 이메일 인증 불가")
     @NotNull
     private String username;
 
