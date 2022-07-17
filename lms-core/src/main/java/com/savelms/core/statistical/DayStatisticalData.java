@@ -1,21 +1,16 @@
 package com.savelms.core.statistical;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.attendance.domain.AttendanceStatus;
-import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
-import com.savelms.core.study_time.domain.entity.StudyTime;
-import com.savelms.core.todo.domain.entity.Todo;
 import com.savelms.core.user.domain.entity.User;
 
 import javax.persistence.*;
 
 import lombok.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 @Getter
 @Table(name = "DAY_STATISTICAL_DATA")
 @Entity
@@ -48,7 +43,7 @@ public class DayStatisticalData extends BaseEntity {
     private Double totalScore;
 
     @Column(nullable = false)
-    private Double weekAbsentScore;                         // 매주 결석 체크
+    private Double weekAbsentScore;// 매주 결석 체크
 
 
 
@@ -56,7 +51,6 @@ public class DayStatisticalData extends BaseEntity {
 
 
     /********************************* 연관관계 매핑 *********************************/
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID")
     private User user;
@@ -73,6 +67,7 @@ public class DayStatisticalData extends BaseEntity {
 
     public void updateAbsentScore(Double absentScore) {
         this.absentScore += absentScore;
+        this.totalScore += absentScore;
     }
 
     public void updateTodoSuccessRate(Double todoSuccessRate) {
@@ -81,6 +76,15 @@ public class DayStatisticalData extends BaseEntity {
 
     public void updateStudyTimeScore(Double studyTimeScore) {
         this.studyTimeScore = studyTimeScore;
+        this.totalScore -= studyTimeScore;
+    }
+
+    public void updateWeekAbsentScore(Double weekAbsentScore) {
+        this.weekAbsentScore += weekAbsentScore;
+    }
+
+    public void updateTotalScore(Double toTalStudyTimeScore) {
+        this.totalScore = this.absentScore - toTalStudyTimeScore;
     }
 
 }
