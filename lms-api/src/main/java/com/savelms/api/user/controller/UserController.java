@@ -9,7 +9,6 @@ import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
 import com.savelms.api.user.controller.dto.UserChangeTeamResponse;
 import com.savelms.api.user.controller.dto.UserLoginRequest;
 import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
-import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
 import com.savelms.api.user.service.UserService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(originPatterns = "http://3.38.226.166:8080")
@@ -35,15 +33,15 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping("/users")
-    public UserSendUserListResponse sendUserList(
-        @RequestParam(value = "attendStatus", required = false, defaultValue = "true") Boolean attendStatus,
-        @RequestParam(value = "offset", required = false, defaultValue = "0") Long offset,
-        @RequestParam(value = "size", required = false, defaultValue="30") Long size,
-        @RequestParam(value = "sort", required = false, defaultValue = "nickname:asc") String sortRule) {
-
-        return userService.findUserList(attendStatus, offset, size, sortRule);
-    }
+//    @GetMapping("/users")
+//    public UserSendUserListResponse sendUserList(
+//        @RequestParam(value = "attendStatus", required = false, defaultValue = "true") Boolean attendStatus,
+//        @RequestParam(value = "offset", required = false, defaultValue = "0") Long offset,
+//        @RequestParam(value = "size", required = false, defaultValue="30") Long size,
+//        @RequestParam(value = "sort", required = false, defaultValue = "nickname:asc") String sortRule) {
+//
+//        return userService.findUserList(attendStatus, offset, size, sortRule);
+//    }
 
     @GetMapping("/users/participating-this-month")
     public ListResponse<UserParticipatingIdResponse> sendParticipatingUserListUserId() {

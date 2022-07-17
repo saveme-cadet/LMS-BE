@@ -10,22 +10,26 @@ import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
 import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
+import com.savelms.api.user.role.service.RoleService;
+import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.team.TeamEnum;
 import com.savelms.core.team.domain.entity.Team;
 import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.team.domain.repository.TeamRepository;
 import com.savelms.core.team.domain.repository.UserTeamRepository;
 import com.savelms.core.user.AttendStatus;
-import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
-import com.savelms.api.user.role.service.RoleService;
+import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserCustomRepository;
+import com.savelms.core.user.domain.repository.UserRepository;
+import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
-import com.savelms.core.user.domain.entity.User;
-import com.savelms.core.user.domain.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -49,6 +53,8 @@ public class UserService {
 
     private final TeamService teamService;
     private final UserTeamRepository userTeamRepository;
+
+    private final CalendarRepository calendarRepository;
     /**
      * 회원가입
      *
@@ -61,9 +67,13 @@ public class UserService {
 
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
         Team defaultTeam = teamService.findByValue(TeamEnum.RED);
+        Calendar calendar = calendarRepository.findByDate(LocalDate.now())
+            .orElseThrow(() ->
+                new EntityNotFoundException("오늘의 일정이 없습니다."));
         String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
         User defaultUser = User.createDefaultUser(userSignUpRequest.getUsername(), encodedPassword,
             userSignUpRequest.getEmail());
+        Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
 
