@@ -6,8 +6,6 @@ import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
-import com.savelms.core.statistical.DayStatisticalData;
-import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
@@ -29,7 +27,7 @@ import java.util.Optional;
 public class AttendanceServiceImpl implements AttendanceService{
 
     private final AttendanceRepository attendanceRepository;
-    private final DayStatisticalDataService statisticalDataRepositoryService;
+    private final DayStatisticalDataService statisticalDataService;
 
     @Override
     @Transactional
@@ -41,7 +39,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     if (validateUserAndDatePermission(findAttendance, user)) {
                         findAttendance.checkIn(status);
 
-                        statisticalDataRepositoryService.updateAttendanceAndAbsentScore(user.getUsername(), status);
+                        statisticalDataService.updateAttendanceAndAbsentScore(user.getUsername(), status, LocalDate.now());
 
                         log.info("Check-In Success: try_user={}, user={}, checkIn={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
@@ -70,11 +68,11 @@ public class AttendanceServiceImpl implements AttendanceService{
                         if (findAttendance.getCheckInStatus() == AttendanceStatus.NONE) {
                             log.info("Check-Out Fail: Must try Check-In first");
 
-                            statisticalDataRepositoryService.updateAttendanceAndAbsentScore(user.getUsername(), status);
-
                             throw new IllegalStateException("Must try Check-In first");
                         }
                         findAttendance.checkOut(status);
+
+                        statisticalDataService.updateAttendanceAndAbsentScore(user.getUsername(), status, LocalDate.now());
                         log.info("Check-Out Success: try_user={}, user={}, checkOut={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
                     } else { //변경 권한이 없는 유저가 조작 시 예외 발생
