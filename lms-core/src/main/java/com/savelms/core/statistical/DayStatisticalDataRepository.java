@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface DayStatisticalDataRepository extends JpaRepository<DayStatisticalData, Long> {
 
     DayStatisticalData findByuser_idAndCalendar(Long id, Long calendar_id);
+    DayStatisticalData findByuser_idAndCalendar_id(Long id, Long calendar_id);
+    Optional<DayStatisticalData> findAllByUser_idAndCalendar_id(Long aLong, Long calendar_id);
 
     @Query("select d from DayStatisticalData d where d.user.username =:username and d.calendar.date =:date")
     Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, LocalDate date);
@@ -21,6 +23,8 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
     @Query("select d from DayStatisticalData d where d.user.apiId =:apiId and d.calendar.date =:date")
     Optional<DayStatisticalData> findByApiIdAndDate(@Param("apiId") String apiId, LocalDate date);
 
-    DayStatisticalData findByuser_idAndCalendar_id(Long id, Long calendar_id);
-    Optional<DayStatisticalData> findAllByUser_idAndCalendar_id(Long aLong, Long calendar_id);
+    @Query("select SUM(d.studyTimeScore) from DayStatisticalData d where d.user.username =:username " +
+            "and SUBSTRING(d.calendar.date, 6, 2) =:month")
+    Optional<Double> findTotalStudyTimePerMonth(@Param("username") String username, String month);
+
 }
