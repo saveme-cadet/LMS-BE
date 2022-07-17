@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class UserSignUpResponse {
 
-    String id;
+    private String id;
+    private String error;
 }

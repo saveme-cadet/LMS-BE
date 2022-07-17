@@ -52,7 +52,8 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     /**
      * email 뒤에 붙는 문자열
      */
-    private static final String emailSuffix = "@student.42seoul.kr";
+    public static final String EMAILSUFFIX = "@student.42seoul.kr";
+
 
     /********************************* PK 필드 *********************************/
 
@@ -81,6 +82,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
 
 
 
+
     @Builder.Default
     @Column(nullable = false)
     private Boolean accountNonExpired = true;
@@ -99,6 +101,12 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
 
     @Column(nullable = false, length = 80)
     private String email;
+
+
+    private String refreshToken;
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean emailAuth = false;
 
     @Column(nullable = false)
     private String apiId;
@@ -203,6 +211,14 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
 
     public void originalUserRolesCurrentlyUsedToFalse(List<UserRole> originalUserRoles) {
         originalUserRoles.forEach(UserRole::notCurrentlyUsed);
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void emailVerifiedSuccess() {
+        this.emailAuth = true;
     }
 
 
