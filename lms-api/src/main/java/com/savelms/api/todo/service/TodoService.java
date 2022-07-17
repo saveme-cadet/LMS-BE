@@ -1,6 +1,7 @@
 package com.savelms.api.todo.service;
 
 import com.savelms.api.calendar.service.CalendarService;
+import com.savelms.api.statistical.service.DayStatisticalDataService;
 import com.savelms.api.todo.controller.dto.AllUserTodoDto;
 import com.savelms.api.todo.controller.dto.AllUserTodoSingleTodoDto;
 import com.savelms.api.todo.controller.dto.CreateTodoRequest;
@@ -33,6 +34,9 @@ public class TodoService {
 
     private final CalendarService calendarService;
     private final TodoRepository todoRepository;
+
+    private final DayStatisticalDataService statisticalDataService;
+
     @Transactional
     public Long create(CreateTodoRequest request, String username) {
 
@@ -122,6 +126,8 @@ public class TodoService {
                 .progress((double)value[1]/ value[0])
                 .build();
             response.getContent().add(dto);
+
+            statisticalDataService.updateTodoSuccessRate(dto.getWriterId(), dto.getProgress(), localDate);
         });
         response.setCount(response.getContent().size());
 

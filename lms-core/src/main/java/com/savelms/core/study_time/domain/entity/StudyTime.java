@@ -1,6 +1,7 @@
 package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.exception.StudyTimeTooLongException;
 import com.savelms.core.user.domain.entity.User;
 
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -28,12 +30,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public class StudyTime extends BaseEntity {
 
-
     /**
      * static final 상수 필드
      * */
     public static final String TIME_FORMAT = "HH:mm:ss";
-    public static final String CREATED_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
 
     /**
@@ -60,9 +61,10 @@ public class StudyTime extends BaseEntity {
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "CALENDAR_ID", nullable = false, updatable = false)
-//    private Calendar calendar;
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CALENDAR_ID", nullable = false, updatable = false)
+    private Calendar calendar;
 
 
     /**
@@ -70,9 +72,10 @@ public class StudyTime extends BaseEntity {
      * */
     protected StudyTime() {}
 
-    public static StudyTime of(User user) {
+    public static StudyTime of(User user, Calendar calendar) {
         return StudyTime.builder()
                 .user(user)
+                .calendar(calendar)
                 .beginTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now())
                 .isStudying(true)
