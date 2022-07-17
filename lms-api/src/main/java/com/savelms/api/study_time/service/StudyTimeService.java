@@ -104,7 +104,7 @@ public class StudyTimeService {
         studyTime.endStudyTime();
 
         statisticalDataService.updateStudyTimeScore(username,
-                StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
+                StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()), LocalDate.now());
 
         return new StudyTimeResponse(studyTime);
     }
