@@ -1,6 +1,7 @@
 package com.savelms.api.user.service;
 
 
+import com.savelms.api.auth.service.EmailService;
 import com.savelms.api.team.service.TeamService;
 import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusRequest;
@@ -10,31 +11,43 @@ import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
 import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
+import com.savelms.api.user.role.service.RoleService;
+import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.team.TeamEnum;
 import com.savelms.core.team.domain.entity.Team;
 import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.team.domain.repository.TeamRepository;
 import com.savelms.core.team.domain.repository.UserTeamRepository;
 import com.savelms.core.user.AttendStatus;
-import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
-import com.savelms.api.user.role.service.RoleService;
+import com.savelms.core.user.domain.DuplicateUsernameException;
+import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserCustomRepository;
+import com.savelms.core.user.domain.repository.UserRepository;
+import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
+import com.savelms.core.user.emailauth.domain.entity.EmailAuth;
+import com.savelms.core.user.emailauth.domain.repository.EmailAuthCustomRepository;
+import com.savelms.core.user.emailauth.domain.repository.EmailAuthRepository;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
-import com.savelms.core.user.domain.entity.User;
-import com.savelms.core.user.domain.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
+
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
@@ -49,6 +62,14 @@ public class UserService {
 
     private final TeamService teamService;
     private final UserTeamRepository userTeamRepository;
+
+    private final CalendarRepository calendarRepository;
+
+    private final EmailAuthRepository emailAuthRepository;
+
+    private final EmailAuthCustomRepository emailAuthCustomRepository;
+
+    private final EmailService emailService;
     /**
      * 회원가입
      *
@@ -59,15 +80,28 @@ public class UserService {
     public String validateUserNameAndSignUp(UserSignUpRequest userSignUpRequest) {
         validateUsernameDuplicate(userSignUpRequest.getUsername());
 
+        EmailAuth emailAuth = emailAuthRepository.save(
+            EmailAuth.builder()
+                .email(userSignUpRequest.getUsername() + User.EMAILSUFFIX)
+                .authToken(UUID.randomUUID().toString())
+                .expired(false)
+                .build());
+
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
         Team defaultTeam = teamService.findByValue(TeamEnum.RED);
+        Calendar calendar = calendarRepository.findByDate(LocalDate.now())
+            .orElseThrow(() ->
+                new EntityNotFoundException("오늘의 일정이 없습니다."));
         String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
         User defaultUser = User.createDefaultUser(userSignUpRequest.getUsername(), encodedPassword,
             userSignUpRequest.getEmail());
+        Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
 
         User savedUser = userRepository.save(defaultUser);
+
+        emailService.send(emailAuth.getEmail(), savedUser.getApiId(), emailAuth.getAuthToken());
         return savedUser.getApiId();
     }
 
@@ -80,7 +114,7 @@ public class UserService {
     private void validateUsernameDuplicate(String username) {
         userRepository.findByUsername(username)
             .ifPresent(u -> {
-                throw new RuntimeException("Id : " + u.getUsername() + "는 이미 사용중입니다.");
+                throw new DuplicateUsernameException("Id : " + u.getUsername() + "는 이미 사용중입니다.");
             });
     }
 

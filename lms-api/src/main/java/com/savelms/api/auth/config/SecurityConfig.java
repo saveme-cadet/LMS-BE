@@ -28,7 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorize -> authorize
                     //.antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/users").permitAll()
-                    .mvcMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
+                    .antMatchers(HttpMethod.GET, "/swagger-ui/index.html**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/auth/email** ").permitAll()
+
                 //.mvcMatchers(HttpMethod.GET, "/").hasRole("USER")
                 //.mvcMatchers(HttpMethod.GET, "/api/userinfos").hasAnyRole("USER", "MEMBER")
             )
