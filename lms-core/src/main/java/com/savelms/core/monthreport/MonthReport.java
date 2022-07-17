@@ -1,17 +1,13 @@
 package com.savelms.core.monthreport;
 
 import com.savelms.core.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Table(name = "MONTH_REPORT")
 @Entity
 @Builder
@@ -22,21 +18,16 @@ public class MonthReport extends BaseEntity {
     @Column(name="MONTH_REPORT_ID")
     private Long id;
 
+    @Setter
     @Column(nullable = false, updatable = false)
     private String UserName;
 
+    @Setter
     @Column(nullable = false, updatable = false)
     private String UserNickName;
 
+    @Setter
     @Column(nullable = false, updatable = false)
     private int grade;
-
-
-    public MonthReport(){
-        setCreatedAt(LocalDateTime.now());
-        setUpdatedAt(LocalDateTime.now());
-        setCreateId("ADMIN");
-        setUpdateId("ADMIN");
-    }
 
 }

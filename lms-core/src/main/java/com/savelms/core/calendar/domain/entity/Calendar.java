@@ -77,11 +77,7 @@ public class Calendar extends BaseEntity {
         }
     }
 
-    public Calendar(LocalDate now, DayType holiday, LocalDateTime now1, LocalDateTime now2, String create_Id, String update_Id) {
-        super.setCreatedAt(now1);
-        super.setCreateId(create_Id);
-        super.setUpdatedAt(now2);
-        super.setUpdateId(update_Id);
+    public Calendar(LocalDate now, DayType holiday) {
         this.date = now;
         this.dayType = holiday;
     }

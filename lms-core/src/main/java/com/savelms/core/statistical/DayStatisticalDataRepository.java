@@ -6,15 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.util.Optional;
-
 import java.util.List;
 import java.util.Optional;
 
 public interface DayStatisticalDataRepository extends JpaRepository<DayStatisticalData, Long> {
 
-    DayStatisticalData findByuser_idAndCalendar(Long id, Long calendar_id);
     DayStatisticalData findByuser_idAndCalendar_id(Long id, Long calendar_id);
+
+    //@Query("select e from DayStatisticalData e where User = :aLong and Calendar = :calendar_id")
     Optional<DayStatisticalData> findAllByUser_idAndCalendar_id(Long aLong, Long calendar_id);
 
     @Query("select d from DayStatisticalData d where d.user.username =:username and d.calendar.date =:date")
