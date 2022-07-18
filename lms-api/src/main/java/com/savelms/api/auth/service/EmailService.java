@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailService {
-    private static final String HOST = "http://localhost:8080";
+    private static final String HOST = "http://3.38.226.166:8080";
     private static final String PATH = "/api/auth/email";
 
     private final JavaMailSender javaMailSender;
