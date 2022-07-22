@@ -124,7 +124,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
      * role
      */
     @Singular
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private final Set<UserRole> userRoles = new HashSet<>();
 
 

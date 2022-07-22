@@ -3,8 +3,6 @@ package com.savelms.api.auth.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.savelms.api.auth.controller.dto.LoginResponseDto;
 import com.savelms.core.user.domain.entity.User;
-import com.savelms.core.user.domain.repository.UserRepository;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +21,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -53,9 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin(loginConfigurer ->
                 loginConfigurer
                     .successHandler((req, res, auth) -> {
-                        User user = userRepository.findByUsername(auth.getName())
-                            .orElseThrow(
-                                EntityNotFoundException::new);
+                        User user = (User)auth.getPrincipal();
                         LoginResponseDto response = new LoginResponseDto();
                         res.setStatus(200);
                         res.setContentType("application/json");
