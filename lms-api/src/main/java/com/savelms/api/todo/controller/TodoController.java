@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +33,7 @@ public class TodoController {
 
     private final TodoService todoService;
 
+    @PreAuthorize("hasAuthority('user.todo.create')")
     @Operation(description = "오늘 할 일 저장")
     @PostMapping("/todos")
     public CreateTodoResponse createTodo(@Validated @Parameter @RequestBody CreateTodoRequest request,
