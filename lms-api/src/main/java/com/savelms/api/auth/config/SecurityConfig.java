@@ -1,5 +1,11 @@
 package com.savelms.api.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.savelms.api.auth.controller.dto.LoginResponseDto;
+import com.savelms.core.user.domain.entity.User;
+import com.savelms.core.user.domain.repository.UserRepository;
+import javax.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,7 +20,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)//Secured, PrePost 어노테이션 활성화
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -43,8 +53,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin(loginConfigurer ->
                 loginConfigurer
                     .successHandler((req, res, auth) -> {
+                        User user = userRepository.findByUsername(auth.getName())
+                            .orElseThrow(
+                                EntityNotFoundException::new);
+                        LoginResponseDto response = new LoginResponseDto();
                         res.setStatus(200);
-                        res.getWriter().write(auth.getName());
+                        res.setContentType("application/json");
+                        res.setCharacterEncoding("utf-8");
+                        response.setId(user.getApiId());
+
+                        res.getWriter().write(objectMapper.writeValueAsString(response));
                     })
                     .failureHandler((req, res, e) -> {
                         res.setStatus(401);
