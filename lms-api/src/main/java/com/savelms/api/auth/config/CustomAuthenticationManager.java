@@ -9,6 +9,6 @@ public class CustomAuthenticationManager {
 
     public Boolean userIdMatches(Authentication authentication, String userId) {
         User user = (User) authentication.getPrincipal();
-        return ((User) authentication.getPrincipal()).getApiId().equals(userId);
+        return user.getApiId().equals(userId);
     }
 }

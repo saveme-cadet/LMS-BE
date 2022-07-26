@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class TodoService {
@@ -34,9 +35,9 @@ public class TodoService {
     private final CalendarService calendarService;
     private final TodoRepository todoRepository;
     @Transactional
-    public Long create(CreateTodoRequest request, String username) {
+    public Long create(CreateTodoRequest request, String apiId) {
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByApiId(apiId)
             .orElseThrow(() ->
                 new EntityNotFoundException("User not found"));
         Calendar calendar = calendarService.findByDate(request.getTodoDay());
@@ -53,11 +54,11 @@ public class TodoService {
 
     }
 
-    public List<GetMyTodosByDayResponse> getMyAllTodoInToday(String username, LocalDate localDate) {
-        List<Todo> todos = todoRepository.findByUsernameAndTodoDayFetchJoin(username,
+    public List<GetMyTodosByDayResponse> getMyAllTodoInToday(String userId, LocalDate localDate) {
+        List<Todo> todos = todoRepository.findByApiIdAndTodoDayFetchJoin(userId,
             localDate);
         return todos.stream()
-            .map((todo) ->
+            .map(todo ->
                 GetMyTodosByDayResponse.builder()
                     .writerId(todo.getUser().getApiId())
                     .todoId(todo.getId())
@@ -130,25 +131,29 @@ public class TodoService {
     }
 
     @Transactional
-    public Long update(UpdateTodoRequest request, Long todoId) {
+    public Long update(UpdateTodoRequest request, Long todoId, String userId) {
         Todo todo = todoRepository.findById(todoId)
             .orElseThrow(() ->
                 new EntityNotFoundException("Todo not found by id: " + todoId));
-
-        return todo.changeTitleAndComplete(request.getTitle(), request.getTitleCheck());
+        if (todo.getUser().getApiId().equals(userId) == false) {
+            throw new IllegalArgumentException("Todo "
+                + todoId
+                + " not found by userId: " + todoId);
+        }
+            return todo.changeTitleAndComplete(request.getTitle(), request.getTitleCheck());
     }
 
     @Transactional
-    public Long delete(Long todoId, String username) {
+    public Long delete(Long todoId, String userId) {
 
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() ->
-                new EntityNotFoundException("User not found :" + username));
+
         Todo todo = todoRepository.findById(todoId)
             .orElseThrow(() ->
                 new EntityNotFoundException("Todo not found by id: " + todoId));
-        if (user != todo.getUser()) {
-            throw new NoAuthorityException("You have no authority to delete : Todo " + todo.getId());
+        if (todo.getUser().getApiId().equals(userId) == false) {
+            throw new IllegalArgumentException("Todo "
+                + todoId
+                + " not found by userId: " + todoId);
         }
         todoRepository.deleteById(todoId);
         return todo.getId();

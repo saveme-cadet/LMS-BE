@@ -57,6 +57,17 @@ public class UserDataLoader implements CommandLineRunner {
         Authority readUser = saveNewAuthority("user.read");
         Authority deleteUser = saveNewAuthority("user.delete");
 
+
+        Authority createTodo = saveNewAuthority("todo.create");
+        Authority createUserTodo = saveNewAuthority("user.todo.create");
+        Authority updateTodo = saveNewAuthority("todo.update");
+        Authority updateUserTodo = saveNewAuthority("user.todo.update");
+        Authority readTodo = saveNewAuthority("todo.read");
+        Authority readUserTodo = saveNewAuthority("user.todo.read");
+        Authority deleteTodo = saveNewAuthority("todo.delete");
+        Authority deleteUserTodo = saveNewAuthority("user.todo.delete");
+
+
         authorityRepository.saveAll(
             Arrays.asList(createUser, updateUser, updateUserRole, updateUserTeam,
                 updateUserAttendStatus, readUser, deleteUser));
@@ -68,10 +79,13 @@ public class UserDataLoader implements CommandLineRunner {
         Role userRole = saveNewRole(RoleEnum.ROLE_USER);
         Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
 
-        adminRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
-        managerRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
-        userRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
-        unauthorizedRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
+        adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
+            createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo);
+        managerRole.addAuthorities(createUser, updateUser, updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser,
+            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo);
+        userRole.addAuthorities(createUser, readUser,
+            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo);
+        unauthorizedRole.addAuthorities(createUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
         //Team 생성
