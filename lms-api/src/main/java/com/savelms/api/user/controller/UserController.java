@@ -16,6 +16,7 @@ import com.savelms.core.user.domain.DuplicateUsernameException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,12 +47,13 @@ public class UserController {
 //        return userService.findUserList(attendStatus, offset, size, sortRule);
 //    }
 
+    @PreAuthorize("hasAuthority('user.read')")
     @GetMapping("/users/participating-this-month")
     public ListResponse<UserParticipatingIdResponse> sendParticipatingUserListUserId() {
         return userService.findParticipatingUserList();
     }
 
-    //@PreAuthorize("hasAuthority('user.create')")
+    @PreAuthorize("hasAuthority('user.create')")
     @PostMapping("/users")
     public ResponseEntity<UserSignUpResponse> signUp(@Validated @RequestBody UserSignUpRequest request) {
 
@@ -72,6 +74,7 @@ public class UserController {
 
     }
 
+    @PreAuthorize("hasAuthority('user.team.update')")
     @PatchMapping("/users/{id}/team")
     public UserChangeTeamResponse changeTeam(@PathVariable("id") String apiId,
         @Validated @RequestBody UserChangeTeamRequest request) {
@@ -80,6 +83,7 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasAuthority('user.role.update')")
     @PatchMapping("/users/{id}/role")
     public UserChangeRoleResponse changeRole(@PathVariable("id") String apiId,
         @Validated @RequestBody UserChangeRoleRequest request) {
@@ -87,6 +91,7 @@ public class UserController {
         return new UserChangeRoleResponse(userService.changeRole(apiId, request));
     }
 
+    @PreAuthorize("hasAuthority('user.attend-status.update')")
     @PatchMapping("/users/{id}/attendStatus")
     public UserChangeAttendStatusResponse changeAttendStatus(@PathVariable("id") String apiId,
         @Validated @RequestBody UserChangeAttendStatusRequest request) {

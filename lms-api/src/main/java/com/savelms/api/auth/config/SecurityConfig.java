@@ -1,10 +1,15 @@
 package com.savelms.api.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.savelms.api.auth.controller.dto.LoginResponseDto;
+import com.savelms.core.user.domain.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +19,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)//Secured, PrePost 어노테이션 활성화
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -26,9 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests(
                 authorize -> authorize
-                    //.antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/users").permitAll()
-                    .antMatchers(HttpMethod.GET, "/swagger-ui/index.html**").permitAll()
+                    //.antMatchers(HttpMethod.POST, "/api/users").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/auth/email** ").permitAll()
 
                 //.mvcMatchers(HttpMethod.GET, "/").hasRole("USER")
@@ -43,8 +50,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin(loginConfigurer ->
                 loginConfigurer
                     .successHandler((req, res, auth) -> {
+                        User user = (User)auth.getPrincipal();
+                        LoginResponseDto response = new LoginResponseDto();
                         res.setStatus(200);
-                        res.getWriter().write(auth.getName());
+                        res.setContentType("application/json");
+                        res.setCharacterEncoding("utf-8");
+                        response.setId(user.getApiId());
+
+                        res.getWriter().write(objectMapper.writeValueAsString(response));
                     })
                     .failureHandler((req, res, e) -> {
                         res.setStatus(401);
@@ -58,6 +71,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .invalidateHttpSession(true);
 
     }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**");
+
+    }
+
 
     //인증 방식 수동 지정. userDetailsService, passwordEncoder 하나일때는 상관없음.
 //    @Override

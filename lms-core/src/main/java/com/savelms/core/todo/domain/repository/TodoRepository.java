@@ -12,8 +12,8 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     @Query("SELECT t FROM Todo t "
         + "join fetch t.user "
         + "join fetch t.calendar "
-        + "WHERE t.user.username = :username AND t.calendar.date = :todoDay")
-    List<Todo> findByUsernameAndTodoDayFetchJoin(@Param("username")String username, @Param("todoDay") LocalDate todoDay);
+        + "WHERE t.user.apiId = :apiId AND t.calendar.date = :todoDay")
+    List<Todo> findByApiIdAndTodoDayFetchJoin(@Param("apiId")String apiId, @Param("todoDay") LocalDate todoDay);
 
 
     @Query("SELECT t FROM Todo t "

@@ -10,6 +10,7 @@ import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.todo.controller.dto.UpdateTodoRequest;
 import com.savelms.api.todo.controller.dto.UpdateTodoResponse;
 import com.savelms.api.todo.service.TodoService;
+import com.savelms.core.user.domain.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -19,10 +20,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @RequiredArgsConstructor
@@ -32,25 +42,31 @@ public class TodoController {
 
     private final TodoService todoService;
 
+    @PreAuthorize("hasAuthority('todo.create') OR "
+        + "(hasAuthority('user.todo.create') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
     @Operation(description = "오늘 할 일 저장")
-    @PostMapping("/todos")
+    @PostMapping("/users/{userId}/todos")
     public CreateTodoResponse createTodo(@Validated @Parameter @RequestBody CreateTodoRequest request,
-        @AuthenticationPrincipal User user) {
-        Long todoId = todoService.create(request, user.getUsername());
+        @AuthenticationPrincipal User user,
+        @PathVariable("userId") String userId) {
+        Long todoId = todoService.create(request, userId);
         return CreateTodoResponse.builder()
             .todoId(todoId)
             .build();
     }
 
+    @PreAuthorize("hasAuthority('todo.read') OR "
+        + "(hasAuthority('user.todo.read') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
     @Operation(description = "오늘 내 할 일 가져오기")
-    @GetMapping("/todos")
-    public ListResponse<GetMyTodosByDayResponse> getMyTodosByToday(@AuthenticationPrincipal User user,
+    @GetMapping("/users/{userId}/todos")
+    public ListResponse<GetMyTodosByDayResponse> getMyTodosByToday(@PathVariable("userId") String userId,
+        @AuthenticationPrincipal User user,
         @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY)
         @RequestParam(required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
         List<GetMyTodosByDayResponse> todoDtos = todoService.getMyAllTodoInToday(
-            user.getUsername(),
+            userId,
             date == null ? LocalDate.now() : date);
 
         ListResponse<GetMyTodosByDayResponse> response = new ListResponse<>();
@@ -59,6 +75,7 @@ public class TodoController {
         return response;
     }
 
+    @PreAuthorize("hasAuthority('todo.read')")
     @Operation(description = "오늘 할 일 모든 유저 가져오기")
     @GetMapping("/users/todos")
     public ListResponse<AllUserTodoDto> getUserTodoAllByDay(
@@ -69,6 +86,7 @@ public class TodoController {
         return todoService.getTodoAllByDay(date == null ? LocalDate.now() : date);
     }
 
+    @PreAuthorize("hasAuthority('todo.read')")
     @Operation(description = "오늘 할 일 모든 유저 진척률")
     @GetMapping("/users/todos/progress")
     public ListResponse<GetTodoProgressResponse> getUserTodoProgress(
@@ -80,11 +98,13 @@ public class TodoController {
     }
 
 
-
-    @PatchMapping("/todos/{id}")
+    @PreAuthorize("hasAuthority('todo.update') OR "
+        + "(hasAuthority('user.todo.update') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
+    @PatchMapping("/users/{userId}/todos/{todoId}")
     public ResponseEntity<UpdateTodoResponse> updateTodo(@Validated @Parameter @RequestBody UpdateTodoRequest request,
-        @PathVariable("id") Long todoId){
-        Long id = todoService.update(request, todoId);
+        @PathVariable("userId") String userId,
+        @PathVariable("todoId") Long todoId){
+        Long id = todoService.update(request, todoId, userId);
 
         UpdateTodoResponse responseBody = UpdateTodoResponse.builder()
             .todoId(id)
@@ -92,12 +112,15 @@ public class TodoController {
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    @DeleteMapping("/todos/{id}")
-    public ResponseEntity<DeleteTodoResponse> deleteTodo(@PathVariable(name = "id") Long todoId,
+    @PreAuthorize("hasAuthority('todo.delete') OR "
+        + "(hasAuthority('user.todo.delete') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
+    @DeleteMapping("/users/{userId}/todos/{todoId}")
+    public ResponseEntity<DeleteTodoResponse> deleteTodo(@PathVariable("userId") String userId,
+        @PathVariable(name = "todoId") Long todoId,
         @AuthenticationPrincipal User user) {
 
         try {
-            Long id = todoService.delete(todoId, user.getUsername());
+            Long id = todoService.delete(todoId, userId);
             DeleteTodoResponse responseBody = DeleteTodoResponse.builder()
                 .todoId(id)
                 .build();

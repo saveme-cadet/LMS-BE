@@ -8,19 +8,18 @@ import com.savelms.core.team.domain.entity.Team;
 import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.team.domain.repository.TeamRepository;
 import com.savelms.core.team.domain.repository.UserTeamRepository;
+import com.savelms.core.user.authority.domain.entity.Authority;
+import com.savelms.core.user.authority.domain.repository.AuthorityRepository;
+import com.savelms.core.user.domain.entity.User;
+import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
-import com.savelms.core.user.authority.domain.entity.Authority;
-import com.savelms.core.user.domain.entity.User;
-import com.savelms.core.user.authority.domain.repository.AuthorityRepository;
-import com.savelms.core.user.domain.repository.UserRepository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.UUID;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,20 +51,41 @@ public class UserDataLoader implements CommandLineRunner {
         // Authority 생성
         Authority createUser = saveNewAuthority("user.create");
         Authority updateUser = saveNewAuthority("user.update");
+        Authority updateUserRole = saveNewAuthority("user.role.update");
+        Authority updateUserTeam = saveNewAuthority("user.team.update");
+        Authority updateUserAttendStatus = saveNewAuthority("user.update-attend.status");
         Authority readUser = saveNewAuthority("user.read");
         Authority deleteUser = saveNewAuthority("user.delete");
 
-        authorityRepository.saveAll(Arrays.asList(createUser, updateUser, readUser, deleteUser));
+
+        Authority createTodo = saveNewAuthority("todo.create");
+        Authority createUserTodo = saveNewAuthority("user.todo.create");
+        Authority updateTodo = saveNewAuthority("todo.update");
+        Authority updateUserTodo = saveNewAuthority("user.todo.update");
+        Authority readTodo = saveNewAuthority("todo.read");
+        Authority readUserTodo = saveNewAuthority("user.todo.read");
+        Authority deleteTodo = saveNewAuthority("todo.delete");
+        Authority deleteUserTodo = saveNewAuthority("user.todo.delete");
+
+
+        authorityRepository.saveAll(
+            Arrays.asList(createUser, updateUser, updateUserRole, updateUserTeam,
+                updateUserAttendStatus, readUser, deleteUser));
+
+        //Authority createUser = saveNewAuthority("user.create");
         //Role 생성
         Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN);
         Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER);
         Role userRole = saveNewRole(RoleEnum.ROLE_USER);
         Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
 
-        adminRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
-        managerRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
-        userRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
-        unauthorizedRole.addAuthorities(createUser, updateUser, readUser, deleteUser);
+        adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
+            createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo);
+        managerRole.addAuthorities(createUser, updateUser, updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser,
+            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo);
+        userRole.addAuthorities(createUser, readUser,
+            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo);
+        unauthorizedRole.addAuthorities(createUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
         //Team 생성
