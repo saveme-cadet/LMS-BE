@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -53,7 +53,7 @@ public class UserController {
         return userService.findParticipatingUserList();
     }
 
-    @PreAuthorize("hasAuthority('user.create')")
+    //@PreAuthorize("hasAuthority('user.create')")
     @PostMapping("/users")
     public ResponseEntity<UserSignUpResponse> signUp(@Validated @RequestBody UserSignUpRequest request) {
 
@@ -99,12 +99,12 @@ public class UserController {
         return new UserChangeAttendStatusResponse(userService.changeAttendStatus(apiId, request));
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public String fakeLogin(@ModelAttribute UserLoginRequest request) {
         throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
     }
 
-    @PostMapping("/auth/logout")
+    @PostMapping("/logout")
     public void fakeLogout() {
         throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
     }

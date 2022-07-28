@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
 @Slf4j
 @RestController
 @RequestMapping("/api")

@@ -8,6 +8,7 @@ import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.api.study_time.service.StudyTimeService;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
+
 @Tag(name = "아오지 API")
 @Slf4j
 @RestController
@@ -41,7 +42,7 @@ public class StudyTimeController {
      * */
     @Operation(description = "스터디 시작")
     @PostMapping("/study_times")
-    public ResponseEntity<StudyTimeResponse> startStudy(@AuthenticationPrincipal User user) {
+    public ResponseEntity<StudyTimeResponse> startStudy(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
         StudyTimeResponse studyTime = studyTimeService.startStudy(user.getUsername());
 
         return ResponseEntity.ok().body(studyTime);
@@ -53,7 +54,7 @@ public class StudyTimeController {
      * */
     @Operation(description = "당일 스터디 조회")
     @GetMapping("/study_times/today")
-    public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
         List<StudyTimeResponse> studyTime = studyTimeService.getTodayStudyTimes(user.getUsername());
 
         return ResponseEntity.ok().body(studyTime);
@@ -62,7 +63,7 @@ public class StudyTimeController {
     @Operation(description = "특정 날짜 스터디 조회")
     @GetMapping("/study_times/{date}") //'yyyy-MM-dd'
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(
-            @AuthenticationPrincipal User user,
+            @Parameter(hidden = true) @AuthenticationPrincipal User user,
             @PathVariable @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date
     ) {
         List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimesByDate(user.getUsername(), date);
@@ -72,7 +73,7 @@ public class StudyTimeController {
 
     @Operation(description = "전체 날짜 스터디 조회")
     @GetMapping("/study_times")
-    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
         List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(user.getUsername());
 
         return ResponseEntity.ok().body(studyTime);
@@ -92,7 +93,7 @@ public class StudyTimeController {
      * */
     @Operation(description = "스터디 종료")
     @PutMapping("/study_times")
-    public ResponseEntity<StudyTimeResponse> endStudy(@AuthenticationPrincipal User user) {
+    public ResponseEntity<StudyTimeResponse> endStudy(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
         StudyTimeResponse studyTimeResponse = studyTimeService.endStudy(user.getUsername());
 
         return ResponseEntity.ok().body(studyTimeResponse);

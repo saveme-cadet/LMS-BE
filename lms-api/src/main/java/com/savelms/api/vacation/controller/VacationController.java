@@ -8,6 +8,7 @@ import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.exception.ExceptionResponse;
 import com.savelms.core.exception.VacationNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@CrossOrigin(originPatterns = "http://3.38.226.166:8080")
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -38,7 +39,7 @@ public class VacationController {
     @Operation(description = "휴가 사용")
     @PostMapping("/vacations")
     public ResponseEntity<VacationResponse> useVacation(@RequestBody @Valid UseVacationRequest vacationRequest,
-                                                        @AuthenticationPrincipal User user) {
+                                                        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         VacationResponse vacationResponse = vacationService.useVacation(vacationRequest, user.getUsername());
 
         return ResponseEntity.ok().body(vacationResponse);
@@ -50,7 +51,7 @@ public class VacationController {
      * */
     @Operation(description = "남은 휴가 조회")
     @GetMapping("/remaining-vacations")
-    public ResponseEntity<VacationResponse> getRemainingVacation(@AuthenticationPrincipal User user) {
+    public ResponseEntity<VacationResponse> getRemainingVacation(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
         VacationResponse vacationResponse = vacationService.getRemainingVacation(user.getUsername());
 
         return ResponseEntity.ok().body(vacationResponse);
@@ -58,7 +59,8 @@ public class VacationController {
 
     @Operation(description = "사용한 휴가 이력 조회")
         @GetMapping("/used-vacations")
-    public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(
+            @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         List<VacationReasonResponse> vacationResponses = vacationService.getUsedVacation(user.getUsername());
 
         return ResponseEntity.ok().body(vacationResponses);
