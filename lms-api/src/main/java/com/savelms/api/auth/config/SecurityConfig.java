@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 authorize -> authorize
                     .antMatchers(HttpMethod.POST, "/api/users").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
                     .antMatchers(HttpMethod.GET, "/api/auth/email** ").permitAll()
 
                 //.mvcMatchers(HttpMethod.GET, "/").hasRole("USER")
@@ -69,10 +70,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         res.setStatus(401);
                     })
                     .usernameParameter("username")
-                    .loginProcessingUrl("/api/login")
+                    .loginProcessingUrl("/api/auth/login")
                     .permitAll()
             )
-            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
+            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout"))
             .deleteCookies("JSESSIONID")
             .invalidateHttpSession(true);
 
