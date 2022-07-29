@@ -17,7 +17,7 @@ import lombok.Setter;
 public class UserChangeTeamRequest {
 
 
-    @Schema(name= "team" , example = "RED, BLUE")
+    @Schema(name= "team" , example = "RED, BLUE, NONE")
     @NotNull
     TeamEnum team;
 
