@@ -9,6 +9,7 @@ import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
 import com.savelms.api.user.controller.dto.UserChangeTeamResponse;
 import com.savelms.api.user.controller.dto.UserLoginRequest;
 import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
+import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
 import com.savelms.api.user.service.UserService;
@@ -18,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -37,15 +38,16 @@ public class UserController {
     private final UserService userService;
 
 
-//    @GetMapping("/users")
-//    public UserSendUserListResponse sendUserList(
-//        @RequestParam(value = "attendStatus", required = false, defaultValue = "true") Boolean attendStatus,
-//        @RequestParam(value = "offset", required = false, defaultValue = "0") Long offset,
-//        @RequestParam(value = "size", required = false, defaultValue="30") Long size,
-//        @RequestParam(value = "sort", required = false, defaultValue = "nickname:asc") String sortRule) {
-//
-//        return userService.findUserList(attendStatus, offset, size, sortRule);
-//    }
+    @PreAuthorize("hasAuthority('user.read')")
+
+    @GetMapping("/users")
+    public ListResponse<UserResponseDto> sendUserList(
+        @RequestParam(value = "offset", required = false, defaultValue = "0") Long offset,
+        @RequestParam(value = "size", required = false, defaultValue="100") Long size
+        ) {
+
+        return userService.findUserList(offset, size);
+    }
 
     @PreAuthorize("hasAuthority('user.read')")
     @GetMapping("/users/participating-this-month")

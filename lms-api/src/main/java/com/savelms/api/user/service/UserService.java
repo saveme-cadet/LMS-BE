@@ -70,6 +70,7 @@ public class UserService {
     private final EmailAuthCustomRepository emailAuthCustomRepository;
 
     private final EmailService emailService;
+
     /**
      * 회원가입
      *
@@ -119,24 +120,33 @@ public class UserService {
     }
 
 
-    public UserSendUserListResponse findUserList(Boolean attendStatus, Long offset, Long size,
-        String sortRule) {
+    public ListResponse<UserResponseDto> findUserList(Long offset, Long size) {
 
-        UserSortRuleDto userSortRuleDto = UserSortRuleDto.toUserSortRoleDto(sortRule);
+        List<User> users = userCustomRepository.findAllAndSortAndPage(offset, size);
 
-        List<User> users = userCustomRepository.findAllAndSortAndPage(attendStatus, offset, size,
-            userSortRuleDto);
-
-        List<UserResponseDto> userDtos = users.stream()
+        List<UserResponseDto> userResponseDtoDatas = users.stream()
             .map((u) ->
                 UserResponseDto.builder()
+                    .id(u.getApiId())
+                    .attendStatus(u.getAttendStatus())
                     .nickname(u.getNickname())
-                    .apiId(u.getApiId())
+                    .role(userRoleRepository.currentlyUsedUserRole(u.getId())
+                        .get(0)
+                        .getRole()
+                        .getValue())
+                    .team(userTeamRepository.currentlyUsedUserTeam(u.getId())
+                        .get(0)
+                        .getTeam()
+                        .getValue())
+                    .vacation(u.getVacations().stream()
+                        .map(v ->
+                            v.getRemainingDays() - v.getUsedDays())
+                        .reduce(0L, Long::sum))
                     .build())
             .collect(Collectors.toList());
-        return UserSendUserListResponse.builder()
-            .users(userDtos)
-            .count(userDtos.size())
+        return ListResponse.<UserResponseDto>builder()
+            .count(userResponseDtoDatas.size())
+            .content(userResponseDtoDatas)
             .build();
     }
 
@@ -168,7 +178,7 @@ public class UserService {
             new EntityNotFoundException(roleEnum.name() + "에 해당하는 role이 없습니다."));
         List<UserRole> originalUserRoles = userRoleRepository.currentlyUsedUserRole(user.getId());
 
-        user.originalUserRolesCurrentlyUsedToFalse( originalUserRoles);
+        user.originalUserRolesCurrentlyUsedToFalse(originalUserRoles);
         UserRole userRole = UserRole.createUserRole(user, role, request.getReason(), true);
         userRoleRepository.save(userRole);
         user.setNewCurrentlyUsedUserRole(userRole);

@@ -17,5 +17,5 @@ public class ListResponse<T> {
 
     private Integer count;
 
-    private List<T> content = new ArrayList<>();
+    private List<T> content;
 }

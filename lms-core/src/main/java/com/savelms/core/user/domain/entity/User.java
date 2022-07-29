@@ -7,6 +7,7 @@ import com.savelms.core.todo.domain.entity.Todo;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
+import com.savelms.core.vacation.domain.entity.Vacation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,7 +46,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Builder
-public class User extends BaseEntity implements UserDetails, CredentialsContainer, Serializable {
+public class
+
+User extends BaseEntity implements UserDetails, CredentialsContainer, Serializable {
 
     //********************************* static final 상수 필드 *********************************/
 
@@ -135,6 +138,10 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @Singular
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
     private final List<Todo> todos = new ArrayList<>();
+
+    @Singular
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
+    private final List<Vacation> vacations = new ArrayList<>();
 
     /********************************* 연관관계 편의 메서드 *********************************/
 

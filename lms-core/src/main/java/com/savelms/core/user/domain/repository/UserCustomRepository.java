@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public class UserCustomRepository {
 
     private final EntityManager em;
-    public List<User> findAllAndSortAndPage(Boolean attendStatus, Long offset, Long size, UserSortRuleDto sortRule) {
+    public List<User> findAllAndSortAndPage(Long offset, Long size) {
 
 //        return em.createQuery(
 //                "SELECT u FROM User u "
@@ -27,9 +27,8 @@ public class UserCustomRepository {
 //            .getResultList();
 
         return em.createQuery("SELECT u FROM User u"
-            + " WHERE u.attendStatus = :attendStatus",
+                    + " ORDER BY u.nickname",
             User.class)
-            .setParameter("attendStatus", attendStatus)
             .setFirstResult(offset.intValue())
             .setMaxResults(size.intValue())
             .getResultList();

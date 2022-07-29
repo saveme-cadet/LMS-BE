@@ -118,9 +118,9 @@ public class UserDataLoader implements CommandLineRunner {
 
         //UserTeam 생성
         UserTeam.createUserTeam(admin, red, "initial", true);
-        UserTeam.createUserTeam(manager, red, "initial", true);
-        UserTeam.createUserTeam(user, red, "initial", true);
-        UserTeam.createUserTeam(unauthorized, red, "initial", true);
+        UserTeam.createUserTeam(manager, blue, "initial", true);
+        UserTeam.createUserTeam(user, none, "initial", true);
+        UserTeam.createUserTeam(unauthorized, none, "initial", true);
 
         //UserRole 생성
         UserRole.createUserRole(admin, adminRole, "initial", true);
