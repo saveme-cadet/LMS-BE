@@ -142,9 +142,9 @@ public class TodoService {
             .orElseThrow(() ->
                 new EntityNotFoundException("Todo not found by id: " + todoId));
         if (todo.getUser().getApiId().equals(userId) == false) {
-            throw new IllegalArgumentException("Todo "
+            throw new EntityNotFoundException("Todo "
                 + todoId
-                + " not found by userId: " + todoId);
+                + " not found being matched with userId: " + userId);
         }
             return todo.changeTitleAndComplete(request.getTitle(), request.getTitleCheck());
     }
@@ -157,9 +157,9 @@ public class TodoService {
             .orElseThrow(() ->
                 new EntityNotFoundException("Todo not found by id: " + todoId));
         if (todo.getUser().getApiId().equals(userId) == false) {
-            throw new IllegalArgumentException("Todo "
+            throw new EntityNotFoundException("Todo "
                 + todoId
-                + " not found by userId: " + todoId);
+                + " not found being matched with userId: " + userId);
         }
         todoRepository.deleteById(todoId);
         return todo.getId();

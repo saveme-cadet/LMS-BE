@@ -99,15 +99,13 @@ public class UserController {
         return new UserChangeAttendStatusResponse(userService.changeAttendStatus(apiId, request));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public String fakeLogin(@ModelAttribute UserLoginRequest request) {
         throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/auth/logout")
     public void fakeLogout() {
         throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
     }
-
-
 }

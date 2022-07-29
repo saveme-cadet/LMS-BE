@@ -95,8 +95,11 @@ public class UserDataLoader implements CommandLineRunner {
         Team blue = Team.builder()
             .value(TeamEnum.BLUE)
             .build();
+        Team none = Team.builder()
+            .value(TeamEnum.NONE)
+            .build();
 
-        teamRepository.saveAll(Arrays.asList(red, blue));
+        teamRepository.saveAll(Arrays.asList(red, blue, none));
 
 
         //유저 생성

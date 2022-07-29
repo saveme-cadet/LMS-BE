@@ -56,7 +56,7 @@ public class TodoController {
     }
 
     @PreAuthorize("hasAuthority('todo.read') OR "
-        + "(hasAuthority('user.todo.read') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
+        + "hasAuthority('user.todo.read')")
     @Operation(description = "오늘 내 할 일 가져오기")
     @GetMapping("/users/{userId}/todos")
     public ListResponse<GetMyTodosByDayResponse> getMyTodosByToday(@PathVariable("userId") String userId,
@@ -119,15 +119,11 @@ public class TodoController {
         @PathVariable(name = "todoId") Long todoId,
         @AuthenticationPrincipal User user) {
 
-        try {
             Long id = todoService.delete(todoId, userId);
             DeleteTodoResponse responseBody = DeleteTodoResponse.builder()
                 .todoId(id)
                 .build();
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
-        } catch (RuntimeException re) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
 }

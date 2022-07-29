@@ -27,7 +27,7 @@ class EmailController {
         } catch (EmailAuthTokenNotFoundException eatnfe) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이메일 인증에 실패햐였습니다.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("이메일 인증에 성공하였습니.");
+        return ResponseEntity.status(HttpStatus.OK).body("이메일 인증에 성공하였습니다.");
     }
 }
 

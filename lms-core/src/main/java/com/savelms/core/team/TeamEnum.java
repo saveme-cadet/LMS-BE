@@ -7,7 +7,7 @@ import java.util.Map;
 import jdk.jshell.Snippet.Status;
 
 public enum TeamEnum {
-    RED, BLUE;
+    NONE, RED, BLUE;
 //    private final String value;
 //
 //    private static final Map<String, TeamEnum> map = new HashMap<>();

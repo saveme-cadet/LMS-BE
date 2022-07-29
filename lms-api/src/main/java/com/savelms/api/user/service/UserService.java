@@ -88,7 +88,7 @@ public class UserService {
                 .build());
 
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
-        Team defaultTeam = teamService.findByValue(TeamEnum.RED);
+        Team defaultTeam = teamService.findByValue(TeamEnum.NONE);
         Calendar calendar = calendarRepository.findByDate(LocalDate.now())
             .orElseThrow(() ->
                 new EntityNotFoundException("오늘의 일정이 없습니다."));
