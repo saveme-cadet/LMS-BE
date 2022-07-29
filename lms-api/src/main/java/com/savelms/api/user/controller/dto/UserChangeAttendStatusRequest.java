@@ -17,5 +17,5 @@ import lombok.Setter;
 public class UserChangeAttendStatusRequest {
     @Schema(name= "attendStatus" , example = "PARTICIPATED, NOT_PARTICIPATED")
     @NotNull
-    AttendStatus attendStatus;
+    private AttendStatus attendStatus;
 }

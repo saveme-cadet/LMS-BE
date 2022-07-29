@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserChangeRoleRequest {
 
-    @Schema(name= "role" , example = "UNAUTHORIZED, USER, MANAGER, ADMIN")
+    @Schema(name= "role" , example = "ROLE_UNAUTHORIZED, ROLE_USER, ROLE_MANAGER, ROLE_ADMIN")
     @NotNull
     RoleEnum role;
 

@@ -13,11 +13,11 @@ import lombok.Setter;
 public class GetTodoProgressResponse {
 
     @Schema(name= "writerId" , example = "d1775d2f-7347-4536-a816-8b38d01d5ce4")
-    @NotNull
     @NotBlank
     private String writerId;
 
     @Schema(name= "writerId" , example = "0.5")
+    @NotNull
     private Double progress;
 
 

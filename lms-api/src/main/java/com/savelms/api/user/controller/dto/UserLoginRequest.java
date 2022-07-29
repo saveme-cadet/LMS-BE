@@ -1,6 +1,7 @@
 package com.savelms.api.user.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,11 +11,11 @@ import lombok.Setter;
 public class UserLoginRequest {
 
     @Schema(name= "username" , example = "intraid")
-    @NotNull
+    @NotBlank
     private String username;
 
     @Schema(name= "password" , example = "asdfer222")
-    @NotNull
+    @NotBlank
     private String password;
 
 

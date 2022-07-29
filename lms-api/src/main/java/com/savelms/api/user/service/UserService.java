@@ -200,7 +200,7 @@ public class UserService {
             .stream()
             .map((u) ->
                 UserParticipatingIdResponse.builder()
-                    .id(u.getApiId())
+                    .userId(u.getApiId())
                     .username(u.getUsername())
                     .build())
             .collect(Collectors.toList());

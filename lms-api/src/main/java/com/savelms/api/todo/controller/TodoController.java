@@ -10,12 +10,14 @@ import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.todo.controller.dto.UpdateTodoRequest;
 import com.savelms.api.todo.controller.dto.UpdateTodoResponse;
 import com.savelms.api.todo.service.TodoService;
+import com.savelms.api.user.controller.error.ErrorResult;
 import com.savelms.core.user.domain.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import java.time.LocalDate;
 import java.util.List;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +43,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class TodoController {
 
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResult> entityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ErrorResult.builder()
+                .message(e.getMessage())
+                .build());
+    }
+
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResult> exception(Exception e) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//            .body(ErrorResult.builder()
+//                .message(e.getMessage())
+//                .build());
+//    }
     private final TodoService todoService;
 
     @PreAuthorize("hasAuthority('todo.create') OR "

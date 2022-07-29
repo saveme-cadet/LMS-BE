@@ -12,13 +12,16 @@ import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
 import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
+import com.savelms.api.user.controller.error.ErrorResult;
 import com.savelms.api.user.service.UserService;
 import com.savelms.core.user.domain.DuplicateUsernameException;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,16 +38,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResult> duplicateUsernameException(DuplicateUsernameException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(ErrorResult.builder()
+                .message(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResult> entityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ErrorResult.builder()
+                .message(e.getMessage())
+                .build());
+    }
+
+
     private final UserService userService;
 
 
     @PreAuthorize("hasAuthority('user.read')")
-
     @GetMapping("/users")
     public ListResponse<UserResponseDto> sendUserList(
         @RequestParam(value = "offset", required = false, defaultValue = "0") Long offset,
-        @RequestParam(value = "size", required = false, defaultValue="100") Long size
-        ) {
+        @RequestParam(value = "size", required = false, defaultValue = "100") Long size
+    ) {
 
         return userService.findUserList(offset, size);
     }
@@ -57,22 +76,15 @@ public class UserController {
 
     //@PreAuthorize("hasAuthority('user.create')")
     @PostMapping("/users")
-    public ResponseEntity<UserSignUpResponse> signUp(@Validated @RequestBody UserSignUpRequest request) {
+    public ResponseEntity<UserSignUpResponse> signUp(
+        @Validated @RequestBody UserSignUpRequest request) {
 
-        String apiId = null;
-        UserSignUpResponse response = null;
-        try{
-            apiId = userService.validateUserNameAndSignUp(request);
-            response = new UserSignUpResponse();
-            response.setId(apiId);
+        String apiId = userService.validateUserNameAndSignUp(request);
+        UserSignUpResponse response = new UserSignUpResponse();
+        response.setId(apiId);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        }catch( DuplicateUsernameException due){
-            response = new UserSignUpResponse();
-            response.setId(apiId);
-            response.setError(due.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
 
     }
 
@@ -102,12 +114,14 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public String fakeLogin(@ModelAttribute UserLoginRequest request) {
-        throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
+    public String fakeLogin(@Validated @ModelAttribute UserLoginRequest request) {
+        throw new IllegalStateException(
+            "This method shouldn't be called. It's implemented by Spring Security filters.");
     }
 
     @PostMapping("/auth/logout")
     public void fakeLogout() {
-        throw new IllegalStateException("This method shouldn't be called. It's implemented by Spring Security filters.");
+        throw new IllegalStateException(
+            "This method shouldn't be called. It's implemented by Spring Security filters.");
     }
 }
