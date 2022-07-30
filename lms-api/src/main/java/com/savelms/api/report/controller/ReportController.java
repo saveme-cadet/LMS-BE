@@ -7,6 +7,7 @@ import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.Role;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class ReportController {
      */
     @Operation(description = "위험한 유저 보고")
     @GetMapping("/report-user")
-    public ResponseEntity<List<ReportResponse>> reportDangerUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<ReportResponse>> reportDangerUser(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
 
         /*
          validation 넣기
