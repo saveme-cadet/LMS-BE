@@ -95,7 +95,7 @@ public class UserService {
                 new EntityNotFoundException("오늘의 일정이 없습니다."));
         String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
         User defaultUser = User.createDefaultUser(userSignUpRequest.getUsername(), encodedPassword,
-            userSignUpRequest.getEmail());
+            userSignUpRequest.getUsername() + User.EMAILSUFFIX);
         Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);

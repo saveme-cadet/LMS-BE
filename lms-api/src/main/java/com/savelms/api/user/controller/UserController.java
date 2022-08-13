@@ -64,7 +64,6 @@ public class UserController {
         @RequestParam(value = "offset", required = false, defaultValue = "0") Long offset,
         @RequestParam(value = "size", required = false, defaultValue = "100") Long size
     ) {
-
         return userService.findUserList(offset, size);
     }
 
