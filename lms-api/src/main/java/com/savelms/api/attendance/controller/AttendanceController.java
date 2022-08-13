@@ -4,6 +4,7 @@ import com.savelms.api.attendance.service.AttendanceService;
 import com.savelms.core.attendance.dto.CheckIOReq;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.domain.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class AttendanceController {
 
     @PatchMapping("/{attendanceId}/checkin")
     public ResponseEntity<String> userCheckIn(
-            @AuthenticationPrincipal User sessionUser,
+            @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
             @PathVariable("attendanceId") Long attendanceId,
             @Valid @RequestBody CheckIOReq reqBody) {
         /**
@@ -58,7 +59,7 @@ public class AttendanceController {
 
     @PatchMapping("/{attendanceId}/checkout")
     public ResponseEntity<String> userCheckOut(
-            @AuthenticationPrincipal User sessionUser,
+            @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
             @PathVariable("attendanceId") Long attendanceId,
             @Valid @RequestBody CheckIOReq reqBody) {
         /**

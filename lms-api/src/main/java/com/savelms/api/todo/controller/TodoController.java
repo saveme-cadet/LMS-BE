@@ -66,7 +66,7 @@ public class TodoController {
     @Operation(description = "오늘 할 일 저장")
     @PostMapping("/users/{userId}/todos")
     public CreateTodoResponse createTodo(@Validated @Parameter @RequestBody CreateTodoRequest request,
-        @AuthenticationPrincipal User user,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable("userId") String userId) {
         Long todoId = todoService.create(request, userId);
         return CreateTodoResponse.builder()
@@ -79,7 +79,7 @@ public class TodoController {
     @Operation(description = "오늘 내 할 일 가져오기")
     @GetMapping("/users/{userId}/todos")
     public ListResponse<GetMyTodosByDayResponse> getMyTodosByToday(@PathVariable("userId") String userId,
-        @AuthenticationPrincipal User user,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY)
         @RequestParam(required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -136,7 +136,7 @@ public class TodoController {
     @DeleteMapping("/users/{userId}/todos/{todoId}")
     public ResponseEntity<DeleteTodoResponse> deleteTodo(@PathVariable("userId") String userId,
         @PathVariable(name = "todoId") Long todoId,
-        @AuthenticationPrincipal User user) {
+        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
 
             Long id = todoService.delete(todoId, userId);
             DeleteTodoResponse responseBody = DeleteTodoResponse.builder()
