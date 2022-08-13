@@ -37,7 +37,7 @@ public class VacationController {
      * 생성
      * */
     //휴가를 사용할 때 마다 INSERT(사용 이유를 기록하기 위해)
-    @PreAuthorize("hasAuthority('vacation.create') and hasAuthority('vacation.update')")
+    @PreAuthorize("hasAuthority('user.vacation.update')")
     @Operation(description = "휴가 사용")
     @PostMapping("/vacations")
     public ResponseEntity<VacationResponse> useVacation(@RequestBody @Valid UseVacationRequest vacationRequest,
@@ -51,7 +51,7 @@ public class VacationController {
     /**
      * 조회
      * */
-    @PreAuthorize("hasAuthority('vacation.read')")
+    @PreAuthorize("hasAuthority('user.vacation.read')")
     @Operation(description = "남은 휴가 조회")
     @GetMapping("/remaining-vacations")
     public ResponseEntity<VacationResponse> getRemainingVacation(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
@@ -60,7 +60,7 @@ public class VacationController {
         return ResponseEntity.ok().body(vacationResponse);
     }
 
-    @PreAuthorize("hasAuthority('vacation.read')")
+    @PreAuthorize("hasAuthority('user.vacation.read')")
     @Operation(description = "사용한 휴가 이력 조회")
         @GetMapping("/used-vacations")
     public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(

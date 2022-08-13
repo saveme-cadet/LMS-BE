@@ -41,7 +41,7 @@ public class StudyTimeController {
     /**
      * 생성
      * */
-    @PreAuthorize("hasAuthority('study-time.create')")
+    @PreAuthorize("hasAuthority('user.study-time.create')")
     @Operation(description = "스터디 시작")
     @PostMapping("/study_times")
     public ResponseEntity<StudyTimeResponse> startStudy(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
@@ -54,7 +54,7 @@ public class StudyTimeController {
     /**
      * 조회
      * */
-    @PreAuthorize("hasAuthority('study-time.read')")
+    @PreAuthorize("hasAuthority('user.study-time.read')")
     @Operation(description = "당일 스터디 조회")
     @GetMapping("/study_times/today")
     public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
@@ -63,7 +63,7 @@ public class StudyTimeController {
         return ResponseEntity.ok().body(studyTime);
     }
 
-    @PreAuthorize("hasAuthority('study-time.read')")
+    @PreAuthorize("hasAuthority('user.study-time.read')")
     @Operation(description = "특정 날짜 스터디 조회")
     @GetMapping("/study_times/{date}") //'yyyy-MM-dd'
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(
@@ -75,7 +75,7 @@ public class StudyTimeController {
         return ResponseEntity.ok().body(studyTime);
     }
 
-    @PreAuthorize("hasAuthority('study-time.read')")
+    @PreAuthorize("hasAuthority('user.study-time.read')")
     @Operation(description = "전체 날짜 스터디 조회")
     @GetMapping("/study_times")
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
@@ -97,7 +97,7 @@ public class StudyTimeController {
     /**
      * 수정
      * */
-    @PreAuthorize("hasAuthority('study-time.update')")
+    @PreAuthorize("hasAuthority('user.study-time.update')")
     @Operation(description = "스터디 종료")
     @PutMapping("/study_times")
     public ResponseEntity<StudyTimeResponse> endStudy(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
