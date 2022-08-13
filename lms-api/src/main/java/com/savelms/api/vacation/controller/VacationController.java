@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class VacationController {
      * 생성
      * */
     //휴가를 사용할 때 마다 INSERT(사용 이유를 기록하기 위해)
+    @PreAuthorize("hasAuthority('vacation.create') and hasAuthority('vacation.update')")
     @Operation(description = "휴가 사용")
     @PostMapping("/vacations")
     public ResponseEntity<VacationResponse> useVacation(@RequestBody @Valid UseVacationRequest vacationRequest,
@@ -49,6 +51,7 @@ public class VacationController {
     /**
      * 조회
      * */
+    @PreAuthorize("hasAuthority('vacation.read')")
     @Operation(description = "남은 휴가 조회")
     @GetMapping("/remaining-vacations")
     public ResponseEntity<VacationResponse> getRemainingVacation(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
@@ -57,6 +60,7 @@ public class VacationController {
         return ResponseEntity.ok().body(vacationResponse);
     }
 
+    @PreAuthorize("hasAuthority('vacation.read')")
     @Operation(description = "사용한 휴가 이력 조회")
         @GetMapping("/used-vacations")
     public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(
@@ -71,6 +75,7 @@ public class VacationController {
     /**
      * 수정
      * */
+    @PreAuthorize("hasAuthority('vacation.create') and hasAuthority('vacation.update')")
     @Operation(description = "휴가 일수 추가")
     @PatchMapping("/vacations")
     public ResponseEntity<VacationResponse> addVacation(@RequestBody @Valid AddVacationRequest vacationRequest,

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
     private final UserRepository userRepository;
 
-
+    @PreAuthorize("hasAuthority('attendance.update')")
     @PatchMapping("/{attendanceId}/checkin")
     public ResponseEntity<String> userCheckIn(
             @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
@@ -57,6 +58,7 @@ public class AttendanceController {
     }
 
 
+    @PreAuthorize("hasAuthority('attendance.update')")
     @PatchMapping("/{attendanceId}/checkout")
     public ResponseEntity<String> userCheckOut(
             @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,

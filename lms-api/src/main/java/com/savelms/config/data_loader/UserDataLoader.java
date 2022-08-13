@@ -68,9 +68,23 @@ public class UserDataLoader implements CommandLineRunner {
         Authority deleteUserTodo = saveNewAuthority("user.todo.delete");
 
 
-        authorityRepository.saveAll(
-            Arrays.asList(createUser, updateUser, updateUserRole, updateUserTeam,
-                updateUserAttendStatus, readUser, deleteUser));
+        Authority createVacation = saveNewAuthority("vacation.create");
+        Authority updateVacation = saveNewAuthority("vacation.update");
+        Authority readVacation = saveNewAuthority("vacation.read");
+        Authority deleteVacation = saveNewAuthority("vacation.delete");
+
+
+        Authority createStudyTime = saveNewAuthority("study-time.create");
+        Authority updateStudyTime = saveNewAuthority("study-time.update");
+        Authority readStudyTime = saveNewAuthority("study-time.read");
+        Authority readStudyTimeUser = saveNewAuthority("study-time.user.read");
+        Authority deleteStudyTime = saveNewAuthority("study-time.delete");
+
+        Authority createAttendance = saveNewAuthority("attendance.create");
+        Authority updateAttendance = saveNewAuthority("attendance.update");
+        Authority readAttendance = saveNewAuthority("attendance.read");
+        Authority deleteAttendance = saveNewAuthority("attendance.delete");
+
 
         //Authority createUser = saveNewAuthority("user.create");
         //Role 생성
@@ -80,11 +94,19 @@ public class UserDataLoader implements CommandLineRunner {
         Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
 
         adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
-            createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo);
+            createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo,
+            createVacation, updateVacation, readVacation, deleteVacation,
+            createStudyTime, updateStudyTime, readStudyTime, readStudyTimeUser, deleteStudyTime,
+            updateAttendance);
         managerRole.addAuthorities(createUser, updateUser, updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser,
-            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo);
+            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
+            createVacation, updateVacation, readVacation, deleteVacation,
+            createStudyTime, updateStudyTime, readStudyTime, readStudyTimeUser, deleteStudyTime,
+            updateAttendance);
         userRole.addAuthorities(createUser, readUser,
-            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo);
+            createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
+            readVacation,
+            createStudyTime, updateStudyTime, readStudyTime, readStudyTimeUser);
         unauthorizedRole.addAuthorities(createUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
@@ -130,7 +152,7 @@ public class UserDataLoader implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
 
-        캘린더_생성_7월();
+        캘린더_생성_7_10월();
     }
 
 
@@ -144,10 +166,10 @@ public class UserDataLoader implements CommandLineRunner {
             Authority.builder().permission(s).build());
     }
 
-    private void 캘린더_생성_7월() {
+    private void 캘린더_생성_7_10월() {
         //캘린더 데이터 저장
         LocalDate startDate = LocalDate.of(2022, 7, 1);
-        LocalDate endDate = LocalDate.of(2022, 10, 1);
+        LocalDate endDate = LocalDate.of(2022, 11, 1);
 
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             Calendar calendar = Calendar.builder()
