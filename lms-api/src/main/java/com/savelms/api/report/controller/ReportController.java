@@ -29,7 +29,7 @@ public class ReportController {
 
     private final ReportService reportService;
     private final UserRepository userRepository;
-    //test5
+    //test6
     /*
     위험한 유저 보고
      */
