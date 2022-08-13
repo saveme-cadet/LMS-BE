@@ -3,9 +3,12 @@ package com.savelms.api.auth.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.savelms.api.auth.controller.dto.LoginResponseDto;
 import com.savelms.core.user.domain.entity.User;
+import java.util.Collection;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,13 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 loginConfigurer
                     .successHandler((req, res, auth) -> {
                         User user = (User)auth.getPrincipal();
-                        LoginResponseDto response = new LoginResponseDto();
+                        LoginResponseDto body = new LoginResponseDto();
                         res.setStatus(200);
                         res.setContentType("application/json");
                         res.setCharacterEncoding("utf-8");
-                        response.setId(user.getApiId());
+                        addSameSiteCookieAttribute(res);
+                        body.setId(user.getApiId());
 
-                        res.getWriter().write(objectMapper.writeValueAsString(response));
+                        res.getWriter().write(objectMapper.writeValueAsString(body));
                     })
                     .failureHandler((req, res, e) -> {
                         res.setStatus(401);
@@ -119,5 +123,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.userDetailsService(new JpaUserDetailService(userRepository)).passwordEncoder(bCryptPasswordEncoder());
 //    }
+
+    private void addSameSiteCookieAttribute(HttpServletResponse response) {
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+        boolean firstHeader = true;
+        // there can be multiple Set-Cookie attributes
+        for (String header : headers) {
+            if (firstHeader) {
+                response.setHeader(HttpHeaders.SET_COOKIE,
+                    String.format("%s; %s", header, "SameSite=Strict"));
+                firstHeader = false;
+                continue;
+            }
+            response.addHeader(HttpHeaders.SET_COOKIE,
+                String.format("%s; %s", header, "SameSite=Strict"));
+        }
+    }
 
 }
