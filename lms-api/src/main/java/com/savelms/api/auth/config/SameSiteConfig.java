@@ -24,7 +24,7 @@ public class SameSiteConfig implements WebMvcConfigurer {
     @Bean
     public CookieSerializer cookieSerializer() throws MalformedURLException {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName("SESSION");
+        serializer.setCookieName("JSESSIONID");
         serializer.setSameSite("None");
         serializer.setUseSecureCookie(true);
         return serializer;
