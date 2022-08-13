@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         res.setStatus(200);
                         res.setContentType("application/json");
                         res.setCharacterEncoding("utf-8");
-                        addSameSiteCookieAttribute(res);
+//                        addSameSiteCookieAttribute(res);
                         body.setId(user.getApiId());
 
                         res.getWriter().write(objectMapper.writeValueAsString(body));
@@ -124,20 +124,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        auth.userDetailsService(new JpaUserDetailService(userRepository)).passwordEncoder(bCryptPasswordEncoder());
 //    }
 
-    private void addSameSiteCookieAttribute(HttpServletResponse response) {
-        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
-        boolean firstHeader = true;
-        // there can be multiple Set-Cookie attributes
-        for (String header : headers) {
-            if (firstHeader) {
-                response.setHeader(HttpHeaders.SET_COOKIE,
-                    String.format("%s; %s", header, "SameSite=None"));
-                firstHeader = false;
-                continue;
-            }
-            response.addHeader(HttpHeaders.SET_COOKIE,
-                String.format("%s; %s", header, "SameSite=None"));
-        }
-    }
+//    private void addSameSiteCookieAttribute(HttpServletResponse response) {
+//        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+//        boolean firstHeader = true;
+//        // there can be multiple Set-Cookie attributes
+//        for (String header : headers) {
+//            if (firstHeader) {
+//                response.setHeader(HttpHeaders.SET_COOKIE,
+//                    String.format("%s; %s", header, "SameSite=None"));
+//                firstHeader = false;
+//                continue;
+//            }
+//            response.addHeader(HttpHeaders.SET_COOKIE,
+//                String.format("%s; %s", header, "SameSite=None"));
+//        }
+//    }
 
 }

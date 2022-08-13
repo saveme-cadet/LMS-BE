@@ -23,5 +23,5 @@ public class ListResponse<T> {
 
     @Schema(name= "내용물 list로 반환" , example = "[{}, {}, {}]")
     @NotNull
-    private List<T> content;
+    private List<T> content = new ArrayList<>();
 }

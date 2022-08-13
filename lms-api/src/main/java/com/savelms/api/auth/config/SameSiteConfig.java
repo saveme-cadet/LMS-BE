@@ -12,14 +12,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class SameSiteConfig implements WebMvcConfigurer {
-    @Bean
-    public TomcatContextCustomizer sameSiteCookiesConfig() {
-        return context -> {
-            final Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
-            cookieProcessor.setSameSiteCookies(SameSiteCookies.NONE.getValue());
-            context.setCookieProcessor(cookieProcessor);
-        };
-    }
+//    @Bean
+//    public TomcatContextCustomizer sameSiteCookiesConfig() {
+//        return context -> {
+//            final Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
+//            cookieProcessor.setSameSiteCookies(SameSiteCookies.NONE.getValue());
+//            context.setCookieProcessor(cookieProcessor);
+//        };
+//    }
 
     @Bean
     public CookieSerializer cookieSerializer() throws MalformedURLException {
