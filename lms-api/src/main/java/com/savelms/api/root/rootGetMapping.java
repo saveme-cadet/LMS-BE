@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class rootGetMapping {
     @GetMapping("/spring")
     public String helloSpring(){
-        return "hello Spring";
+
+        return "hello Spring2";
     }
 
 }
