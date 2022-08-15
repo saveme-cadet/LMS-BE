@@ -15,7 +15,7 @@ public class rootGetMapping {
     @GetMapping("/spring")
     public String helloSpring(){
 
-        return "hello Spring4";
+        return "hello Spring5";
     }
 
 }
