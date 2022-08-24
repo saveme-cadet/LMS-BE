@@ -80,8 +80,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginProcessingUrl("/api/auth/login")
                     .permitAll()
             )
-            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout"))
-            .deleteCookies("JSESSIONID")
+            .logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout"))
+            .logoutSuccessHandler((request, response, authentication) -> {
+                response.setStatus(HttpServletResponse.SC_OK);
+            })
+            .deleteCookies("SESSION")
             .invalidateHttpSession(true);
 
     }

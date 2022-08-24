@@ -2,6 +2,8 @@ package com.savelms.api.statistical.service;
 
 import com.savelms.api.statistical.dto.DayStatisticalDataDto;
 import com.savelms.core.attendance.domain.AttendanceStatus;
+import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,22 @@ import java.time.LocalDate;
 @Service
 public class DayStatisticalDataService {
 
+    private final CalendarRepository calendarRepository;
     private final DayStatisticalDataRepository statisticalDataRepository;
 
+//    public DayStatisticalDataDto getDayStatisticalData(String userId, LocalDate date) {
+//        Calendar calendar = calendarRepository.findByDate(date)
+//            .orElseThrow(() -> new EntityNotFoundException("해당 날짜의 캘린더가 존재하지 않습니다."));
+//
+//        DayStatisticalData dayStatisticalData = statisticalDataRepository.findByUserIdAndDate(userId, date)
+//                .orElseThrow(EntityNotFoundException::new);
+//
+//        return DayStatisticalDataDto.builder()
+//                .userId(dayStatisticalData.getUserId())
+//                .date(dayStatisticalData.getDate())
+//                .attendanceStatus(dayStatisticalData.getAttendanceStatus())
+//                .build();
+//    }
 
     /**
      * 조회
