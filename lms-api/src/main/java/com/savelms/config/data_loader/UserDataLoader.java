@@ -69,11 +69,14 @@ public class UserDataLoader implements CommandLineRunner {
 
 
         Authority createVacation = saveNewAuthority("vacation.create");
+        Authority createUserVacation = saveNewAuthority("user.vacation.create");
         Authority updateVacation = saveNewAuthority("vacation.update");
         Authority updateUserVacation = saveNewAuthority("user.vacation.update");
         Authority readVacation = saveNewAuthority("vacation.read");
         Authority readUserVacation = saveNewAuthority("user.vacation.read");
         Authority deleteVacation = saveNewAuthority("vacation.delete");
+        Authority deleteUserVacation = saveNewAuthority("user.vacation.delete");
+
 
 
         Authority createStudyTime = saveNewAuthority("study-time.create");
@@ -92,6 +95,11 @@ public class UserDataLoader implements CommandLineRunner {
         Authority readAttendance = saveNewAuthority("attendance.read");
         Authority deleteAttendance = saveNewAuthority("attendance.delete");
 
+        Authority createUserAttendance = saveNewAuthority("user.attendance.create");
+        Authority updateUserAttendance = saveNewAuthority("user.attendance.update");
+        Authority readUserAttendance = saveNewAuthority("user.attendance.read");
+        Authority deleteUserAttendance = saveNewAuthority("user.attendance.delete");
+
 
         //Authority createUser = saveNewAuthority("user.create");
         //Role 생성
@@ -102,20 +110,23 @@ public class UserDataLoader implements CommandLineRunner {
 
         adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
             createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo,
-            createVacation, updateVacation, readVacation,readUserVacation, deleteVacation,
+            createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
             createStudyTime, updateStudyTime, readStudyTime, deleteStudyTime,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
-            updateAttendance);
+            createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance
+            );
         managerRole.addAuthorities(createUser, updateUser, updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
-            createVacation, updateVacation, readVacation, readUserVacation, deleteVacation,
-            readStudyTime,
+            createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
-            updateAttendance);
+            createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance
+
+        );
         userRole.addAuthorities(createUser, readUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
-            updateUserVacation,readUserVacation,
-            createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser);
+            createUserVacation, updateUserVacation,readUserVacation,
+            createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime);
+
         unauthorizedRole.addAuthorities(createUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));

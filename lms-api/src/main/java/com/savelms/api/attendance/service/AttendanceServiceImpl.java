@@ -4,11 +4,13 @@ import com.savelms.api.statistical.service.DayStatisticalDataService;
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
-import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -119,5 +121,21 @@ public class AttendanceServiceImpl implements AttendanceService{
 
         return new AttendanceDto(attendance);
     }
+
+    public Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date) {
+        return attendanceRepository.findAllByDateWithUser(date)
+            .stream()
+            .collect(Collectors.toMap(
+                attendance -> attendance.getUser().getId(),
+                AttendanceDto::new
+            ));
+
+    }
+
+
+
+//    public List<> getAttendanceAllUserByDate() {
+//
+//    }
 
 }

@@ -86,6 +86,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                         .user(userRepository.getById(x.longValue()))
                         .todoSuccessRate(dayStatisticalData.getTodoSuccessRate())
                         .calendar(day)
+                        //.role(roleService.)
                         .totalScore(dayStatisticalData.getTotalScore())
                         .studyTimeScore(dayStatisticalData.getStudyTimeScore())
                         .build());
