@@ -1,4 +1,4 @@
-package com.savelms.core.attendance.repository;
+package com.savelms.core.attendance.domain.repository;
 
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
@@ -21,6 +21,10 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("select a from Attendance a join fetch a.user u " +
             "where a.user.username =:username and a.calendar.date =:date")
     Optional<Attendance> findByUsernameAndDate(@Param("username") String username, @Param("date") LocalDate date);
+
+    @Query("select a from Attendance a " +
+        "where a.calendar.date =:date")
+    Optional<Attendance> findByDate(@Param("username") String username, @Param("date") LocalDate date);
 
     Optional<Attendance> findAllByCalendar(Long calendarId);
     List<Attendance> findAllByUser(Long userId);
