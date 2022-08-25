@@ -18,7 +18,7 @@ public class DayStatisticalDataController {
 
     public DayStatisticalDataService dayStatisticalDataService;
 
-//    @GetMapping("/users/{userId}/day-statistical-data")
+//    @GetMapping("/day-statistical-data")
 //    public DayStatisticalDataGetResponse getDayStatisticalData(@PathVariable("userId") String userId,
 //        @RequestParam("date") String date) {
 //

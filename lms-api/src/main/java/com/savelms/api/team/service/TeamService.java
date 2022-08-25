@@ -15,6 +15,7 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
 
+
     public Team findByValue(TeamEnum teamEnum) {
         return teamRepository.findByValue(teamEnum)
             .orElseThrow(()->

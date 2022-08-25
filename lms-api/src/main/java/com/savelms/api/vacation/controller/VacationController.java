@@ -37,7 +37,7 @@ public class VacationController {
      * 생성
      * */
     //휴가를 사용할 때 마다 INSERT(사용 이유를 기록하기 위해)
-    @PreAuthorize("hasAuthority('user.vacation.update')")
+    @PreAuthorize("hasAuthority('user.vacation.create')")
     @Operation(description = "휴가 사용")
     @PostMapping("/vacations")
     public ResponseEntity<VacationResponse> useVacation(@RequestBody @Valid UseVacationRequest vacationRequest,

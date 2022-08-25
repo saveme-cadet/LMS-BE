@@ -46,9 +46,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Builder
-public class
-
-User extends BaseEntity implements UserDetails, CredentialsContainer, Serializable {
+public class User extends BaseEntity implements UserDetails, CredentialsContainer, Serializable {
 
     //********************************* static final 상수 필드 *********************************/
 
