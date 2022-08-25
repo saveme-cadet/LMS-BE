@@ -3,6 +3,7 @@ package com.savelms.api.auth.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.savelms.api.auth.controller.dto.LoginResponseDto;
 import com.savelms.core.user.domain.entity.User;
+import com.savelms.core.user.role.domain.entity.UserRole;
 import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +71,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         res.setCharacterEncoding("utf-8");
 //                        addSameSiteCookieAttribute(res);
                         body.setId(user.getApiId());
-
+                        UserRole userRole = user.getUserRoles()
+                            .stream()
+                            .filter(ur ->
+                                ur.getCurrentlyUsed())
+                            .findFirst().get();
+                        body.setRole(userRole.getRole().getValue());
                         res.getWriter().write(objectMapper.writeValueAsString(body));
                     })
                     .failureHandler((req, res, e) -> {
