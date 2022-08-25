@@ -9,8 +9,11 @@ import com.savelms.core.user.role.domain.entity.UserRole;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,14 +27,26 @@ public class UserRoleService {
 
     private final UserRepository userRepository;
 
+    @Data
+    @AllArgsConstructor
+    private static class ForMapping {
+
+        private Long Id;
+        private RoleEnum roleEnum;
+    }
     //모든 유저의 특정날짜 role을 반환.
-    public List<RoleEnum> findAllUserRoleByDate(LocalDate date) {
+    public Map<Long, RoleEnum> findAllUserRoleByDate(LocalDate date) {
+
         return userRepository.findAll()
             .stream()
             .map((u) -> (
-                findNearestUserRole(u.getUserRoles(), date)
+                new ForMapping(u.getId(),
+                    findNearestUserRole(u.getUserRoles(), date))
             ))
-            .collect(Collectors.toList());
+            .collect(Collectors.toMap(
+                ForMapping::getId,
+                ForMapping::getRoleEnum
+            ));
     }
 
     private RoleEnum findNearestUserRole(Set<UserRole> userRoles, LocalDate date) {

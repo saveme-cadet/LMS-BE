@@ -1,13 +1,22 @@
 package com.savelms.api.attendance.controller;
 
 import com.savelms.api.attendance.service.AttendanceService;
+import com.savelms.api.todo.controller.dto.ListResponse;
+import com.savelms.api.user.service.UserService;
+import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.dto.CheckIOReq;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.domain.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +36,7 @@ import java.util.NoSuchElementException;
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
+    private final UserService userService;
     private final UserRepository userRepository;
 
     @PreAuthorize("hasAuthority('attendance.update')")
@@ -90,19 +100,23 @@ public class AttendanceController {
     }
 
 
-//    @GetMapping("?date=")
-//    public List<AttendanceTableDto> dateAttendance(
-//            @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate refDt) {
-//
-//
-//
-//        //일단 캘린더를 찾고, 참가하는 유저들을 찾아
-//        //캘린더로 통계(어제꺼 봐야함 -> 점수 합산용), 출결, 투두, 아오지를 가져와
-//        //유저를 기준으로 합쳐서
-//        //유저로는 팀, 역할, 이름, 휴가(통계 불필요)
-//        //출결로는 출석-결석 점수(통계 필요), 체크-인아웃(통계 불필요)
-//        //투두로는 진척도(통계 불필요)
-//        //아오지는 아오지 시간(통계 필요)
-//
-//    }
+    @PreAuthorize("hasAuthority('attendance.read')")
+    @GetMapping("")
+    public ListResponse<AttendanceDto> getAttendanceListByDate(
+        @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY)
+        @RequestParam(required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<AttendanceDto> attendanceDtoList = attendanceService.getAllAttendanceByDate(
+                date == null ? LocalDate.now() : date)
+            .values()
+            .stream()
+            .collect(Collectors.toList());
+
+        return ListResponse.<AttendanceDto>builder()
+            .content(attendanceDtoList)
+            .count(attendanceDtoList.size())
+            .build();
+    }
+
 }

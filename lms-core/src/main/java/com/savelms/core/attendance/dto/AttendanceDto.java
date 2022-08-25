@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 public class AttendanceDto {
 
-    private String username;
+    private String userId;
     private AttendanceStatus checkInStatus;
     private AttendanceStatus checkOutStatus;
 
     public AttendanceDto(Attendance attendance) {
-        this.username = attendance.getUser().getUsername();
+        this.userId = attendance.getUser().getApiId();
         this.checkInStatus = attendance.getCheckInStatus();
         this.checkOutStatus = attendance.getCheckOutStatus();
     }
