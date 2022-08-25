@@ -129,7 +129,6 @@ public class AttendanceServiceImpl implements AttendanceService{
                 attendance -> attendance.getUser().getId(),
                 AttendanceDto::new
             ));
-
     }
 
 
