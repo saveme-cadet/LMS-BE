@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,18 +15,6 @@ public class VacationRepositoryImpl implements VacationQueryRepository {
 
     @PersistenceContext
     private EntityManager em;
-
-    @Override
-    public Optional<Vacation> findAllByDate(LocalDate date) {
-        String sql = "select v from Vacation v where v.createdAt <= :date order by v.id desc";
-
-        Vacation vacation = em.createQuery(sql, Vacation.class)
-                .setParameter("date", date)
-                .setMaxResults(1)
-                .getSingleResult();
-
-        return Optional.ofNullable(vacation);
-    }
 
     @Override
     public Optional<Vacation> findFirstByUserApiId(String userApiId) {

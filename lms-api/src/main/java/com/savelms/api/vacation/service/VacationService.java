@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,6 +70,19 @@ public class VacationService {
     /**
      * 조회
      * */
+    public List<Map<Long, Long>> getAllRemainingVacationByDate(LocalDate date) {
+        List<Vacation> vacations = vacationRepository.findAllByDate(date);
+        List<Map<Long, Long>> allRemainingVacation = new ArrayList<>();
+
+        Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));
+        for (List<Vacation> userVacations : collect.values()) {
+            Vacation vacation = userVacations.stream().max(Comparator.comparing(Vacation::getCreatedAt)).get();
+            allRemainingVacation.add(Map.of(vacation.getUser().getId(), vacation.getRemainingDays()));
+        }
+
+        return allRemainingVacation;
+    }
+
     public VacationResponse getRemainingVacation(String userApiId) {
         Optional<Vacation> optional = vacationRepository.findFirstByUserApiId(userApiId);
 

@@ -7,9 +7,11 @@ import com.savelms.api.vacation.dto.VacationResponse;
 import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.exception.ExceptionResponse;
 import com.savelms.core.exception.VacationNotFoundException;
+import com.savelms.core.study_time.domain.entity.StudyTime;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +31,6 @@ import java.util.List;
 public class VacationController {
 
     private final VacationService vacationService;
-
 
     /**
      * 생성
