@@ -37,7 +37,10 @@ public class Vacation extends BaseEntity {
     private Long remainingDays;
 
     @Column(nullable = false)
-    private Long usedDays;
+    private Long addedDays;
+
+    @Column(nullable = false)
+    private Long usedDays;  
 
     private String reason;
 
@@ -51,9 +54,10 @@ public class Vacation extends BaseEntity {
      * */
     protected Vacation() {}
 
-    public static Vacation of(Long remainingDays, Long usedDays, String reason, User user) {
+    public static Vacation of(Long remainingDays, Long addedDays, Long usedDays, String reason, User user) {
         return Vacation.builder()
                 .remainingDays(remainingDays)
+                .addedDays(addedDays)
                 .usedDays(usedDays)
                 .reason(reason)
                 .user(user)
