@@ -7,19 +7,18 @@ import com.savelms.api.vacation.dto.VacationResponse;
 import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.exception.ExceptionResponse;
 import com.savelms.core.exception.VacationNotFoundException;
+import com.savelms.core.study_time.domain.entity.StudyTime;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,13 +35,22 @@ public class VacationController {
     /**
      * 생성
      * */
-    //휴가를 사용할 때 마다 INSERT(사용 이유를 기록하기 위해)
-    @PreAuthorize("hasAuthority('user.vacation.update')")
-    @Operation(description = "휴가 사용")
+    @Operation(description = "휴가 추가")
     @PostMapping("/vacations")
+    public ResponseEntity<VacationResponse> addVacation(@RequestBody @Valid AddVacationRequest vacationRequest,
+                                                        @RequestParam("userApiId") String userApiId) {
+        VacationResponse vacationResponse = vacationService.addVacation(vacationRequest, userApiId);
+
+        return ResponseEntity.ok().body(vacationResponse);
+    }
+
+    //휴가를 사용할 때 마다 INSERT(사용 이유를 기록하기 위해)
+//    @PreAuthorize("hasAuthority('user.vacation.update')")
+    @Operation(description = "휴가 사용")
+    @PostMapping("/vacations/remaining-vacations")
     public ResponseEntity<VacationResponse> useVacation(@RequestBody @Valid UseVacationRequest vacationRequest,
-                                                        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        VacationResponse vacationResponse = vacationService.useVacation(vacationRequest, user.getUsername());
+                                                        @RequestParam String userApiId) {
+        VacationResponse vacationResponse = vacationService.useVacation(vacationRequest, userApiId);
 
         return ResponseEntity.ok().body(vacationResponse);
     }
@@ -51,40 +59,24 @@ public class VacationController {
     /**
      * 조회
      * */
-    @PreAuthorize("hasAuthority('user.vacation.read')")
+//    @PreAuthorize("hasAuthority('user.vacation.read')")
     @Operation(description = "남은 휴가 조회")
-    @GetMapping("/remaining-vacations")
-    public ResponseEntity<VacationResponse> getRemainingVacation(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        VacationResponse vacationResponse = vacationService.getRemainingVacation(user.getUsername());
+    @GetMapping("/vacations/remaining-vacations")
+    public ResponseEntity<VacationResponse> getRemainingVacation(@RequestParam("userApiId") String userApiId) {
+        VacationResponse vacationResponse = vacationService.getRemainingVacation(userApiId);
 
         return ResponseEntity.ok().body(vacationResponse);
     }
 
-    @PreAuthorize("hasAuthority('user.vacation.read')")
+
+//    @PreAuthorize("hasAuthority('user.vacation.read')")
     @Operation(description = "사용한 휴가 이력 조회")
-        @GetMapping("/used-vacations")
-    public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(
-            @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        List<VacationReasonResponse> vacationResponses = vacationService.getUsedVacation(user.getUsername());
+    @GetMapping("/vacations/used-vacations")
+    public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(@RequestParam("userApiId") String userApiId) {
+        List<VacationReasonResponse> vacationResponses = vacationService.getUsedVacation(userApiId);
 
         return ResponseEntity.ok().body(vacationResponses);
     }
-
-
-
-    /**
-     * 수정
-     * */
-    @PreAuthorize("hasAuthority('vacation.create') and hasAuthority('vacation.update')")
-    @Operation(description = "휴가 일수 추가")
-    @PatchMapping("/vacations")
-    public ResponseEntity<VacationResponse> addVacation(@RequestBody @Valid AddVacationRequest vacationRequest,
-                                                        @RequestParam Long userId) {
-        VacationResponse vacationResponse = vacationService.addVacation(vacationRequest, userId);
-
-        return ResponseEntity.ok().body(vacationResponse);
-    }
-
 
 
     /**

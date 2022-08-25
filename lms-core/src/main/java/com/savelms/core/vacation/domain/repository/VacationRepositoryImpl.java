@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +16,23 @@ public class VacationRepositoryImpl implements VacationQueryRepository {
     private EntityManager em;
 
     @Override
-    public Optional<Vacation> findFirstByUserId(Long userId) {
-        String query = "select v from Vacation v where v.user.id = :userId order by v.id desc";
+    public Optional<Vacation> findAllByDate(LocalDate date) {
+        String sql = "select v from Vacation v where v.createdAt <= :date order by v.id desc";
+
+        Vacation vacation = em.createQuery(sql, Vacation.class)
+                .setParameter("date", date)
+                .setMaxResults(1)
+                .getSingleResult();
+
+        return Optional.ofNullable(vacation);
+    }
+
+    @Override
+    public Optional<Vacation> findFirstByUserApiId(String userApiId) {
+        String query = "select v from Vacation v where v.user.apiId = :userApiId order by v.id desc";
 
         List<Vacation> vacations = em.createQuery(query, Vacation.class)
-                .setParameter("userId", userId)
+                .setParameter("userApiId", userApiId)
                 .setMaxResults(1)
                 .getResultList();
 
@@ -37,5 +50,4 @@ public class VacationRepositoryImpl implements VacationQueryRepository {
 
         return vacations.stream().findFirst();
     }
-
 }

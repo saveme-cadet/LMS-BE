@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,34 +30,35 @@ public class VacationService {
     /**
      * 생성
      * */
-    public VacationResponse createVacation(Long remainingDays, Long usedDays, String reason, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
-
-        Vacation vacation = Vacation.of(remainingDays, usedDays, reason, user);
-        vacationRepository.save(vacation);
-
-        return new VacationResponse(vacation);
-    }
-
-    public VacationResponse createVacation(Long remainingDays, Long usedDays, String reason, String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
-
-        Vacation vacation = Vacation.of(remainingDays, usedDays, reason, user);
-        vacationRepository.save(vacation);
-
-        return new VacationResponse(vacation);
-    }
-
-    public VacationResponse useVacation(UseVacationRequest vacationRequest, String username) {
-        Vacation vacation = vacationRepository.findFirstByUsername(username)
+    public VacationResponse useVacation(UseVacationRequest vacationRequest, String userApiId) {
+        Vacation vacation = vacationRepository.findFirstByUserApiId(userApiId)
                 .orElseThrow(() -> new VacationNotFoundException("존재하는 휴가가 없습니다."));
 
         checkRemainingDays(vacation.getRemainingDays(), vacationRequest.getUsedDays());
         long remainingDays = vacation.getRemainingDays() - vacationRequest.getUsedDays();
 
-        return createVacation(remainingDays, vacationRequest.getUsedDays(), vacationRequest.getReason(), username);
+        return createVacation(remainingDays, 0L, vacationRequest.getUsedDays(), vacationRequest.getReason(), userApiId);
+    }
+
+    public VacationResponse addVacation(AddVacationRequest vacationRequest, String userApiId) {
+        Long remainingDays = vacationRequest.getAddedDays();
+        Optional<Vacation> vacationOptional = vacationRepository.findFirstByUserApiId(userApiId);
+
+        if (vacationOptional.isPresent()) {
+            remainingDays += vacationOptional.get().getRemainingDays();
+        }
+
+        return createVacation(remainingDays, vacationRequest.getAddedDays(), 0L, "", userApiId);
+    }
+
+    private VacationResponse createVacation(Long remainingDays, Long addedDays, Long usedDays, String reason, String userApiId) {
+        User user = userRepository.findByApiId(userApiId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
+        Vacation vacation = Vacation.of(remainingDays, addedDays, usedDays, reason, user);
+        vacationRepository.save(vacation);
+
+        return new VacationResponse(vacation);
     }
 
     private void checkRemainingDays(Long remainingDays, Long usedDays) {
@@ -69,8 +71,8 @@ public class VacationService {
     /**
      * 조회
      * */
-    public VacationResponse getRemainingVacation(String username) {
-        Optional<Vacation> optional = vacationRepository.findFirstByUsername(username);
+    public VacationResponse getRemainingVacation(String userApiId) {
+        Optional<Vacation> optional = vacationRepository.findFirstByUserApiId(userApiId);
 
         if (optional.isPresent()) {
             Vacation vacation = optional.get();
@@ -78,33 +80,14 @@ public class VacationService {
             return new VacationResponse(vacation);
         }
 
-        return createVacation(0L, 0L, "", username);
+        return createVacation(0L, 0L, 0L, "", userApiId);
     }
 
-    public List<VacationReasonResponse> getUsedVacation(String username) {
-        List<Vacation> vacations = vacationRepository.findByUsernameAndUsedDaysNotZero(username)
-                .orElseThrow(() -> new VacationNotFoundException("사용한 휴가가 없습니다."));
+    public List<VacationReasonResponse> getUsedVacation(String userApiId) {
+        List<Vacation> vacations = vacationRepository.findByApiIdAndUsedDaysNotZero(userApiId);
 
         return vacations.stream()
                 .map(VacationReasonResponse::new)
                 .collect(Collectors.toList());
     }
-
-
-    /**
-     * 수정
-     * */
-    public VacationResponse addVacation(AddVacationRequest vacationRequest, Long userId) {
-        Optional<Vacation> optional = vacationRepository.findFirstByUserId(userId);
-
-        if (optional.isPresent()) {
-            Vacation vacation = optional.get();
-            vacation.addVacationDays(vacationRequest.getAddedDays());
-
-            return new VacationResponse(vacation);
-        }
-
-        return createVacation(vacationRequest.getAddedDays(), 0L, "", userId);
-    }
-
 }
