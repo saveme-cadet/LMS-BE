@@ -6,6 +6,7 @@ import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
+import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
@@ -29,7 +30,7 @@ import java.util.Optional;
 public class AttendanceServiceImpl implements AttendanceService{
 
     private final AttendanceRepository attendanceRepository;
-    private final DayStatisticalDataService statisticalDataService;
+    private final DayStatisticalDataRepository statisticalDataRepository;
 
     @Override
     @Transactional
@@ -40,8 +41,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     //변경 권한 확인
                     if (validateUserAndDatePermission(findAttendance, user)) {
                         findAttendance.checkIn(status);
-
-                        statisticalDataService.updateAttendanceAndAbsentScore(user.getUsername(), status, LocalDate.now());
+                        updateAttendanceAndAbsentScore(user, status);
 
                         log.info("Check-In Success: try_user={}, user={}, checkIn={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
@@ -73,8 +73,8 @@ public class AttendanceServiceImpl implements AttendanceService{
                             throw new IllegalStateException("Must try Check-In first");
                         }
                         findAttendance.checkOut(status);
+                        updateAttendanceAndAbsentScore(user, status);
 
-                        statisticalDataService.updateAttendanceAndAbsentScore(user.getUsername(), status, LocalDate.now());
                         log.info("Check-Out Success: try_user={}, user={}, checkOut={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
                     } else { //변경 권한이 없는 유저가 조작 시 예외 발생
@@ -87,6 +87,20 @@ public class AttendanceServiceImpl implements AttendanceService{
                 () -> {
                     log.info("Check-Out Fail: Attendance Not Found");
                     throw new NoSuchElementException("Attendance Not Found");
+                });
+    }
+
+    private void updateAttendanceAndAbsentScore(User user, AttendanceStatus status) {
+        statisticalDataRepository.findByUsernameAndDate(user.getUsername(), LocalDate.now())
+                .ifPresentOrElse(dayStatisticalData -> {
+                    dayStatisticalData.updateAttendanceScore(status.getAttendanceScore());
+                    dayStatisticalData.updateAbsentScore(status.getAttendancePenalty());
+
+                    if (status.equals(AttendanceStatus.ABSENT)) {
+                        dayStatisticalData.updateWeekAbsentScore(1.0D);
+                    }
+                }, () -> {
+                    log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
                 });
     }
 
