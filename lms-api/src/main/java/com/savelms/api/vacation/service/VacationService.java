@@ -70,14 +70,14 @@ public class VacationService {
     /**
      * 조회
      * */
-    public List<Map<Long, Double>> getAllRemainingVacationByDate(LocalDate date) {
+    public Map<Long, Double> getAllRemainingVacationByDate(LocalDate date) {
         List<Vacation> vacations = vacationRepository.findAllByDate(date);
-        List<Map<Long, Double>> allRemainingVacation = new ArrayList<>();
+        Map<Long, Double> allRemainingVacation = new HashMap<>();
 
         Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));
         for (List<Vacation> userVacations : collect.values()) {
             Vacation vacation = userVacations.stream().max(Comparator.comparing(Vacation::getCreatedAt)).get();
-            allRemainingVacation.add(Map.of(vacation.getUser().getId(), vacation.getRemainingDays()));
+            allRemainingVacation.put(vacation.getUser().getId(), vacation.getRemainingDays());
         }
 
         return allRemainingVacation;

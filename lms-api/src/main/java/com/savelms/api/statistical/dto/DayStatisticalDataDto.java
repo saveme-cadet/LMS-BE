@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class DayStatisticalDataDto {
 
@@ -17,20 +16,25 @@ public class DayStatisticalDataDto {
     private Double weekAbsentScore;
     private Double totalScore;
 
-    static public DayStatisticalDataDto of(
+    private DayStatisticalDataDto(
             Double attendanceScore, Double absentScore, Double todoSuccessRate,
-            Double studyTimeScore, Double weekAbsentScore, Double totalScore
-    ) {
-        return new DayStatisticalDataDto(attendanceScore, absentScore, todoSuccessRate, studyTimeScore, weekAbsentScore, totalScore);
+            Double studyTimeScore, Double weekAbsentScore, Double totalScore)
+    {
+        this.attendanceScore = attendanceScore;
+        this.absentScore = absentScore;
+        this.todoSuccessRate = todoSuccessRate;
+        this.studyTimeScore = studyTimeScore;
+        this.weekAbsentScore = weekAbsentScore;
+        this.totalScore = totalScore;
     }
 
-    public DayStatisticalDataDto(DayStatisticalData dayStatisticalData) {
-        this.attendanceScore = dayStatisticalData.getAttendanceScore();
-        this.absentScore = dayStatisticalData.getAbsentScore();
-        this.todoSuccessRate = dayStatisticalData.getTodoSuccessRate();
-        this.studyTimeScore = dayStatisticalData.getStudyTimeScore();
-        this.weekAbsentScore = dayStatisticalData.getWeekAbsentScore();
-        this.totalScore = dayStatisticalData.getTotalScore();
+    static public DayStatisticalDataDto from(DayStatisticalData dayStatisticalData) {
+        return new DayStatisticalDataDto(
+                dayStatisticalData.getAttendanceScore(),
+                dayStatisticalData.getAbsentScore(),
+                dayStatisticalData.getTodoSuccessRate(),
+                dayStatisticalData.getStudyTimeScore(),
+                dayStatisticalData.getWeekAbsentScore(),
+                dayStatisticalData.getTotalScore());
     }
-
 }
