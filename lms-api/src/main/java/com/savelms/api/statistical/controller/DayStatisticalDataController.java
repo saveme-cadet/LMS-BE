@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class DayStatisticalDataController {
 
     public DayStatisticalDataService dayStatisticalDataService;
-
-//    @GetMapping("/day-statistical-data")
+//
+//    @GetMapping("/day-log")
 //    public DayStatisticalDataGetResponse getDayStatisticalData(@PathVariable("userId") String userId,
 //        @RequestParam("date") String date) {
 //

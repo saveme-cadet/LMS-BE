@@ -35,23 +35,24 @@ public class VacationController {
     /**
      * 생성
      * */
-    @PreAuthorize("hasAuthority('vacation.create') and hasAuthority('vacation.update')")
+    @PreAuthorize("hasAuthority('vacation.create')")
     @Operation(description = "휴가 추가")
-    @PostMapping("/users/{userApiId}/vacations/added-days")
+    @PostMapping("/users/{userId}/vacations/added-days")
     public ResponseEntity<VacationResponse> addVacation(@RequestBody @Valid AddVacationRequest vacationRequest,
-                                                        @PathVariable("userApiId") String userApiId) {
-        VacationResponse vacationResponse = vacationService.addVacation(vacationRequest, userApiId);
+                                                        @PathVariable("userId") String userId) {
+        VacationResponse vacationResponse = vacationService.addVacation(vacationRequest, userId);
 
         return ResponseEntity.ok().body(vacationResponse);
     }
 
     //휴가를 사용할 때 마다 INSERT(사용 이유를 기록하기 위해)
-    @PreAuthorize("hasAuthority('user.vacation.create')")
+    @PreAuthorize("hasAuthority('vacation.create') OR "
+        + "(hasAuthority('user.vacation.create') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
     @Operation(description = "휴가 사용")
-    @PostMapping("/users/{userApiId}/vacations/used-days")
+    @PostMapping("/users/{userId}/vacations/used-days")
     public ResponseEntity<VacationResponse> useVacation(@RequestBody @Valid UseVacationRequest vacationRequest,
-                                                        @PathVariable("userApiId") String userApiId) {
-        VacationResponse vacationResponse = vacationService.useVacation(vacationRequest, userApiId);
+                                                        @PathVariable("userId") String userId) {
+        VacationResponse vacationResponse = vacationService.useVacation(vacationRequest, userId);
 
         return ResponseEntity.ok().body(vacationResponse);
     }
@@ -60,21 +61,23 @@ public class VacationController {
     /**
      * 조회
      * */
-    @PreAuthorize("hasAuthority('user.vacation.read')")
+    @PreAuthorize("hasAuthority('vacation.read') OR "
+        + "(hasAuthority('user.vacation.read') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
     @Operation(description = "남은 휴가 조회")
-    @GetMapping("/users/{userApiId}/vacations/remaining-vacations")
-    public ResponseEntity<VacationResponse> getRemainingVacation(@PathVariable("userApiId") String userApiId) {
-        VacationResponse vacationResponse = vacationService.getRemainingVacation(userApiId);
+    @GetMapping("/users/{userId}/vacations/remaining-vacations")
+    public ResponseEntity<VacationResponse> getRemainingVacation(@PathVariable("userId") String userId) {
+        VacationResponse vacationResponse = vacationService.getRemainingVacation(userId);
 
         return ResponseEntity.ok().body(vacationResponse);
     }
 
 
-    @PreAuthorize("hasAuthority('user.vacation.read')")
+    @PreAuthorize("hasAuthority('vacation.read') OR "
+        + "(hasAuthority('user.vacation.read') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
     @Operation(description = "사용한 휴가 이력 조회")
-    @GetMapping("/users/{userApiId}/vacations/used-vacations")
-    public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(@PathVariable("userApiId") String userApiId) {
-        List<VacationReasonResponse> vacationResponses = vacationService.getUsedVacation(userApiId);
+    @GetMapping("/users/{userId}/vacations/used-vacations")
+    public ResponseEntity<List<VacationReasonResponse>> getUsedVacation(@PathVariable("userId") String userId) {
+        List<VacationReasonResponse> vacationResponses = vacationService.getUsedVacation(userId);
 
         return ResponseEntity.ok().body(vacationResponses);
     }
