@@ -138,9 +138,8 @@ public class UserService {
                         .getTeam()
                         .getValue())
                     .vacation(u.getVacations().stream()
-                        .map(v ->
-                            v.getRemainingDays() - v.getUsedDays())
-                        .reduce(0L, Long::sum))
+                        .map(v -> v.getRemainingDays() - v.getUsedDays())
+                        .reduce(0.0, Double::sum))
                     .build())
             .collect(Collectors.toList());
         return ListResponse.<UserResponseDto>builder()

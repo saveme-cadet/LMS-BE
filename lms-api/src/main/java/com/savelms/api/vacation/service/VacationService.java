@@ -34,23 +34,23 @@ public class VacationService {
                 .orElseThrow(() -> new VacationNotFoundException("존재하는 휴가가 없습니다."));
 
         checkRemainingDays(vacation.getRemainingDays(), vacationRequest.getUsedDays());
-        long remainingDays = vacation.getRemainingDays() - vacationRequest.getUsedDays();
+        double remainingDays = vacation.getRemainingDays() - vacationRequest.getUsedDays();
 
-        return createVacation(remainingDays, 0L, vacationRequest.getUsedDays(), vacationRequest.getReason(), userApiId);
+        return createVacation(remainingDays, 0.0, vacationRequest.getUsedDays(), vacationRequest.getReason(), userApiId);
     }
 
     public VacationResponse addVacation(AddVacationRequest vacationRequest, String userApiId) {
-        Long remainingDays = vacationRequest.getAddedDays();
+        Double remainingDays = vacationRequest.getAddedDays();
         Optional<Vacation> vacationOptional = vacationRepository.findFirstByUserApiId(userApiId);
 
         if (vacationOptional.isPresent()) {
             remainingDays += vacationOptional.get().getRemainingDays();
         }
 
-        return createVacation(remainingDays, vacationRequest.getAddedDays(), 0L, "", userApiId);
+        return createVacation(remainingDays, vacationRequest.getAddedDays(), 0.0, "", userApiId);
     }
 
-    private VacationResponse createVacation(Long remainingDays, Long addedDays, Long usedDays, String reason, String userApiId) {
+    private VacationResponse createVacation(Double remainingDays, Double addedDays, Double usedDays, String reason, String userApiId) {
         User user = userRepository.findByApiId(userApiId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
@@ -60,7 +60,7 @@ public class VacationService {
         return new VacationResponse(vacation);
     }
 
-    private void checkRemainingDays(Long remainingDays, Long usedDays) {
+    private void checkRemainingDays(Double remainingDays, Double usedDays) {
         if ((remainingDays - usedDays) < 0) {
             throw new VacationNotFoundException("사용할 휴가가 부족합니다.");
         }
@@ -70,9 +70,9 @@ public class VacationService {
     /**
      * 조회
      * */
-    public List<Map<Long, Long>> getAllRemainingVacationByDate(LocalDate date) {
+    public List<Map<Long, Double>> getAllRemainingVacationByDate(LocalDate date) {
         List<Vacation> vacations = vacationRepository.findAllByDate(date);
-        List<Map<Long, Long>> allRemainingVacation = new ArrayList<>();
+        List<Map<Long, Double>> allRemainingVacation = new ArrayList<>();
 
         Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));
         for (List<Vacation> userVacations : collect.values()) {
@@ -92,7 +92,7 @@ public class VacationService {
             return new VacationResponse(vacation);
         }
 
-        return createVacation(0L, 0L, 0L, "", userApiId);
+        return createVacation(0.0, 0.0, 0.0, "", userApiId);
     }
 
     public List<VacationReasonResponse> getUsedVacation(String userApiId) {

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 public class UseVacationRequest {
 
     @NotNull
-    private Long usedDays;
+    private Double usedDays;
 
     @NotNull
     private String reason;
