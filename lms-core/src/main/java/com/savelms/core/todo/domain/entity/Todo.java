@@ -50,8 +50,9 @@ public class Todo extends BaseEntity {
 
 //    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "TODO_GENERATOR")
 //    private Integer order;
-
-    private Boolean complete;
+    @Column(nullable = false)
+    private Boolean complete = false;
+    @Column(nullable = false)
     private String title;
 
 
