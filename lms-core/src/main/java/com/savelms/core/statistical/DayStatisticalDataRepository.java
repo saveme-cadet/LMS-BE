@@ -13,8 +13,11 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
 
     DayStatisticalData findByuser_idAndCalendar_id(Long id, Long calendar_id);
 
-    //@Query("select e from DayStatisticalData e where User = :aLong and Calendar = :calendar_id")
     Optional<DayStatisticalData> findAllByUser_idAndCalendar_id(Long aLong, Long calendar_id);
+
+    @Query("select d from DayStatisticalData d join fetch d.user u " +
+            "where d.calendar.date =:date order by u.id asc")
+    List<DayStatisticalData> findAllByDate(@Param("date") LocalDate date);
 
     @Query("select d from DayStatisticalData d where d.user.username =:username and d.calendar.date =:date")
     Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, LocalDate date);
@@ -25,5 +28,4 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
     @Query("select SUM(d.studyTimeScore) from DayStatisticalData d where d.user.username =:username " +
             "and SUBSTRING(d.calendar.date, 6, 2) =:month")
     Optional<Double> findTotalStudyTimePerMonth(@Param("username") String username, String month);
-
 }
