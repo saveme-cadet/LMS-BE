@@ -3,13 +3,17 @@ package com.savelms.api.statistical.service;
 import com.savelms.api.attendance.service.AttendanceService;
 import com.savelms.api.statistical.dto.DayStatisticalDataDto;
 import com.savelms.api.statistical.dto.DayLogDto;
+import com.savelms.api.user.userrole.service.UserRoleService;
+import com.savelms.api.user.userteam.service.UserTeamService;
 import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
-import com.savelms.core.user.domain.entity.User;
+import com.savelms.core.team.TeamEnum;
+import com.savelms.core.user.role.RoleEnum;
+import com.savelms.core.user.role.domain.entity.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,8 @@ public class DayStatisticalDataService {
     private final CalendarRepository calendarRepository;
     private final AttendanceService attendanceService;
     private final VacationService vacationService;
+    private final UserRoleService userRoleService;
+    private final UserTeamService userTeamService;
     private final DayStatisticalDataRepository statisticalDataRepository;
 
 //    public DayStatisticalDataDto getDayStatisticalData(String userId, LocalDate date) {
@@ -53,17 +59,23 @@ public class DayStatisticalDataService {
         final Map<Long, AttendanceDto> attendances = attendanceService.getAllAttendanceByDate(date);
         final Map<Long, Double> remainingVacations = vacationService.getAllRemainingVacationByDate(date);
         final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDate(date);
+        Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date);
+        Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date);
 
         for (DayStatisticalData statisticalData : dayStatisticalData) {
             Long userId = statisticalData.getUser().getId();
             String apiId = statisticalData.getUser().getApiId();
             String nickname = statisticalData.getUser().getNickname();
+
             Double vacation = remainingVacations.computeIfAbsent(userId, (k) -> 0.0);
-            AttendanceDto attendance = attendances.computeIfAbsent(userId, (k) -> new AttendanceDto(apiId, NONE, NONE));
+            TeamEnum team = teams.computeIfAbsent(userId, (k) -> TeamEnum.NONE);
+            RoleEnum role = roles.computeIfAbsent(userId, (k) -> RoleEnum.ROLE_UNAUTHORIZED);
+            AttendanceDto attendance = attendances.computeIfAbsent(userId,
+                    (k) -> new AttendanceDto(apiId, 0L, AttendanceStatus.NONE, AttendanceStatus.NONE));
 
             DayLogDto userLogDto = DayLogDto.of(
-                    apiId, nickname, attendance.getCheckInStatus(), attendance.getCheckOutStatus(),
-                    null, null, date, vacation, DayStatisticalDataDto.from(statisticalData));
+                    apiId, attendance.getAttendanceId(), nickname, attendance.getCheckInStatus(), attendance.getCheckOutStatus(),
+                    role, team, date, vacation, DayStatisticalDataDto.from(statisticalData));
             userLogDtoList.add(userLogDto);
         }
         return userLogDtoList;

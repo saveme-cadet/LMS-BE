@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class DayLogDto {
 
     private String userId;
+    private Long  attendanceId;
     private String username;
     private AttendanceStatus checkIn;
     private AttendanceStatus checkOut;
@@ -27,6 +28,7 @@ public class DayLogDto {
 
     private DayLogDto(
             String userId,
+            Long  attendanceId,
             String username,
             AttendanceStatus checkIn,
             AttendanceStatus checkOut,
@@ -42,6 +44,7 @@ public class DayLogDto {
             Double totalScore)
     {
         this.userId = userId;
+        this.attendanceId = attendanceId;
         this.username = username;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -59,6 +62,7 @@ public class DayLogDto {
 
     public static DayLogDto of(
             String userId,
+            Long  attendanceId,
             String username,
             AttendanceStatus checkIn,
             AttendanceStatus checkOut,
@@ -70,6 +74,7 @@ public class DayLogDto {
     {
         return new DayLogDto(
                 userId,
+                attendanceId,
                 username,
                 checkIn,
                 checkOut,

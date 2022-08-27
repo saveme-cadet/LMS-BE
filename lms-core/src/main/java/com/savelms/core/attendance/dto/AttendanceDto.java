@@ -12,11 +12,13 @@ import lombok.Setter;
 public class AttendanceDto {
 
     private String userId;
+    private Long attendanceId;
     private AttendanceStatus checkInStatus;
     private AttendanceStatus checkOutStatus;
 
     public AttendanceDto(Attendance attendance) {
         this.userId = attendance.getUser().getApiId();
+        this.attendanceId = attendance.getId();
         this.checkInStatus = attendance.getCheckInStatus();
         this.checkOutStatus = attendance.getCheckOutStatus();
     }
