@@ -37,5 +37,5 @@ public class UserResponseDto {
     // 주 마다
     @Schema(description = "가진 휴가 일 수", example = "1, 2")
     @NotNull
-    private final Long vacation;
+    private final Double vacation;
 }

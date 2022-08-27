@@ -8,6 +8,6 @@ import javax.validation.constraints.NotNull;
 public class AddVacationRequest {
 
     @NotNull
-    private Long addedDays;
+    private Double addedDays;
 
 }

@@ -6,10 +6,9 @@ import lombok.Data;
 @Data
 public class VacationResponse {
 
-    private Long remainingDays;
+    private Double remainingDays;
 
     public VacationResponse(Vacation vacation) {
         this.remainingDays = vacation.getRemainingDays();
     }
-
 }

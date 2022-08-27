@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 public class VacationReasonResponse {
 
     private String usedDate;
-    private Long usedDays;
+    private Double usedDays;
     private String reason;
 
     public VacationReasonResponse(Vacation vacation) {
@@ -18,5 +18,4 @@ public class VacationReasonResponse {
         this.usedDays = vacation.getUsedDays();
         this.reason = vacation.getReason();
     }
-
 }
