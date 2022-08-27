@@ -14,6 +14,7 @@ import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,12 +57,23 @@ public class EmailService {
 
     @Transactional
     public EmailAuthResponseDto confirmEmailAndAuthorizeUser(EmailAuthRequestDto requestDto) {
-        EmailAuth emailAuth = emailAuthCustomRepository.findValidAuthByEmail(requestDto.getEmail(),
-                requestDto.getAuthToken(), LocalDateTime.now())
-            .orElseThrow(EmailAuthTokenNotFoundException::new);
+        Optional<EmailAuth> validAuthByEmail = emailAuthCustomRepository.findValidAuthByEmail(
+            requestDto.getEmail(),
+            requestDto.getAuthToken(), LocalDateTime.now());
+        EmailAuth emailAuth = null;
 
         User user = userRepository.findByApiId(requestDto.getId())
             .orElseThrow(EntityNotFoundException::new);
+        if (validAuthByEmail.isEmpty()) {
+            if (user.getEmailAuth() == true) {
+                return EmailAuthResponseDto.builder()
+                    .userId(user.getApiId())
+                    .build();
+            } else if (user.getEmailAuth() == false) {
+                emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
+            }
+        }
+
         Role role = roleRepository.findByValue(RoleEnum.ROLE_USER)
             .orElseThrow(EntityNotFoundException::new);
 
@@ -81,11 +93,22 @@ public class EmailService {
 
     @Transactional
     public EmailAuthResponseDto confirmEmailAndUpdateWithRandomPassword(EmailAuthRequestDto requestDto) {
-        EmailAuth emailAuth = emailAuthCustomRepository.findValidAuthByEmail(requestDto.getEmail(),
-                requestDto.getAuthToken(), LocalDateTime.now())
-            .orElseThrow(EmailAuthTokenNotFoundException::new);
+        Optional<EmailAuth> validAuthByEmail = emailAuthCustomRepository.findValidAuthByEmail(
+            requestDto.getEmail(),
+            requestDto.getAuthToken(), LocalDateTime.now());
+        EmailAuth emailAuth = null;
+
         User user = userRepository.findByApiId(requestDto.getId())
             .orElseThrow(EntityNotFoundException::new);
+        if (validAuthByEmail.isEmpty()) {
+            if (user.getEmailAuth() == true) {
+                return EmailAuthResponseDto.builder()
+                    .userId(user.getApiId())
+                    .build();
+            } else if (user.getEmailAuth() == false) {
+                emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
+            }
+        }
         Role role = roleRepository.findByValue(RoleEnum.ROLE_USER)
             .orElseThrow(EntityNotFoundException::new);
 
