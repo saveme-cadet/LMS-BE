@@ -69,11 +69,9 @@ public class EmailService {
                 return EmailAuthResponseDto.builder()
                     .userId(user.getApiId())
                     .build();
-            } else if (user.getEmailAuth() == false) {
-                emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
             }
         }
-
+        emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
         Role role = roleRepository.findByValue(RoleEnum.ROLE_USER)
             .orElseThrow(EntityNotFoundException::new);
 
