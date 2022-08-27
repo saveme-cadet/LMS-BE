@@ -107,6 +107,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     private String email;
 
 
+    private String refreshToken;
     @Builder.Default
     @Column(nullable = false)
     private Boolean emailAuth = false;
@@ -118,6 +119,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
     @Builder.Default
     @Column(nullable = false)
     private AttendStatus attendStatus = AttendStatus.PARTICIPATED;
+
     /********************************* 비영속 필드 *********************************/
 
     /********************************* 연관관계 매핑 *********************************/
@@ -221,13 +223,15 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
         originalUserRoles.forEach(UserRole::notCurrentlyUsed);
     }
 
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public void emailVerifiedSuccess() {
         this.emailAuth = true;
     }
 
-    public static String
-    getRamdomPassword(int size) {
+    public static String getRamdomPassword(int size) {
         char[] charSet = new char[] {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
