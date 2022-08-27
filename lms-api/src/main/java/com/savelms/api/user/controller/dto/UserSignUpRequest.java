@@ -20,7 +20,4 @@ public class UserSignUpRequest {
     @ValidPassword
     private String password;
 
-//    @Schema(name= "email" , example = "test@gmail.com(이메일 인증에 사용되지 않음.)")
-//    @Email(message = "이메일 형식이 올바르지 않습니다.")
-//    private String email;
 }

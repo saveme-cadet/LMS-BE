@@ -46,6 +46,7 @@ public class EmailAuth {
             .email(email)
             .authToken(authToken)
             .expired(false)
+            .expireDate(LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME))
             .build();
     }
 

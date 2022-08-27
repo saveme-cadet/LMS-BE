@@ -12,7 +12,7 @@ import lombok.Setter;
 public class UserChangePasswordRequest {
 
 
-    @Schema(name= "password" , example = "asdfer222")
+    @Schema(name= "password" , example = "영어 대문자 + 영어 소문자 + 특수문자 + 길이 8~30")
     @NotBlank
     @ValidPassword
     private String password;
