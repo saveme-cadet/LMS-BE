@@ -297,10 +297,12 @@ INSERT INTO user_team (user_team_id, update_id, create_id, created_at, updated_a
 (10, 'ADMIN', 'ADMIN', '2022-08-26 14:46:24', '2022-08-26 14:46:24', true, 'signUpDefault', 1, 10),
 (11, 'ADMIN', 'ADMIN', '2022-08-26 14:46:34', '2022-08-26 14:46:34', true, 'signUpDefault', 2, 11),
 (12, 'ADMIN', 'ADMIN', '2022-08-26 14:46:50', '2022-08-26 14:46:50', true, 'signUpDefault', 2, 12),
-(13, 'ADMIN', 'ADMIN', '2022-08-26 14:47:03', '2022-08-26 14:47:03', true, 'signUpDefault', 2, 13),
+(13, 'ADMIN', 'ADMIN', '2022-08-26 14:47:03', '2022-08-26 14:47:03', false, 'signUpDefault', 2, 13),
 (14, 'ADMIN', 'ADMIN', '2022-08-26 14:47:15', '2022-08-26 14:47:15', true, 'signUpDefault', 2, 14),
 (15, 'ADMIN', 'ADMIN', '2022-08-26 14:47:23', '2022-08-26 14:47:23', true, 'signUpDefault', 2, 15),
-(16, 'ADMIN', 'ADMIN', '2022-08-26 14:49:56', '2022-08-26 14:49:56', true, 'signUpDefault', 2, 16);
+(16, 'ADMIN', 'ADMIN', '2022-08-26 14:49:56', '2022-08-26 14:49:56', true, 'signUpDefault', 2, 16),
+(17, 'ADMIN', 'ADMIN', '2022-08-27 14:47:03', '2022-08-27 14:47:03', true, 'signUpDefault', 1, 13);
+
 
 INSERT INTO user_role (user_role_id, update_id, create_id, created_at, updated_at, currently_used, reason, role_id, user_id) VALUES
 (1, 'ADMIN', 'ADMIN', '2022-08-26 14:44:45', '2022-08-26 14:44:45', true, 'initial', 1, 1),
@@ -317,8 +319,9 @@ INSERT INTO user_role (user_role_id, update_id, create_id, created_at, updated_a
 (12, 'ADMIN', 'ADMIN', '2022-08-26 14:46:50', '2022-08-26 14:46:50', true, 'signUpDefault', 3, 12),
 (13, 'ADMIN', 'ADMIN', '2022-08-26 14:47:03', '2022-08-26 14:47:03', true, 'signUpDefault', 3, 13),
 (14, 'ADMIN', 'ADMIN', '2022-08-26 14:47:15', '2022-08-26 14:47:15', true, 'signUpDefault', 2, 14),
-(15, 'ADMIN', 'ADMIN', '2022-08-26 14:47:23', '2022-08-26 14:47:23', true, 'signUpDefault', 3, 15),
-(16, 'ADMIN', 'ADMIN', '2022-08-26 14:49:56', '2022-08-26 14:49:56', true, 'signUpDefault', 3, 16);
+(15, 'ADMIN', 'ADMIN', '2022-08-26 14:47:23', '2022-08-26 14:47:23', false, 'signUpDefault', 3, 15),
+(16, 'ADMIN', 'ADMIN', '2022-08-26 14:49:56', '2022-08-26 14:49:56', true, 'signUpDefault', 3, 16),
+(17, 'ADMIN', 'ADMIN', '2022-08-27 14:47:23', '2022-08-27 14:47:23', true, 'signUpDefault', 2, 15);
 
 INSERT INTO day_statistical_data (day_statistical_data_id, update_id, create_id, created_at, updated_at, absent_score, attendance_score, study_time_score, todo_success_rate, total_score, week_absent_score, calendar_id, user_id) VALUES
 (1, 'ADMIN', 'ADMIN', '2022-08-26 14:44:45', '2022-08-26 14:44:45', 0, 1, 0, 0, 0, 0, 57, 1),
@@ -346,7 +349,7 @@ INSERT INTO day_statistical_data (day_statistical_data_id, update_id, create_id,
 (23, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0, 2, 0, 0, 0, 0, 58, 7),
 (24, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0, 2, 0, 0, 0, 0, 58, 8),
 (25, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0.25, 1.5, 0, 0, 0.25, 0, 58, 9),
-(26, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0.5, 1.5, 0, 0, 0.5, 0, 58, 10),
+(26, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0.5, 1.5, 0, 0, 0.5, 1, 58, 10),
 (27, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0, 2, 0, 0, 0, 0, 58, 11),
 (28, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0, 2, 0, 0, 0, 0, 58, 12),
 (29, 'ADMIN', 'ADMIN', '2022-08-27 00:00:10', '2022-08-27 00:00:10', 0, 2, 0, 0, 0, 0, 58, 13),
