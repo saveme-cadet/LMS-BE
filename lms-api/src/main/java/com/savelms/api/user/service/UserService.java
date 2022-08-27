@@ -225,7 +225,7 @@ public class UserService {
             EmailAuth.HOST + EmailAuth.EMAILAUTHPATH + "?id=" + user.getApiId()
                 + "&email=" + emailAuth.getEmail()
                 + "&authToken=" + emailAuth.getAuthToken()
-                + "authorizationType=" + EmailAuthRequestDto.RESET);
+                + "&authorizationType=" + EmailAuthRequestDto.RESET);
 
     }
 
