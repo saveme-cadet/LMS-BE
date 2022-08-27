@@ -6,16 +6,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class EmailAuth {
 
-    private static final Long MAX_EXPIRE_TIME = 60L * 24L * 30 * 6;
+    //2일
+    private static final Long MAX_EXPIRE_TIME = 60L * 24L * 2L;
+    public static final String HOST = "https://www.savvemecadet.click";
+    public static final String EMAILAUTHPATH = "/api/auth/email";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +34,6 @@ public class EmailAuth {
     private Boolean expired;
     private LocalDateTime expireDate;
 
-    @Builder
     public EmailAuth(String email, String authToken, Boolean expired) {
         this.email = email;
         this.authToken = authToken;
@@ -34,7 +41,17 @@ public class EmailAuth {
         this.expireDate = LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME);
     }
 
+    public static EmailAuth createEmailAuth(String email, String authToken) {
+        return EmailAuth.builder()
+            .email(email)
+            .authToken(authToken)
+            .expired(false)
+            .build();
+    }
+
+
     public void useToken() {
         this.expired = true;
     }
+
 }

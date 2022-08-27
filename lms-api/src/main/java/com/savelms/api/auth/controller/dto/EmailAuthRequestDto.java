@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class EmailAuthRequestDto {
 
+    public static final String SIGNUP = "signup";
+    public static final String RESET = "reset";
     @Schema(name = "id", example = "8414c5d1-5e09-4f76-8738-9c05fa603918")
     @NotNull
     private String id;
@@ -20,6 +22,10 @@ public class EmailAuthRequestDto {
     @Schema(name = "authToken", example = "8414c5d1-5e09-4f76-8738-9c05fa603918")
     @NotNull
     private String authToken;
+
+    @Schema(name = "authorizationType", example = "signup or reset")
+    private String authorizationType = SIGNUP;
+
 
 
 }

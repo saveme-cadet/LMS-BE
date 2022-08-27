@@ -1,15 +1,16 @@
 package com.savelms.api.user.service;
 
 
+import com.savelms.api.auth.controller.dto.EmailAuthRequestDto;
 import com.savelms.api.auth.service.EmailService;
 import com.savelms.api.team.service.TeamService;
 import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusRequest;
+import com.savelms.api.user.controller.dto.UserChangePasswordRequest;
 import com.savelms.api.user.controller.dto.UserChangeRoleRequest;
 import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
 import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
 import com.savelms.api.user.controller.dto.UserResponseDto;
-import com.savelms.api.user.controller.dto.UserSendUserListResponse;
 import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.attendance.domain.entity.Attendance;
@@ -25,7 +26,6 @@ import com.savelms.core.user.domain.DuplicateUsernameException;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserCustomRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
-import com.savelms.core.user.domain.repository.dto.UserSortRuleDto;
 import com.savelms.core.user.emailauth.domain.entity.EmailAuth;
 import com.savelms.core.user.emailauth.domain.repository.EmailAuthCustomRepository;
 import com.savelms.core.user.emailauth.domain.repository.EmailAuthRepository;
@@ -80,13 +80,6 @@ public class UserService {
     public String validateUserNameAndSignUp(UserSignUpRequest userSignUpRequest) {
         validateUsernameDuplicate(userSignUpRequest.getUsername());
 
-        EmailAuth emailAuth = emailAuthRepository.save(
-            EmailAuth.builder()
-                .email(userSignUpRequest.getUsername() + User.EMAILSUFFIX)
-                .authToken(UUID.randomUUID().toString())
-                .expired(false)
-                .build());
-
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
         Team defaultTeam = teamService.findByValue(TeamEnum.NONE);
         Calendar calendar = calendarRepository.findByDate(LocalDate.now())
@@ -101,7 +94,17 @@ public class UserService {
 
         User savedUser = userRepository.save(defaultUser);
 
-        emailService.send(emailAuth.getEmail(), savedUser.getApiId(), emailAuth.getAuthToken());
+        EmailAuth emailAuth = emailAuthRepository.save(
+            EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,
+                UUID.randomUUID().toString()));
+
+        emailService.send(emailAuth.getEmail(),
+            "42Seoul 구해줘 카뎃 회원가입 이메일 인증입니다. 다음링크를 클릭하면 인증이 완료됩니다. 2일 후 만료됩니다.",
+            EmailAuth.HOST + EmailAuth.EMAILAUTHPATH + "?id=" + savedUser.getApiId()
+                + "&email=" + emailAuth.getEmail()
+                + "&authToken=" + emailAuth.getAuthToken()
+                );
+
         return savedUser.getApiId();
     }
 
@@ -207,5 +210,31 @@ public class UserService {
             .count(responseContents.size())
             .content(responseContents)
             .build();
+    }
+
+    @Transactional
+    public void passwordInquery(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+            new EntityNotFoundException("username에 해당하는 user가 없습니다."));
+        EmailAuth emailAuth = emailAuthRepository.save(
+            EmailAuth.createEmailAuth(user.getEmail(), UUID.randomUUID().toString()));
+
+        emailService.send(emailAuth.getEmail(),
+            "42Seoul 구해줘 카뎃 비밀번호 찾기 이메일 인증입니다." +
+                " 다음링크를 클릭하면 임시 비밀번호가 이 이메일로 발급됩니다." +
+                " 2일 후 만료됩니다.",
+            EmailAuth.HOST + EmailAuth.EMAILAUTHPATH + "?id=" + user.getApiId()
+                + "&email=" + emailAuth.getEmail()
+                + "&authToken=" + emailAuth.getAuthToken()
+                + "authorizationType=" + EmailAuthRequestDto.RESET);
+
+    }
+
+    @Transactional
+    public void changePassword(String username, UserChangePasswordRequest request) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+            new EntityNotFoundException("username에 해당하는 user가 없습니다."));
+        user.updatePassword(bCryptPasswordEncoder.encode(request.getPassword()));
     }
 }

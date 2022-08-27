@@ -1,6 +1,8 @@
 package com.savelms.api.user.controller;
 
 import com.savelms.api.todo.controller.dto.ListResponse;
+import com.savelms.api.user.controller.dto.UserChangePasswordRequest;
+import com.savelms.api.user.controller.dto.UserPasswordInqueryRequest;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusRequest;
 import com.savelms.api.user.controller.dto.UserChangeAttendStatusResponse;
 import com.savelms.api.user.controller.dto.UserChangeRoleRequest;
@@ -15,11 +17,15 @@ import com.savelms.api.user.controller.dto.UserSignUpResponse;
 import com.savelms.api.user.controller.error.ErrorResult;
 import com.savelms.api.user.service.UserService;
 import com.savelms.core.user.domain.DuplicateUsernameException;
+import com.savelms.core.user.domain.entity.User;
+import io.swagger.v3.oas.annotations.Parameter;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +55,14 @@ public class UserController {
     @ExceptionHandler
     public ResponseEntity<ErrorResult> entityNotFoundException(EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ErrorResult.builder()
+                .message(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResult> checkPasswordUnequal(RequestRejectedException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ErrorResult.builder()
                 .message(e.getMessage())
                 .build());
@@ -122,5 +136,18 @@ public class UserController {
     public void fakeLogout() {
         throw new IllegalStateException(
             "This method shouldn't be called. It's implemented by Spring Security filters.");
+    }
+
+
+    @PreAuthorize("hasAuthority('user.update')")
+    @PatchMapping("/auth/password")
+    public ResponseEntity<Void> changePassword(
+        @Validated @Parameter @RequestBody UserChangePasswordRequest request,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        if (request.getPassword().equals(request.getCheckPassword()) == false) {
+            throw new RequestRejectedException("확인 비밀번호가 다릅니다.");
+        }
+        userService.changePassword(user.getUsername(), request);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
