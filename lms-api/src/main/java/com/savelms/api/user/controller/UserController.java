@@ -19,6 +19,9 @@ import com.savelms.api.user.service.UserService;
 import com.savelms.core.user.domain.DuplicateUsernameException;
 import com.savelms.core.user.domain.entity.User;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,7 +73,6 @@ public class UserController {
 
 
     private final UserService userService;
-
 
     @PreAuthorize("hasAuthority('user.read')")
     @GetMapping("/users")
