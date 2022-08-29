@@ -35,15 +35,20 @@ import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
+
+import com.savelms.core.vacation.domain.entity.Vacation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static java.util.Comparator.comparingLong;
 
 @Service
 @Slf4j
@@ -138,8 +143,9 @@ public class UserService {
                         .getTeam()
                         .getValue())
                     .vacation(u.getVacations().stream()
-                        .map(v -> v.getRemainingDays() - v.getUsedDays())
-                        .reduce(0.0, Double::sum))
+                            .max(comparingLong(Vacation::getId))
+                            .orElse(Vacation.of(0D, 0D, 0D, "", u))
+                            .getRemainingDays())
                     .build())
             .collect(Collectors.toList());
         return ListResponse.<UserResponseDto>builder()
