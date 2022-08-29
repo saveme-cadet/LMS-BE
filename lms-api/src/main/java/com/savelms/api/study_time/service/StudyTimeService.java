@@ -48,7 +48,7 @@ public class StudyTimeService {
         StudyTime studyTime = StudyTime.of(user, calendar);
         studyTimeRepository.save(studyTime);
         
-        return new StudyTimeResponse(studyTime);
+        return StudyTimeResponse.from(studyTime);
     }
 
 
@@ -61,7 +61,7 @@ public class StudyTimeService {
 
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -70,7 +70,7 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -79,7 +79,7 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -106,7 +106,7 @@ public class StudyTimeService {
         statisticalDataService.updateStudyTimeScore(username,
                 StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()), LocalDate.now());
 
-        return new StudyTimeResponse(studyTime);
+        return StudyTimeResponse.from(studyTime);
     }
 
     @Transactional
@@ -121,7 +121,7 @@ public class StudyTimeService {
 
         studyTime.updateStudyTime(beginTime, endTime);
 
-        return new StudyTimeResponse(studyTime);
+        return StudyTimeResponse.from(studyTime);
     }
 
     private LocalDateTime stringToLocalDateTime(String dateTime) {
@@ -141,5 +141,4 @@ public class StudyTimeService {
 
         studyTimeRepository.delete(studyTime);
     }
-
 }
