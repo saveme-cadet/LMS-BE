@@ -122,12 +122,12 @@ public class UserDataLoader implements CommandLineRunner {
             createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance
 
         );
-        userRole.addAuthorities(createUser, readUser,
+        userRole.addAuthorities(createUser, readUser,updateUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
             createUserVacation, updateUserVacation,readUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime);
 
-        unauthorizedRole.addAuthorities(createUser);
+        unauthorizedRole.addAuthorities(createUser, updateUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
         //Team 생성
@@ -145,17 +145,17 @@ public class UserDataLoader implements CommandLineRunner {
 
 
         //유저 생성
-        User admin = User.createDefaultUser("admin", passwordEncoder.encode("admin"),
+        User admin = User.createDefaultUser("admin", passwordEncoder.encode("42Seoul!"),
             "admin@gmail.com");
 
-        User manager = User.createDefaultUser("manager", passwordEncoder.encode("manager"),
+        User manager = User.createDefaultUser("manager", passwordEncoder.encode("42Seoul!"),
             "manager@gmail.com");
 
-        User user = User.createDefaultUser("user", passwordEncoder.encode("user"),
+        User user = User.createDefaultUser("user", passwordEncoder.encode("42Seoul!"),
             "user@gmail.com");
 
         User unauthorized = User.createDefaultUser("unauthorized",
-            passwordEncoder.encode("unauthorized"),
+            passwordEncoder.encode("42Seoul!"),
             "unauthorized@gmail.com");
 
         //UserTeam 생성

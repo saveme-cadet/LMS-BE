@@ -17,11 +17,10 @@ import lombok.Setter;
 @Builder
 public class ListResponse<T> {
 
-    @Schema(name= "count" , example = "3")
+
     @NotNull
     private Integer count;
 
-    @Schema(name= "내용물 list로 반환" , example = "[{}, {}, {}]")
     @NotNull
     private List<T> content = new ArrayList<>();
 }
