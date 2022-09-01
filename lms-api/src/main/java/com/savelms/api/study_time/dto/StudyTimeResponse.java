@@ -1,8 +1,6 @@
 package com.savelms.api.study_time.dto;
 
 import com.savelms.core.study_time.domain.entity.StudyTime;
-import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,7 +39,7 @@ public class StudyTimeResponse {
         return new StudyTimeResponse(
                 studyTime.getId(),
                 DateTimeFormatter.ofPattern(StudyTime.DATE_FORMAT).format(studyTime.getCreatedAt()),
-                DateTimeFormatter.ofPattern(StudyTime.DATE_FORMAT).format(studyTime.getBeginTime()),
+                DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getBeginTime()),
                 DateTimeFormatter.ofPattern(StudyTime.TIME_FORMAT).format(studyTime.getEndTime()),
                 studyTime.getFinalStudyTime(),
                 StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));

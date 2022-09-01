@@ -1,11 +1,12 @@
 package com.savelms.core.statistical;
 
-import com.savelms.core.calendar.domain.entity.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +24,20 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
     List<DayStatisticalData> findAllByDate(@Param("date") LocalDate date);
 
     @Query("select d from DayStatisticalData d where d.user.username =:username and d.calendar.date =:date")
-    Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, LocalDate date);
+    Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, @Param("date") LocalDate date);
 
     @Query("select d from DayStatisticalData d where d.user.apiId =:apiId and d.calendar.date =:date")
-    Optional<DayStatisticalData> findByApiIdAndDate(@Param("apiId") String apiId, LocalDate date);
+    Optional<DayStatisticalData> findByApiIdAndDate(@Param("apiId") String apiId, @Param("date") LocalDate date);
 
     @Query("select SUM(d.studyTimeScore) from DayStatisticalData d where d.user.username =:username " +
             "and SUBSTRING(d.calendar.date, 6, 2) =:month")
     Optional<Double> findTotalStudyTimePerMonth(@Param("username") String username, String month);
+
+    @Modifying
+    @Query(value = "update day_statistical_data d inner join User u on u.user_id = d.user_id " +
+            "set d.study_time_score = d.study_time_score + :studyScore, d.total_score = d.total_score + (:studyScore * -1) " +
+            "where d.created_at >= :date and u.api_id = :apiId", nativeQuery = true)
+    void updateStudyTimeScore(@Param("apiId") String apiId,
+                              @Param("studyScore") double studyScore,
+                              @Param("date") LocalDateTime date);
 }

@@ -35,12 +35,6 @@ public class DayStatisticalDataService {
     private final AttendanceService attendanceService;
     private final DayStatisticalDataRepository statisticalDataRepository;
 
-    public List<DayLogDto> getDayLogs() {
-        final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(LocalDate.now());
-
-        return null;
-    }
-
     public List<DayLogDto> getDayLogs(LocalDate date) {
         final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date); //1
         final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date); // 1
