@@ -39,8 +39,8 @@ public class StudyTimeService {
      * 생성
      * */
     @Transactional
-    public StudyTimeResponse startStudy(String username) {
-        User user = userRepository.findByUsername(username)
+    public StudyTimeResponse startStudy(String apiId) {
+        User user = userRepository.findByApiId(apiId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         Calendar calendar = calendarRepository.findAllByDate(LocalDate.now());
@@ -55,8 +55,8 @@ public class StudyTimeService {
     /**
      * 조회
      * */
-    public List<StudyTimeResponse> getStudyTimes(String username) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUsername(username)
+    public List<StudyTimeResponse> getStudyTimes(String apiId) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiId(apiId)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
 
@@ -65,8 +65,8 @@ public class StudyTimeService {
                 .collect(Collectors.toList());
     }
 
-    public List<StudyTimeResponse> getTodayStudyTimes(String username) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndDate(username, LocalDate.now())
+    public List<StudyTimeResponse> getTodayStudyTimes(String apiId) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, LocalDate.now())
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
@@ -74,8 +74,8 @@ public class StudyTimeService {
                 .collect(Collectors.toList());
     }
 
-    public List<StudyTimeResponse> getStudyTimesByDate(String username, LocalDate createdDate) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndDate(username, createdDate)
+    public List<StudyTimeResponse> getStudyTimesByDate(String apiId, LocalDate createdDate) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, createdDate)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
@@ -97,13 +97,13 @@ public class StudyTimeService {
      * 수정
      * */
     @Transactional
-    public StudyTimeResponse endStudy(String username) {
-        StudyTime studyTime = studyTimeRepository.findByUsernameAndIsStudying(username, true)
+    public StudyTimeResponse endStudy(String apiId) {
+        StudyTime studyTime = studyTimeRepository.findByUserApiIdAndIsStudying(apiId, true)
                 .orElseThrow(() -> {throw new StudyTimeNotFoundException("공부 중이 아닙니다.");});
 
         studyTime.endStudyTime();
 
-        statisticalDataService.updateStudyTimeScore(username,
+        statisticalDataService.updateStudyTimeScore(apiId,
                 StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()), LocalDate.now());
 
         return StudyTimeResponse.from(studyTime);
