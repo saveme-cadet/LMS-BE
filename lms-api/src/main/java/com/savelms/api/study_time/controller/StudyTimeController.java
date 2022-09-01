@@ -106,10 +106,11 @@ public class StudyTimeController {
 
     @PreAuthorize("hasAuthority('study-time.update')")
     @Operation(description = "스터디 시간 수정", summary = "스터디 시간 수정")
-    @PatchMapping("/users/study_times/{studyTimeId}")
-    public ResponseEntity<StudyTimeResponse> updateStudyTime(@PathVariable Long studyTimeId,
+    @PatchMapping("/users/{userId}/study_times/{studyTimeId}")
+    public ResponseEntity<StudyTimeResponse> updateStudyTime(@PathVariable String userId,
+                                                             @PathVariable Long studyTimeId,
                                                              @RequestBody UpdateStudyTimeRequest request) {
-        StudyTimeResponse studyTimeResponse = studyTimeService.updateStudyTime(studyTimeId, request);
+        StudyTimeResponse studyTimeResponse = studyTimeService.updateStudyTime(userId, studyTimeId, request);
 
         return ResponseEntity.ok().body(studyTimeResponse);
     }

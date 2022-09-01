@@ -85,8 +85,8 @@ public class DayLogDto {
                 dayStatisticalDataDto.getAttendanceScore(),
                 dayStatisticalDataDto.getAbsentScore(),
                 dayStatisticalDataDto.getTodoSuccessRate(),
-                dayStatisticalDataDto.getStudyTimeScore(),
+                Math.round(dayStatisticalDataDto.getStudyTimeScore() * 100) / 100.0,
                 dayStatisticalDataDto.getWeekAbsentScore(),
-                dayStatisticalDataDto.getTotalScore());
+                Math.round(dayStatisticalDataDto.getTotalScore() * 100) / 100.0);
     }
 }

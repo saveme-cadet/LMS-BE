@@ -6,7 +6,9 @@ import com.savelms.core.exception.StudyTimeMeasurementException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,6 +51,9 @@ public class StudyTime extends BaseEntity {
     @Column(nullable = false)
     private Boolean isStudying;
 
+    @Column(nullable = false)
+    private Double studyScore;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
@@ -66,28 +71,33 @@ public class StudyTime extends BaseEntity {
                 .user(user)
                 .calendar(calendar)
                 .beginTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().with(LocalTime.MIN))
                 .isStudying(true)
+                .studyScore(0D)
                 .finalStudyTime("00:00:00")
                 .build();
     }
+
 
     public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
         double second = (double) Duration.between(beginTime, endTime).getSeconds();
         double studyTimeScore = second / (8 * 60 * 60);
 
-        return Math.round(studyTimeScore * 100) / 100.0 ;
+        double score = Math.round(studyTimeScore * 100) / 100.0;
+        return score >= 0 ? score : 0.0;
     }
 
     public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         this.beginTime = beginTime;
         this.endTime = endTime;
+        this.studyScore = getStudyScore(this.beginTime, this.endTime);
         this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
     }
 
     public void endStudyTime() {
         this.endTime = LocalDateTime.now();
         this.isStudying = false;
+        this.studyScore = getStudyScore(this.beginTime, this.endTime);
         this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
     }
 

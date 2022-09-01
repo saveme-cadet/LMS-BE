@@ -75,7 +75,7 @@ public class DayStatisticalData extends BaseEntity {
     }
 
     public void updateStudyTimeScore(Double studyTimeScore) {
-        this.studyTimeScore = studyTimeScore;
+        this.studyTimeScore += studyTimeScore;
         this.totalScore -= studyTimeScore;
     }
 
@@ -86,5 +86,4 @@ public class DayStatisticalData extends BaseEntity {
     public void updateTotalScore(Double toTalStudyTimeScore) {
         this.totalScore = this.absentScore - toTalStudyTimeScore;
     }
-
 }
