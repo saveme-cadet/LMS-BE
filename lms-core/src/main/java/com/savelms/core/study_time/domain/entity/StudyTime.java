@@ -2,7 +2,7 @@ package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.calendar.domain.entity.Calendar;
-import com.savelms.core.exception.StudyTimeTooLongException;
+import com.savelms.core.exception.StudyTimeMeasurementException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
@@ -30,18 +30,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StudyTime extends BaseEntity {
 
-    /**
-     * static final 상수 필드
-     * */
     public static final String TIME_FORMAT = "HH:mm:ss";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-
-    /**
-     * 필드
-     * */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="STUDY_TIME_ID")
     private Long id;
 
@@ -67,9 +59,6 @@ public class StudyTime extends BaseEntity {
     private Calendar calendar;
 
 
-    /**
-     * 셍성자
-     * */
     protected StudyTime() {}
 
     public static StudyTime of(User user, Calendar calendar) {
@@ -83,10 +72,13 @@ public class StudyTime extends BaseEntity {
                 .build();
     }
 
+    public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
+        double second = (double) Duration.between(beginTime, endTime).getSeconds();
+        double studyTimeScore = second / (8 * 60 * 60);
 
-    /**
-     * 비니지스 로직
-     * */
+        return Math.round(studyTimeScore * 100) / 100.0 ;
+    }
+
     public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         this.beginTime = beginTime;
         this.endTime = endTime;
@@ -96,34 +88,30 @@ public class StudyTime extends BaseEntity {
     public void endStudyTime() {
         this.endTime = LocalDateTime.now();
         this.isStudying = false;
-
         this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
     }
 
     private String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
-        if (between.toHours() >= 24) {
-            throw new StudyTimeTooLongException("24시간 이상은 측정이 불가능합니다.");
-        }
-
+        validateStudyTime(beginTime, endTime);
         return String.format("%02d:%02d:%02d",
                 between.toHours(),
                 between.toMinutesPart(),
                 between.toSecondsPart());
     }
 
-    public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
-        double second = (double) Duration.between(beginTime, endTime).getSeconds();
-        double studyTimeScore = second / (8 * 60 * 60);
+    private void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+        Duration between = Duration.between(beginTime, endTime);
 
-        return Math.round(studyTimeScore * 100) / 100.0 ;
+        if (endTime.isBefore(beginTime)) {
+            throw new StudyTimeMeasurementException("종료시간이 시작시간보다 작을 수 없습니다.");
+        } else if (between.toHours() >= 24) {
+            throw new StudyTimeMeasurementException("스터디 시간은 24시간 이상 넘어가면 측정이 불가능합니다.");
+        }
     }
 
 
-    /**
-     * equals AND hashCode
-     * */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,5 +124,4 @@ public class StudyTime extends BaseEntity {
     public int hashCode() {
         return Objects.hash(id);
     }
-
 }

@@ -85,8 +85,8 @@ public class DayStatisticalDataService {
                 });
     }
 
-    public void updateStudyTimeScore(String username, Double studyScore, LocalDate date) {
-        statisticalDataRepository.findByUsernameAndDate(username, date)
+    public void updateStudyTimeScore(String apiId, Double studyScore, LocalDate date) {
+        statisticalDataRepository.findByApiIdAndDate(apiId, date)
                 .ifPresentOrElse(dayStatisticalData -> {
                     dayStatisticalData.updateStudyTimeScore(studyScore);
                 }, () -> {
