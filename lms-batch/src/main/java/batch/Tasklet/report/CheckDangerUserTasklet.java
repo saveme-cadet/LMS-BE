@@ -2,12 +2,12 @@ package batch.Tasklet.report;
 
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
-import com.savelms.core.weekreport.WeekReport;
-import com.savelms.core.weekreport.WeekReportRepository;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.repository.UserRepository;
+import com.savelms.core.weekreport.WeekReport;
+import com.savelms.core.weekreport.WeekReportRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
