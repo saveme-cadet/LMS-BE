@@ -95,7 +95,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     dayStatisticalData.updateAbsentScore(status.getAttendancePenalty());
 
                     if (status.equals(AttendanceStatus.ABSENT)) {
-                        dayStatisticalData.updateWeekAbsentScore(1.0D);
+                        dayStatisticalData.updateWeekAbsentScore(0.5D);
                     }
                 }, () -> {
                     log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
