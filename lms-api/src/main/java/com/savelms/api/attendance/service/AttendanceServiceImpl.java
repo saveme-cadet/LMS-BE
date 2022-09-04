@@ -10,7 +10,8 @@ import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -97,7 +95,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     dayStatisticalData.updateAbsentScore(status.getAttendancePenalty());
 
                     if (status.equals(AttendanceStatus.ABSENT)) {
-                        dayStatisticalData.updateWeekAbsentScore(1.0D);
+                        dayStatisticalData.updateWeekAbsentScore(0.5D);
                     }
                 }, () -> {
                     log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");

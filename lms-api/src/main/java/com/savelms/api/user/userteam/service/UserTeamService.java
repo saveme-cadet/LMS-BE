@@ -36,7 +36,7 @@ public class UserTeamService {
     //모든 유저의 특정날짜 team을 반환.
     public Map<Long, TeamEnum> findAllUserTeamByDate(LocalDate date) {
 
-        return userRepository.findAll()
+        return userRepository.findAllWithUserTeamsAndTeam()
             .stream()
             .map((u) -> (
                 new UserTeamService.ForMapping(u.getId(),

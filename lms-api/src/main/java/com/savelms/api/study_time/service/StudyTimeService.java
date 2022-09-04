@@ -7,6 +7,7 @@ import com.savelms.api.study_time.dto.UpdateStudyTimeRequest;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.exception.StudyTimeNotFoundException;
+import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import com.savelms.core.study_time.domain.repository.StudyTimeRepository;
@@ -17,9 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,14 +35,15 @@ public class StudyTimeService {
     private final StudyTimeRepository studyTimeRepository;
     private final CalendarRepository calendarRepository;
     private final DayStatisticalDataService statisticalDataService;
+    private final DayStatisticalDataRepository statisticalDataRepository;
 
 
     /**
      * 생성
      * */
     @Transactional
-    public StudyTimeResponse startStudy(String username) {
-        User user = userRepository.findByUsername(username)
+    public StudyTimeResponse startStudy(String apiId) {
+        User user = userRepository.findByApiId(apiId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         Calendar calendar = calendarRepository.findAllByDate(LocalDate.now());
@@ -48,38 +51,38 @@ public class StudyTimeService {
         StudyTime studyTime = StudyTime.of(user, calendar);
         studyTimeRepository.save(studyTime);
         
-        return new StudyTimeResponse(studyTime);
+        return StudyTimeResponse.from(studyTime);
     }
 
 
     /**
      * 조회
      * */
-    public List<StudyTimeResponse> getStudyTimes(String username) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUsername(username)
+    public List<StudyTimeResponse> getStudyTimes(String apiId) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiId(apiId)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public List<StudyTimeResponse> getTodayStudyTimes(String username) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndDate(username, LocalDate.now())
+    public List<StudyTimeResponse> getTodayStudyTimes(String apiId) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, LocalDate.now())
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public List<StudyTimeResponse> getStudyTimesByDate(String username, LocalDate createdDate) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUsernameAndDate(username, createdDate)
+    public List<StudyTimeResponse> getStudyTimesByDate(String apiId, LocalDate createdDate) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, createdDate)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
         return studyTimes.stream()
-                .map(StudyTimeResponse::new)
+                .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -97,37 +100,37 @@ public class StudyTimeService {
      * 수정
      * */
     @Transactional
-    public StudyTimeResponse endStudy(String username) {
-        StudyTime studyTime = studyTimeRepository.findByUsernameAndIsStudying(username, true)
-                .orElseThrow(() -> {throw new StudyTimeNotFoundException("공부 중이 아닙니다.");});
+    public StudyTimeResponse endStudy(String apiId) {
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndIsStudying(apiId, true);
+        if (studyTimes.isEmpty()) {
+            throw new StudyTimeNotFoundException("아직 스터디를 시작하지 않았습니다.");
+        }
 
+        StudyTime studyTime = studyTimes.get(0);
         studyTime.endStudyTime();
 
-        statisticalDataService.updateStudyTimeScore(username,
-                StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()), LocalDate.now());
-
-        return new StudyTimeResponse(studyTime);
+        Double studyScore = StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime());
+        statisticalDataService.updateStudyTimeScore(apiId, studyScore, LocalDate.now());
+        return StudyTimeResponse.from(studyTime);
     }
 
     @Transactional
-    public StudyTimeResponse updateStudyTime(Long studyTimeId, UpdateStudyTimeRequest request) {
+    public StudyTimeResponse updateStudyTime(String apiId, Long studyTimeId, UpdateStudyTimeRequest request) {
         StudyTime studyTime = studyTimeRepository.findById(studyTimeId)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
+        DayStatisticalData stats = statisticalDataRepository.findByApiIdAndDate(apiId, studyTime.getCreatedAt().toLocalDate())
+                .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
 
-        String date = studyTime.getCreatedAt().format(DateTimeFormatter.ofPattern(StudyTime.DATE_FORMAT));
+        LocalDateTime beginTime = LocalDateTime.of(studyTime.getCreatedAt().toLocalDate(), LocalTime.parse(request.getBeginTime()));
+        LocalDateTime endTime = LocalDateTime.of(studyTime.getCreatedAt().toLocalDate(), LocalTime.parse(request.getEndTime()));
 
-        LocalDateTime beginTime = stringToLocalDateTime(date + " " + request.getBeginTime());
-        LocalDateTime endTime = stringToLocalDateTime(date + " " + request.getEndTime());
-
+        Double oldStudyScore = studyTime.getStudyScore();
         studyTime.updateStudyTime(beginTime, endTime);
+        Double newStudyScore = StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime());
+        double differenceScore = newStudyScore - oldStudyScore;
 
-        return new StudyTimeResponse(studyTime);
-    }
-
-    private LocalDateTime stringToLocalDateTime(String dateTime) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return LocalDateTime.parse(dateTime, dateTimeFormatter);
+        statisticalDataRepository.updateStudyTimeScore(apiId, differenceScore, LocalDateTime.of(studyTime.getCreatedAt().toLocalDate(), LocalTime.MIN));
+        return StudyTimeResponse.from(studyTime);
     }
 
 
@@ -141,5 +144,4 @@ public class StudyTimeService {
 
         studyTimeRepository.delete(studyTime);
     }
-
 }

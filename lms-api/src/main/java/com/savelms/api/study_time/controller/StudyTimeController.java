@@ -8,7 +8,6 @@ import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.api.study_time.service.StudyTimeService;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -42,10 +40,10 @@ public class StudyTimeController {
      * 생성
      * */
     @PreAuthorize("hasAuthority('user.study-time.create')")
-    @Operation(description = "스터디 시작")
-    @PostMapping("/study_times")
-    public ResponseEntity<StudyTimeResponse> startStudy(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        StudyTimeResponse studyTime = studyTimeService.startStudy(user.getUsername());
+    @Operation(description = "스터디 시작", summary = "스터디 시작")
+    @PostMapping("/users/{userId}/study_times")
+    public ResponseEntity<StudyTimeResponse> startStudy(@PathVariable String userId) {
+        StudyTimeResponse studyTime = studyTimeService.startStudy(userId);
 
         return ResponseEntity.ok().body(studyTime);
     }
@@ -55,38 +53,38 @@ public class StudyTimeController {
      * 조회
      * */
     @PreAuthorize("hasAuthority('user.study-time.read')")
-    @Operation(description = "당일 스터디 조회")
-    @GetMapping("/study_times/today")
-    public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        List<StudyTimeResponse> studyTime = studyTimeService.getTodayStudyTimes(user.getUsername());
+    @Operation(description = "개인유저의 당일 스터디 기록 조회", summary = "개인유저의 당일 스터디 기록 조회")
+    @GetMapping("/users/{userId}/study_times/today")
+    public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@PathVariable String userId) {
+        List<StudyTimeResponse> studyTime = studyTimeService.getTodayStudyTimes(userId);
 
         return ResponseEntity.ok().body(studyTime);
     }
 
     @PreAuthorize("hasAuthority('user.study-time.read')")
-    @Operation(description = "특정 날짜 스터디 조회")
-    @GetMapping("/study_times/{date}") //'yyyy-MM-dd'
+    @Operation(description = "개인유저의 특정 날짜 스터디 기록 조회", summary = "개인유저의 특정 날짜 스터디 기록 조회")
+    @GetMapping("/users/{userId}/study_times/{date}")
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(
-            @Parameter(hidden = true) @AuthenticationPrincipal User user,
+            @PathVariable String userId,
             @PathVariable @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date
     ) {
-        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimesByDate(user.getUsername(), date);
+        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimesByDate(userId, date);
 
         return ResponseEntity.ok().body(studyTime);
     }
 
     @PreAuthorize("hasAuthority('user.study-time.read')")
-    @Operation(description = "전체 날짜 스터디 조회")
-    @GetMapping("/study_times")
-    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(user.getUsername());
+    @Operation(description = "개인유저의 모든 스터디 기록 조회", summary = "개인유저의 모든 스터디 기록 조회")
+    @GetMapping("/users/{userId}/study_times")
+    public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@PathVariable String userId) {
+        List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimes(userId);
 
         return ResponseEntity.ok().body(studyTime);
     }
 
     @PreAuthorize("hasAuthority('study-time.user.read')")
-    @Operation(description = "현재 스터디 중인 회원 조회")
-    @GetMapping("/study_times/study-user")
+    @Operation(description = "현재 스터디 중인 전체 회원 조회", summary = "현재 스터디 중인 전체 회원 조회")
+    @GetMapping("/users/study_times/studying-user")
     public ResponseEntity<List<StudyingUserResponse>> getStudyingUser() {
         List<StudyingUserResponse> studyingUserResponse = studyTimeService.getStudyingUser();
 
@@ -98,20 +96,21 @@ public class StudyTimeController {
      * 수정
      * */
     @PreAuthorize("hasAuthority('user.study-time.update')")
-    @Operation(description = "스터디 종료")
-    @PutMapping("/study_times")
-    public ResponseEntity<StudyTimeResponse> endStudy(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        StudyTimeResponse studyTimeResponse = studyTimeService.endStudy(user.getUsername());
+    @Operation(description = "스터디 종료", summary = "스터디 종료")
+    @PutMapping("/users/{userId}/study_times")
+    public ResponseEntity<StudyTimeResponse> endStudy(@PathVariable String userId) {
+        StudyTimeResponse studyTimeResponse = studyTimeService.endStudy(userId);
 
         return ResponseEntity.ok().body(studyTimeResponse);
     }
 
     @PreAuthorize("hasAuthority('study-time.update')")
-    @Operation(description = "스터디 시간 수정")
-    @PatchMapping("/study_times/{studyTimeId}")
-    public ResponseEntity<StudyTimeResponse> updateStudyTime(@PathVariable Long studyTimeId,
-                                          @RequestBody UpdateStudyTimeRequest request) {
-        StudyTimeResponse studyTimeResponse = studyTimeService.updateStudyTime(studyTimeId, request);
+    @Operation(description = "스터디 시간 수정", summary = "스터디 시간 수정")
+    @PatchMapping("/users/{userId}/study_times/{studyTimeId}")
+    public ResponseEntity<StudyTimeResponse> updateStudyTime(@PathVariable String userId,
+                                                             @PathVariable Long studyTimeId,
+                                                             @RequestBody UpdateStudyTimeRequest request) {
+        StudyTimeResponse studyTimeResponse = studyTimeService.updateStudyTime(userId, studyTimeId, request);
 
         return ResponseEntity.ok().body(studyTimeResponse);
     }
@@ -121,8 +120,8 @@ public class StudyTimeController {
      * 삭제
      * */
     @PreAuthorize("hasAuthority('study-time.delete')")
-    @Operation(description = "스터디 삭제")
-    @DeleteMapping("/study_times/{studyTimeId}")
+    @Operation(description = "스터디 삭제", summary = "스터디 삭제")
+    @DeleteMapping("/users/study_times/{studyTimeId}")
     public ResponseEntity deleteStudyTime(@PathVariable Long studyTimeId) {
         studyTimeService.deleteStudyTime(studyTimeId);
 
@@ -179,5 +178,4 @@ public class StudyTimeController {
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
-
 }

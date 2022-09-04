@@ -2,9 +2,9 @@ package batch.job.daliymake;
 
 import batch.Tasklet.report.CheckDangerUserTasklet;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
-import com.savelms.core.weekreport.WeekReportRepository;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.repository.UserRepository;
+import com.savelms.core.weekreport.WeekReportRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

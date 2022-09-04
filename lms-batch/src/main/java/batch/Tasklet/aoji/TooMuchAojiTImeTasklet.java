@@ -1,8 +1,6 @@
 package batch.Tasklet.aoji;
 
-import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
-import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.study_time.domain.repository.StudyTimeRepository;
 import com.savelms.core.user.AttendStatus;
@@ -12,7 +10,6 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 public class TooMuchAojiTImeTasklet implements Tasklet {
