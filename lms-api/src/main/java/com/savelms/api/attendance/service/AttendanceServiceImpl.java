@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 
+import static com.savelms.core.attendance.domain.AttendanceStatus.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -34,7 +36,21 @@ public class AttendanceServiceImpl implements AttendanceService{
     @Transactional
     public void checkIn(Long attendanceId, User user, AttendanceStatus status) throws NoPermissionException {
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
+        if (findAttendanceOptional.get().getCheckInStatus().equals(PRESENT)
+                || findAttendanceOptional.get().getCheckInStatus().equals(TARDY)
+                || findAttendanceOptional.get().getCheckInStatus().equals(ABSENT)) {
+            statisticalDataRepository.findByUsernameAndDate(user.getUsername(), findAttendanceOptional.get().getCalendar().getDate())
+                    .ifPresentOrElse(dayStatisticalData -> {
+                        dayStatisticalData.updateAttendanceScore(-1 * status.getAttendanceScore());
+                        dayStatisticalData.updateAbsentScore( -1 * status.getAttendancePenalty());
 
+                        if (status.equals(ABSENT)) {
+                            dayStatisticalData.updateWeekAbsentScore(-1 * 0.5D);
+                        }
+                    }, () -> {
+                        log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
+                    });
+        }
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
                  //   if (validateUserAndDatePermission(findAttendance, user, findAttendanceOptional.get().getCalendar().getDate())) {
@@ -56,6 +72,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     log.info("Check-In Fail: Attendance Not Found");
                     throw new NoSuchElementException("Attendance Not Found");
                 });
+
     }
 
     @Override
@@ -63,6 +80,21 @@ public class AttendanceServiceImpl implements AttendanceService{
     public void checkOut(Long attendanceId, User user, AttendanceStatus status) throws NoPermissionException {
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
 
+        if (findAttendanceOptional.get().getCheckInStatus().equals(PRESENT)
+                || findAttendanceOptional.get().getCheckInStatus().equals(TARDY)
+                || findAttendanceOptional.get().getCheckInStatus().equals(ABSENT)) {
+            statisticalDataRepository.findByUsernameAndDate(user.getUsername(), findAttendanceOptional.get().getCalendar().getDate())
+                    .ifPresentOrElse(dayStatisticalData -> {
+                        dayStatisticalData.updateAttendanceScore(-1 * status.getAttendanceScore());
+                        dayStatisticalData.updateAbsentScore( -1 * status.getAttendancePenalty());
+
+                        if (status.equals(ABSENT)) {
+                            dayStatisticalData.updateWeekAbsentScore(-1 * 0.5D);
+                        }
+                    }, () -> {
+                        log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
+                    });
+        }
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
               //      if (validateUserAndDatePermission(findAttendance, user, findAttendanceOptional.get().getCalendar().getDate())) {
@@ -96,7 +128,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     dayStatisticalData.updateAttendanceScore(status.getAttendanceScore());
                     dayStatisticalData.updateAbsentScore(status.getAttendancePenalty());
 
-                    if (status.equals(AttendanceStatus.ABSENT)) {
+                    if (status.equals(ABSENT)) {
                         dayStatisticalData.updateWeekAbsentScore(0.5D);
                     }
                 }, () -> {
