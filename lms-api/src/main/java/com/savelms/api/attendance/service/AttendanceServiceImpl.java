@@ -37,17 +37,19 @@ public class AttendanceServiceImpl implements AttendanceService{
 
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
-                    if (validateUserAndDatePermission(findAttendance, user)) {
+                 //   if (validateUserAndDatePermission(findAttendance, user, findAttendanceOptional.get().getCalendar().getDate())) {
                         findAttendance.checkIn(status);
-                        updateAttendanceAndAbsentScore(user, status);
+
+
+                        updateAttendanceAndAbsentScore(user, status, findAttendanceOptional.get().getCalendar().getDate());
 
                         log.info("Check-In Success: try_user={}, user={}, checkIn={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
-                    } else { //변경 권한이 없는 유저가 조작 시 예외 발생
-                        log.info("Check-In Fail: try_user={}, user={}, checkIn={}",
-                                user.getUsername(), findAttendance.getUser().getUsername(), status);
-                        throw new NoPermissionException("Attempt to Check-In without permission");
-                    }
+//                    } else { //변경 권한이 없는 유저가 조작 시 예외 발생
+//                        log.info("Check-In Fail: try_user={}, user={}, checkIn={}",
+//                                user.getUsername(), findAttendance.getUser().getUsername(), status);
+//                        throw new NoPermissionException("Attempt to Check-In without permission");
+//                    }
                 },
                 //출석표가 없는 경우 -> 잘못된 attendanceId 입력 시
                 () -> {
@@ -63,7 +65,7 @@ public class AttendanceServiceImpl implements AttendanceService{
 
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
-                    if (validateUserAndDatePermission(findAttendance, user)) {
+              //      if (validateUserAndDatePermission(findAttendance, user, findAttendanceOptional.get().getCalendar().getDate())) {
                         //체크인을 하지 않고 체크아웃을 시도하는 경우 예외 발생
                         if (findAttendance.getCheckInStatus() == AttendanceStatus.NONE) {
                             log.info("Check-Out Fail: Must try Check-In first");
@@ -71,15 +73,15 @@ public class AttendanceServiceImpl implements AttendanceService{
                             throw new IllegalStateException("Must try Check-In first");
                         }
                         findAttendance.checkOut(status);
-                        updateAttendanceAndAbsentScore(user, status);
+                        updateAttendanceAndAbsentScore(user, status, findAttendanceOptional.get().getCalendar().getDate());
 
                         log.info("Check-Out Success: try_user={}, user={}, checkOut={}",
                                 user.getUsername(), findAttendance.getUser().getUsername(), status);
-                    } else { //변경 권한이 없는 유저가 조작 시 예외 발생
-                        log.info("Check-Out Fail: try_user={}, user={}, checkOut={}",
-                                user.getUsername(), findAttendance.getUser().getUsername(), status);
-                        throw new NoPermissionException("Attempt to Check-Out without permission");
-                    }
+//                    } else { //변경 권한이 없는 유저가 조작 시 예외 발생
+//                        log.info("Check-Out Fail: try_user={}, user={}, checkOut={}",
+//                                user.getUsername(), findAttendance.getUser().getUsername(), status);
+//                        throw new NoPermissionException("Attempt to Check-Out without permission");
+//                    }
                 },
                 //출석표가 없는 경우 -> 잘못된 attendanceId 입력 시
                 () -> {
@@ -88,8 +90,8 @@ public class AttendanceServiceImpl implements AttendanceService{
                 });
     }
 
-    private void updateAttendanceAndAbsentScore(User user, AttendanceStatus status) {
-        statisticalDataRepository.findByUsernameAndDate(user.getUsername(), LocalDate.now())
+    private void updateAttendanceAndAbsentScore(User user, AttendanceStatus status, LocalDate date) {
+        statisticalDataRepository.findByUsernameAndDate(user.getUsername(), date)
                 .ifPresentOrElse(dayStatisticalData -> {
                     dayStatisticalData.updateAttendanceScore(status.getAttendanceScore());
                     dayStatisticalData.updateAbsentScore(status.getAttendancePenalty());
@@ -102,9 +104,9 @@ public class AttendanceServiceImpl implements AttendanceService{
                 });
     }
 
-    private boolean validateUserAndDatePermission(Attendance attendance, User user) {
+    private boolean validateUserAndDatePermission(Attendance attendance, User user, LocalDate date) {
         //지난 날짜는 출결 불가능
-        boolean isToday = attendance.getCalendar().getDate().isEqual(LocalDate.now());
+        boolean isToday = attendance.getCalendar().getDate().isEqual(date);
 
         //본인의 출결만 변경 가능
         boolean isUserSelf = attendance.getUser().getUsername().equals(user.getUsername());
