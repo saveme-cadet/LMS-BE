@@ -21,4 +21,6 @@ public enum AttendanceStatus {
         this.attendanceScore = attendanceScore;
         this.attendancePenalty = attendancePenalty;
     }
+
+
 }
