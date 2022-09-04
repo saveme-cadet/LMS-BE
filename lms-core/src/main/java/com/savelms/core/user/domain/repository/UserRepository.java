@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByApiId(String apiId);
     List<User> findAllByAttendStatus(AttendStatus ch);
 
+    Optional<User> findFirstByApiId(String userAPI);
+
     @EntityGraph(attributePaths = {"userRoles", "userRoles.role"})
     @Query("SELECT DISTINCT u FROM User u join fetch u.userTeams ut join fetch ut.team ")
     List<User> findAllWithUserTeamsAndTeam();
