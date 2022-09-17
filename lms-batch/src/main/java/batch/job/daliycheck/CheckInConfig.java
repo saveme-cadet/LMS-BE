@@ -1,7 +1,7 @@
 package batch.job.daliycheck;
 
 import batch.Tasklet.attendance.CheckInTasklet;
-import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.user.domain.repository.UserRepository;

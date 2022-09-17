@@ -6,7 +6,8 @@ import batch.Tasklet.statistical.SaveDayStatisticalDataTasklet;
 import batch.Tasklet.user.SaveUserTasklet;
 import batch.custom.CustomItemReader;
 import batch.validation.DayOfWeek;
-import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
+
 import com.savelms.core.calendar.DayType;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
