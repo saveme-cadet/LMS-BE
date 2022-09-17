@@ -3,6 +3,8 @@ package com.savelms.api.attendance.controller;
 import com.savelms.api.attendance.service.AttendanceService;
 import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.service.UserService;
+import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.dto.CheckIOReq;
 import com.savelms.core.exception.NoPermissionException;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,6 +42,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final AttendanceRepository attendanceRepository;
 
     @PreAuthorize("hasAuthority('attendance.update')")
     @PatchMapping("/{userId}/{attendanceId}/checkin")
@@ -53,10 +58,20 @@ public class AttendanceController {
          * 출결표 있는지 확인하기 -> 서비스
          */
 
-        //    try {
-        //유저 찾은 후, 정상적으로 유저를 찾으면 비즈니스 로직 실행
-        userRepository.findFirstByApiId(userAPiId)
-                .ifPresent(user -> attendanceService.checkIn(attendanceId, user, reqBody.getStatus()));
+        //try {
+
+//            if (userRepository.findById(userAPiId).get().getUserRoles().)
+            //유저 찾은 후, 정상적으로 유저를 찾으면 비즈니스 로직 실행
+            attendanceService.checkIn(attendanceId, userAPiId, reqBody.getStatus());
+
+
+//        final Optional<Attendance> original = attendanceRepository.findAttendanceById(attendanceId);
+//                original.ifPresent(user -> {
+//                    attendanceService.checkIn(attendanceId, userAPiId, reqBody.getStatus());
+//                });
+
+//        userRepository.findFirstByApiId(userAPiId)
+//                .ifPresent(user -> attendanceService.checkIn(attendanceId, user, reqBody.getStatus()));
         //정상적으로 로직이 실행 된 경우
         return new ResponseEntity<>("OK", HttpStatus.OK);
 //        } catch (NoPermissionException e) {
@@ -82,11 +97,14 @@ public class AttendanceController {
          * 권한 확인하기 -> 서비스 Exceptions
          * 출결표 있는지 확인하기 -> 서비스
          */
+        attendanceRepository.findById(attendanceId)
+                .ifPresent(user -> attendanceService.checkOut(attendanceId, userApiId, reqBody.getStatus()));
+
 
         //    try {
         //유저 찾은 후, 정상적으로 유저를 찾으면 비즈니스 로직 실행
-        userRepository.findFirstByApiId(userApiId)
-                .ifPresent(user -> attendanceService.checkOut(attendanceId, user, reqBody.getStatus()));
+//        userRepository.findFirstByApiId(userApiId)
+//                .ifPresent(user -> attendanceService.checkOut(attendanceId, user, reqBody.getStatus()));
         //정상적으로 로직이 실행 된 경우
         return new ResponseEntity<>("OK", HttpStatus.OK);
 //        } catch (NoPermissionException e) {

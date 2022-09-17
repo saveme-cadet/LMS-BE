@@ -22,6 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByApiId(String apiId);
     List<User> findAllByAttendStatus(AttendStatus ch);
 
+
     Optional<User> findFirstByApiId(String userAPI);
 
     @EntityGraph(attributePaths = {"userRoles", "userRoles.role"})
