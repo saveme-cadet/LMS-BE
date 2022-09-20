@@ -67,7 +67,6 @@ public class DaliyConfig {
         return this.jobBuilderFactory.get("DaliyJob")
                 .incrementer(new RunIdIncrementer())
                 .start(this.ItemDailyWriterStep())
-               // .start(saveUserStep())
                 .next(this.saveDayStatisticalDataStep())
                 .next(this.saveAttendanceStep())
                 .build();
@@ -129,7 +128,7 @@ public class DaliyConfig {
 
 
     /*
-    score점수 저장 테이블 생성
+    score 전날 점수 저장 테이블 생성
      */
 
     @Bean
