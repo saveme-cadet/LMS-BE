@@ -95,5 +95,6 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
         //합쳐서 data 에 넣기
 
+        //TODO: 매달 점수 발표하면서 점수 초기화 하기
     }
 }
