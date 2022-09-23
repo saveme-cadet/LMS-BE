@@ -39,7 +39,8 @@ public class AttendanceController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @PreAuthorize("hasAuthority('attendance.update')")
+    @PreAuthorize("hasAuthority('attendance.update') OR "
+        + "hasAuthority('user.attendance.update')")
     @PatchMapping("/{attendanceId}/checkin")
     public ResponseEntity<String> userCheckIn(
             @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
@@ -68,7 +69,8 @@ public class AttendanceController {
     }
 
 
-    @PreAuthorize("hasAuthority('attendance.update')")
+    @PreAuthorize("hasAuthority('attendance.update') OR "
+        + "hasAuthority('user.attendance.update')")
     @PatchMapping("/{attendanceId}/checkout")
     public ResponseEntity<String> userCheckOut(
             @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,

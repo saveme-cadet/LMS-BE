@@ -120,12 +120,12 @@ public class UserDataLoader implements CommandLineRunner {
             createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
             createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance
-
         );
         userRole.addAuthorities(createUser, readUser,updateUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
             createUserVacation, updateUserVacation,readUserVacation,
-            createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime);
+            createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
+            readAttendance, createUserAttendance, updateUserAttendance, readUserAttendance);
 
         unauthorizedRole.addAuthorities(createUser, updateUser);
 

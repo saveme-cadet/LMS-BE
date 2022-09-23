@@ -68,6 +68,7 @@ public class DayLogDto {
             AttendanceStatus checkOut,
             RoleEnum role,
             TeamEnum team,
+            Double progress,
             LocalDate tableDay,
             Double vacation,
             DayStatisticalDataDto dayStatisticalDataDto)
@@ -84,7 +85,7 @@ public class DayLogDto {
                 vacation,
                 dayStatisticalDataDto.getAttendanceScore(),
                 dayStatisticalDataDto.getAbsentScore(),
-                dayStatisticalDataDto.getTodoSuccessRate(),
+                progress,
                 Math.round(dayStatisticalDataDto.getStudyTimeScore() * 100) / 100.0,
                 dayStatisticalDataDto.getWeekAbsentScore(),
                 Math.round(dayStatisticalDataDto.getTotalScore() * 100) / 100.0);

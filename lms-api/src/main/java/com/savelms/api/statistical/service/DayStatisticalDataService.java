@@ -3,6 +3,9 @@ package com.savelms.api.statistical.service;
 import com.savelms.api.attendance.service.AttendanceService;
 import com.savelms.api.statistical.dto.DayStatisticalDataDto;
 import com.savelms.api.statistical.dto.DayLogDto;
+import com.savelms.api.todo.controller.dto.GetTodoProgressResponse;
+import com.savelms.api.todo.controller.dto.ListResponse;
+import com.savelms.api.todo.service.TodoService;
 import com.savelms.api.user.userrole.service.UserRoleService;
 import com.savelms.api.user.userteam.service.UserTeamService;
 import com.savelms.api.vacation.service.VacationService;
@@ -11,7 +14,10 @@ import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.team.TeamEnum;
+import com.savelms.core.todo.domain.entity.Todo;
+import com.savelms.core.todo.domain.repository.TodoRepository;
 import com.savelms.core.user.role.RoleEnum;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,13 +41,20 @@ public class DayStatisticalDataService {
     private final AttendanceService attendanceService;
     private final DayStatisticalDataRepository statisticalDataRepository;
 
+    private final TodoRepository todoRepository;
+
+    private final TodoService todoService;
     public List<DayLogDto> getDayLogs(LocalDate date) {
         final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date); //1
         final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date); // 1
         final Map<Long, AttendanceDto> attendances = attendanceService.getAllAttendanceByDate(date); // 5
         final Map<Long, Double> remainingVacations = vacationService.getAllRemainingVacationByDate(date); // 1
         final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDate(date); // 5
-
+        final List<GetTodoProgressResponse> todoProgress = todoService.getTodoProgress(date).getContent();
+        Map<String, Double> progessMap = new HashMap<>();
+        for (GetTodoProgressResponse progress : todoProgress) {
+            progessMap.put(progress.getWriterId(), progress.getProgress());
+        }
         return dayStatisticalData.stream()
                 .map((statisticalData) -> {
                     Long userId = statisticalData.getUser().getId();
@@ -53,10 +66,10 @@ public class DayStatisticalDataService {
                     RoleEnum role = roles.computeIfAbsent(userId, (k) -> RoleEnum.ROLE_UNAUTHORIZED);
                     AttendanceDto attendance = attendances.computeIfAbsent(userId,
                             (k) -> new AttendanceDto(apiId, 0L, AttendanceStatus.NONE, AttendanceStatus.NONE));
-
+                    Double progress = progessMap.get(apiId);
                     return DayLogDto.of(apiId, attendance.getAttendanceId(), nickname,
                             attendance.getCheckInStatus(), attendance.getCheckOutStatus(),
-                            role, team, date, vacation, DayStatisticalDataDto.from(statisticalData));
+                            role, team, progress, date, vacation, DayStatisticalDataDto.from(statisticalData));
                 })
                 .collect(Collectors.toUnmodifiableList());
     }

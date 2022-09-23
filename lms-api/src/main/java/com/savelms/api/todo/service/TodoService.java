@@ -135,7 +135,6 @@ public class TodoService {
         response.setCount(response.getContent().size());
 
         return response;
-
     }
 
     @Transactional

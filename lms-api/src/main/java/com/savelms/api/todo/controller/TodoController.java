@@ -105,16 +105,16 @@ public class TodoController {
         return todoService.getTodoAllByDay(date == null ? LocalDate.now() : date);
     }
 
-    @PreAuthorize("hasAuthority('todo.read')")
-    @Operation(description = "오늘 할 일 모든 유저 진척률")
-    @GetMapping("/users/todos/progress")
-    public ListResponse<GetTodoProgressResponse> getUserTodoProgress(
-        @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY)
-        @RequestParam(required = false)
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
-        return todoService.getTodoProgress(date == null ? LocalDate.now() : date);
-    }
+//    @PreAuthorize("hasAuthority('todo.read')")
+//    @Operation(description = "오늘 할 일 모든 유저 진척률")
+//    @GetMapping("/users/todos/progress")
+//    public ListResponse<GetTodoProgressResponse> getUserTodoProgress(
+//        @Parameter(name = "date", description = "date=2022-02-11", in = ParameterIn.QUERY)
+//        @RequestParam(required = false)
+//        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+//
+//        return todoService.getTodoProgress(date == null ? LocalDate.now() : date);
+//    }
 
 
     @PreAuthorize("hasAuthority('todo.update') OR "
