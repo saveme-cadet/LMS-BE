@@ -45,7 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService{
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
         Optional<User> user = userRepository.findByApiId(apiId);            // 변경 권한 확인하기
 
-        if (!findAttendanceOptional.get().getCheckInStatus().equals(NONE)) {
+        if (!(findAttendanceOptional.get().getCheckInStatus().equals(NONE) || findAttendanceOptional.get().getCheckInStatus().equals(VACATION))) {
             statisticalDataRepository.findByUsernameAndDate(findAttendanceOptional.get().getUser().getUsername(), findAttendanceOptional.get().getCalendar().getDate())
                     .ifPresentOrElse(dayStatisticalData -> {
                         dayStatisticalData.updateAttendanceScore(-1 * findAttendanceOptional.get().getCheckInStatus().getAttendanceScore());
@@ -90,7 +90,7 @@ public class AttendanceServiceImpl implements AttendanceService{
     public void checkOut(Long attendanceId, String userApiId, AttendanceStatus status) throws NoPermissionException {
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
         Optional<User> user = userRepository.findByApiId(userApiId);
-        if (!findAttendanceOptional.get().getCheckInStatus().equals(NONE)) {
+        if (!(findAttendanceOptional.get().getCheckInStatus().equals(NONE) || findAttendanceOptional.get().getCheckInStatus().equals(VACATION))) {
             statisticalDataRepository.findByUsernameAndDate(findAttendanceOptional.get().getUser().getUsername(), findAttendanceOptional.get().getCalendar().getDate())
                     .ifPresentOrElse(dayStatisticalData -> {
                         dayStatisticalData.updateAttendanceScore(-1 * findAttendanceOptional.get().getCheckInStatus().getAttendanceScore());
