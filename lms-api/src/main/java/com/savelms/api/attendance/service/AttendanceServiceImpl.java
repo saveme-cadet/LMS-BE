@@ -1,6 +1,8 @@
 package com.savelms.api.attendance.service;
 
 import com.savelms.api.statistical.service.DayStatisticalDataService;
+import com.savelms.api.vacation.dto.UseVacationRequest;
+import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
@@ -33,6 +35,7 @@ public class AttendanceServiceImpl implements AttendanceService{
     private final AttendanceRepository attendanceRepository;
     private final DayStatisticalDataRepository statisticalDataRepository;
     private final UserRepository userRepository;
+    private final VacationService vacationService;
     @Override
     @Transactional
     public void checkIn(Long attendanceId, String apiId, AttendanceStatus status) throws NoPermissionException {
@@ -54,6 +57,9 @@ public class AttendanceServiceImpl implements AttendanceService{
                     }, () -> {
                         log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
                     });
+        } else if (findAttendanceOptional.get().getCheckInStatus().equals(VACATION)) {
+            vacationService.useVacation(new UseVacationRequest(0.5D, "출결 휴가"), apiId);
+
         }
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
@@ -96,6 +102,9 @@ public class AttendanceServiceImpl implements AttendanceService{
                     }, () -> {
                         log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
                     });
+        } else if (findAttendanceOptional.get().getCheckInStatus().equals(VACATION)) {
+            vacationService.useVacation(new UseVacationRequest(0.5D, "출결 휴가"), userApiId);
+
         }
         findAttendanceOptional.ifPresentOrElse(findAttendance -> {
                     //변경 권한 확인
