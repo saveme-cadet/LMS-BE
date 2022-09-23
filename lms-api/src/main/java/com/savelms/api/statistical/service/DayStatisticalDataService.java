@@ -44,6 +44,7 @@ public class DayStatisticalDataService {
     private final TodoRepository todoRepository;
 
     private final TodoService todoService;
+
     public List<DayLogDto> getDayLogs(LocalDate date) {
         final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date); //1
         final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date); // 1

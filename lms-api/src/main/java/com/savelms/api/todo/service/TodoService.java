@@ -38,7 +38,6 @@ public class TodoService {
     private final CalendarService calendarService;
     private final TodoRepository todoRepository;
 
-    private final DayStatisticalDataService statisticalDataService;
 
     @Transactional
     public Long create(CreateTodoRequest request, String apiId) {
@@ -130,7 +129,7 @@ public class TodoService {
                 .build();
             response.getContent().add(dto);
 
-            statisticalDataService.updateTodoSuccessRate(dto.getWriterId(), dto.getProgress(), localDate);
+            //statisticalDataService.updateTodoSuccessRate(dto.getWriterId(), dto.getProgress(), localDate);
         });
         response.setCount(response.getContent().size());
 
