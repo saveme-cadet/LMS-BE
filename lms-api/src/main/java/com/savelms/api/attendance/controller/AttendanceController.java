@@ -85,14 +85,10 @@ public class AttendanceController {
     }
 
 
-<<<<<<< HEAD
+
     @PreAuthorize("hasAuthority('attendance.update') OR "
         + "hasAuthority('user.attendance.update')")
-    @PatchMapping("/{attendanceId}/checkout")
-=======
-    @PreAuthorize("hasAuthority('attendance.update')")
     @PatchMapping("/{userId}/{attendanceId}/checkout")
->>>>>>> 5ab4275751736582d543c376faa03feb890a0736
     public ResponseEntity<String> userCheckOut(
 //            @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
             @PathVariable("userId") String userApiId,
