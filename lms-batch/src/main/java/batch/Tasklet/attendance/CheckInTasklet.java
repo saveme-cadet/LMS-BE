@@ -3,7 +3,7 @@ package batch.Tasklet.attendance;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
-import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.statistical.DayStatisticalData;
@@ -70,7 +70,7 @@ public class CheckInTasklet implements Tasklet {
             Optional<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(x, day.getId());
             dayStatisticalData.ifPresent(dayStatisticalData1 -> {
                 dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + 0.5);
-                dayStatisticalData1.setTotalScore(dayStatisticalData1.getAbsentScore() - dayStatisticalData1.getStudyTimeScore());
+                dayStatisticalData1.setTotalScore(dayStatisticalData1.getAbsentScore() - dayStatisticalData1.getStudyTimeScore()); // TODO: ? 왜 아오지 시간을 빼는 거지?
                 dayStatisticalDataRepository.save(dayStatisticalData1);
             });
         }

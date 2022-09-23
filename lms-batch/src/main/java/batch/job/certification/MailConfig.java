@@ -27,6 +27,13 @@ public class MailConfig {
         this.userRepository = userRepository;
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     *
+     *  email 인증이 안된 계정 2일 후 삭제
+     */
     @Bean
     public Job mailJob() throws Exception {
         return this.jobBuilderFactory.get("mailJob")

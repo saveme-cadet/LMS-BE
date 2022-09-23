@@ -1,5 +1,6 @@
 package batch.job.UserMake;
 
+import batch.Tasklet.statistical.SaveDayStatisticalDataTasklet;
 import batch.Tasklet.user.SaveUserTasklet;
 import com.savelms.core.user.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,23 +28,23 @@ public class userConfig {
             this.userRepository = userRepository;
         }
 
-        @Bean
-        public Job userJob() throws Exception {
-            return this.jobBuilderFactory.get("userJob")
-                    .incrementer(new RunIdIncrementer())
-                    .start(this.userStep())
-                    .build();
-        }
+//        @Bean
+//        public Job userJob() throws Exception {
+//            return this.jobBuilderFactory.get("userJob")
+//                    .incrementer(new RunIdIncrementer())
+//                    .start(this.userStep())
+//                    .build();
+//        }
 
 
     /*
     매주 월요일 week_absent_score 0점으로 초기화
      */
 
-        @Bean
-        public Step userStep() throws Exception {
-            return this.stepBuilderFactory.get("userStep")
-                    .tasklet(new SaveUserTasklet(userRepository))
-                    .build();
-        }
+//        @Bean
+//        public Step userStep() throws Exception {
+//            return this.stepBuilderFactory.get("userStep")
+//                    .tasklet(new SaveDayStatisticalDataTasklet(userRepository))
+//                    .build();
+//        }
 }

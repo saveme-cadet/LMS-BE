@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface AttendanceService {
-    void checkIn(Long attendanceId, User user, AttendanceStatus status);
-    void checkOut(Long attendanceId, User user, AttendanceStatus status);
+    void checkIn(Long attendanceId, String apiId, AttendanceStatus status);
+    void checkOut(Long attendanceId, String apiId, AttendanceStatus status);
     AttendanceDto getAttendanceByDate(String username, LocalDate date);
 
     public Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date);

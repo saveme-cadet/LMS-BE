@@ -2,7 +2,7 @@ package batch.Tasklet.attendance;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
-import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.user.AttendStatus;

@@ -46,6 +46,7 @@ public class GradeExcellentUserTasklet implements Tasklet {
                                 .equals(LocalDate.now()))
                 .collect(Collectors.toList());
 
+        // TODO : 등수 구하기 AND 점수 초기화 하기
         for (int i = 1; i < 4; i++){
             monthReportList.add(MonthReport.builder()
                             .UserName(dayStatisticalData.get(i).getUser().getUsername())

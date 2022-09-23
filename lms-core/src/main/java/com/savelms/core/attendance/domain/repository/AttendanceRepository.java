@@ -5,6 +5,7 @@ import com.savelms.core.calendar.domain.entity.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,12 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     Optional<Attendance> findAllByCalendarId(Long calendarId);
     List<Attendance> findAllByUserId(Long userId);
+
+    List<Attendance> findFirstById(Long attendanceId);
+
+
+//    @Query("select distinct u FROM Attendance u join fetch u.user ")
+    Optional<Attendance> findAttendanceById(Long attendanceId);
 
     @Query("select a from Attendance a join fetch a.user u " +
             "where a.user.username =:username and a.calendar.date =:date")

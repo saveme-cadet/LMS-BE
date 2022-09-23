@@ -6,7 +6,8 @@ import batch.Tasklet.statistical.SaveDayStatisticalDataTasklet;
 import batch.Tasklet.user.SaveUserTasklet;
 import batch.custom.CustomItemReader;
 import batch.validation.DayOfWeek;
-import com.savelms.core.attendance.repository.AttendanceRepository;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
+
 import com.savelms.core.calendar.DayType;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
@@ -66,7 +67,6 @@ public class DaliyConfig {
         return this.jobBuilderFactory.get("DaliyJob")
                 .incrementer(new RunIdIncrementer())
                 .start(this.ItemDailyWriterStep())
-               // .start(saveUserStep())
                 .next(this.saveDayStatisticalDataStep())
                 .next(this.saveAttendanceStep())
                 .build();
@@ -128,7 +128,7 @@ public class DaliyConfig {
 
 
     /*
-    score점수 저장 테이블 생성
+    score 전날 점수 저장 테이블 생성
      */
 
     @Bean

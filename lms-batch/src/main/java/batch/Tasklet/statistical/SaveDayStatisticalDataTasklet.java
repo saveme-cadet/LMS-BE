@@ -58,7 +58,6 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now().minusDays(1));
-        System.out.println(day.getId());
 
         // ===================================== 매일 1일 0으로 초기화 ========================= //
         if (LocalDate.now().getDayOfMonth() == 1) {
@@ -96,5 +95,6 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
         //합쳐서 data 에 넣기
 
+        //TODO: 매달 점수 발표하면서 점수 초기화 하기
     }
 }
