@@ -1,6 +1,7 @@
 package com.savelms.core.attendance.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public enum AttendanceStatus {
