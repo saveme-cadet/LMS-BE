@@ -1,5 +1,6 @@
 package com.savelms.core.vacation.domain.repository;
 
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.vacation.domain.entity.Vacation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,10 @@ public interface VacationRepository extends JpaRepository<Vacation, Long>, Vacat
 
     @Query("select v from Vacation v where v.user.apiId = :apiId and v.usedDays <> 0")
     List<Vacation>findByApiIdAndUsedDaysNotZero(@Param("apiId") String apiId);
+
+    @Query(value = "select v.*, u.* from vacation v " +
+            "join user u on u.user_id = v.user_id " +
+            "where date(v.created_at) <= :date and u.attend_status = :attendStatus " +
+            "order by v.vacation_id desc", nativeQuery = true)
+    List<Vacation> findAllByDateAttendStatus(@Param("date") LocalDate date, @Param("attendStatus") String attendStatus);
 }

@@ -1,5 +1,6 @@
 package com.savelms.core.statistical;
 
+import com.savelms.core.user.AttendStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +23,16 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
             "join fetch ur.role r " +
             "where d.calendar.date =:date order by u.id asc")
     List<DayStatisticalData> findAllByDate(@Param("date") LocalDate date);
+
+    @Query("select distinct d from DayStatisticalData d " +
+            "join fetch d.user u " +
+            "join fetch u.userRoles ur " +
+            "join fetch ur.role r " +
+            "where d.calendar.date =:date and u.attendStatus = :attendStatus " +
+            "order by u.id asc")
+    List<DayStatisticalData> findAllByDateAndAttendStatus(
+            @Param("date") LocalDate date,
+            @Param("attendStatus") AttendStatus attendStatus);
 
     @Query("select d from DayStatisticalData d where d.user.username =:username and d.calendar.date =:date")
     Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, @Param("date") LocalDate date);

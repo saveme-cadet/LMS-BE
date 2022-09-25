@@ -1,6 +1,5 @@
 package com.savelms.api.attendance.service;
 
-import com.savelms.api.statistical.service.DayStatisticalDataService;
 import com.savelms.api.vacation.dto.UseVacationRequest;
 import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.attendance.domain.AttendanceStatus;
@@ -10,6 +9,7 @@ import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.user.role.RoleEnum;
@@ -18,8 +18,6 @@ import com.savelms.core.user.role.domain.entity.UserRole;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.savelms.core.vacation.domain.entity.Vacation;
-import com.savelms.core.vacation.domain.repository.VacationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +39,6 @@ public class AttendanceServiceImpl implements AttendanceService{
     private final DayStatisticalDataRepository statisticalDataRepository;
     private final UserRepository userRepository;
     private final VacationService vacationService;
-    private final VacationRepository vacationRepository;
 
 //
 //    public void updateCheckIn(TableCheckInDto tableCheckInDto, LocalDate date){
@@ -220,20 +217,6 @@ public class AttendanceServiceImpl implements AttendanceService{
         });
     }
 
-    private void updateAttendanceAndAbsentScore(User user, AttendanceStatus status, LocalDate date) {
-        statisticalDataRepository.findByUsernameAndDate(user.getUsername(), date)
-                .ifPresentOrElse(dayStatisticalData -> {
-                    dayStatisticalData.updateAttendanceScore(status.getAttendanceScore());
-                    dayStatisticalData.updateAbsentScore(status.getAttendancePenalty());
-
-                    if (status.equals(ABSENT)) {
-                        dayStatisticalData.updateWeekAbsentScore(0.5D);
-                    }
-                }, () -> {
-                    log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
-                });
-    }
-
     private boolean validateUserAndDatePermission(Attendance attendance, User user, LocalDate date) {
         //지난 날짜는 출결 불가능
         boolean isToday = attendance.getCalendar().getDate().isEqual(date);
@@ -264,6 +247,15 @@ public class AttendanceServiceImpl implements AttendanceService{
                 .orElseThrow(() -> new EntityNotFoundException("출석정보를 찾지 못하였습니다."));
 
         return new AttendanceDto(attendance);
+    }
+
+    public Map<Long, AttendanceDto> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+        return attendanceRepository.findAllByDateAndAttendStatusWithUser(date, attendStatus)
+                .stream()
+                .collect(Collectors.toMap(
+                        attendance -> attendance.getUser().getId(),
+                        AttendanceDto::new
+                ));
     }
 
     public Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date) {

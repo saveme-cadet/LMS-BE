@@ -3,6 +3,7 @@ package com.savelms.api.statistical.controller;
 import com.savelms.api.statistical.dto.DayLogDto;
 import com.savelms.api.statistical.service.DayStatisticalDataService;
 import com.savelms.core.study_time.domain.entity.StudyTime;
+import com.savelms.core.user.AttendStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,9 +26,10 @@ public class DayStatisticalDataController {
 
     @GetMapping("/day-logs")
     public ResponseEntity<List<DayLogDto>> getDayLogs(
-            @RequestParam("date") @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date)
+            @RequestParam("date") @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date,
+            @RequestParam(value = "attendStatus", required = false) AttendStatus attendStatus)
     {
-        List<DayLogDto> dayLogs = dayStatisticalDataService.getDayLogs(date);
+        List<DayLogDto> dayLogs = dayStatisticalDataService.getDayLogs(date, attendStatus);
 
         return ResponseEntity.ok().body(dayLogs);
     }

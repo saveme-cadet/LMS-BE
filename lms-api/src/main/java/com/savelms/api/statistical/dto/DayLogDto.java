@@ -2,6 +2,7 @@ package com.savelms.api.statistical.dto;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.team.TeamEnum;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.role.RoleEnum;
 import lombok.Getter;
 
@@ -10,26 +11,28 @@ import java.time.LocalDate;
 @Getter
 public class DayLogDto {
 
+    private LocalDate tableDay;
     private String userId;
-    private Long  attendanceId;
+    private Long attendanceId;
     private String username;
-    private AttendanceStatus checkIn;
-    private AttendanceStatus checkOut;
     private RoleEnum role;
     private TeamEnum team;
-    private Double attendanceScore;
-    private Double absentScore;
-    private Double todoSuccessRate;
-    private LocalDate tableDay;
     private Double vacation;
-    private Double studyTimeScore;
+    private AttendStatus attendStatus;
+    private AttendanceStatus checkIn;
+    private AttendanceStatus checkOut;
+    private Double todoSuccessRate;
     private Double weekAbsentScore;
-    private Double totalScore;
+    private Double attendanceScore;
+    private Double totalAbsentScore;
+
+    protected DayLogDto() {}
 
     private DayLogDto(
             String userId,
             Long  attendanceId,
             String username,
+            AttendStatus attendStatus,
             AttendanceStatus checkIn,
             AttendanceStatus checkOut,
             RoleEnum role,
@@ -37,15 +40,14 @@ public class DayLogDto {
             LocalDate tableDay,
             Double vacation,
             Double attendanceScore,
-            Double absentScore,
             Double todoSuccessRate,
-            Double studyTimeScore,
             Double weekAbsentScore,
             Double totalScore)
     {
         this.userId = userId;
         this.attendanceId = attendanceId;
         this.username = username;
+        this.attendStatus = attendStatus;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.role = role;
@@ -53,17 +55,16 @@ public class DayLogDto {
         this.tableDay = tableDay;
         this.vacation = vacation;
         this.attendanceScore = attendanceScore;
-        this.absentScore = absentScore;
         this.todoSuccessRate = todoSuccessRate;
-        this.studyTimeScore = studyTimeScore;
         this.weekAbsentScore = weekAbsentScore;
-        this.totalScore = totalScore;
+        this.totalAbsentScore = totalScore;
     }
 
     public static DayLogDto of(
             String userId,
             Long  attendanceId,
             String username,
+            AttendStatus attendStatus,
             AttendanceStatus checkIn,
             AttendanceStatus checkOut,
             RoleEnum role,
@@ -77,6 +78,7 @@ public class DayLogDto {
                 userId,
                 attendanceId,
                 username,
+                attendStatus,
                 checkIn,
                 checkOut,
                 role,
@@ -84,9 +86,7 @@ public class DayLogDto {
                 tableDay,
                 vacation,
                 dayStatisticalDataDto.getAttendanceScore(),
-                dayStatisticalDataDto.getAbsentScore(),
                 progress,
-                Math.round(dayStatisticalDataDto.getStudyTimeScore() * 100) / 100.0,
                 dayStatisticalDataDto.getWeekAbsentScore(),
                 Math.round(dayStatisticalDataDto.getTotalScore() * 100) / 100.0);
     }
