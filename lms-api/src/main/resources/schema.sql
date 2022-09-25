@@ -198,10 +198,10 @@ create table vacation (
     create_id varchar(255),
     created_at datetime default CURRENT_TIMESTAMP not null,
     updated_at datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP not null,
-    added_days bigint not null,
+    added_days double not null,
     reason varchar(255),
-    remaining_days bigint not null,
-    used_days bigint not null,
+    remaining_days double not null,
+    used_days double not null,
     user_id bigint not null,
     primary key (vacation_id)
 ) engine=InnoDB;
