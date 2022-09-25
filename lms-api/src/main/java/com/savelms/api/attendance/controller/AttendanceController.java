@@ -46,9 +46,9 @@ public class AttendanceController {
 
     @PreAuthorize("hasAuthority('attendance.update') OR "
         + "hasAuthority('user.attendance.update')")
-    @PatchMapping("/{userId}/{attendanceId}/checkin")
+    @PatchMapping("/users/{userId}/{attendanceId}/checkin")
     public ResponseEntity<String> userCheckIn(
-
+            @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
             @PathVariable("userId") String userAPiId,
             @PathVariable("attendanceId") Long attendanceId,
             @Valid @RequestBody CheckIOReq reqBody) {
@@ -88,9 +88,9 @@ public class AttendanceController {
 
     @PreAuthorize("hasAuthority('attendance.update') OR "
         + "hasAuthority('user.attendance.update')")
-    @PatchMapping("/{userId}/{attendanceId}/checkout")
+    @PatchMapping("/users/{userId}/{attendanceId}/checkout")
     public ResponseEntity<String> userCheckOut(
-//            @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
+            @Parameter(hidden = true) @AuthenticationPrincipal User sessionUser,
             @PathVariable("userId") String userApiId,
             @PathVariable("attendanceId") Long attendanceId,
             @Valid @RequestBody CheckIOReq reqBody) {
