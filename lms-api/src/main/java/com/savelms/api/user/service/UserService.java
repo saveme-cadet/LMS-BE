@@ -34,6 +34,8 @@ import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -44,6 +46,8 @@ import javax.persistence.EntityNotFoundException;
 import com.savelms.core.vacation.domain.entity.Vacation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +79,7 @@ public class UserService {
 
     private final EmailService emailService;
 
+
     /**
      * 회원가입
      *
@@ -83,7 +88,7 @@ public class UserService {
      */
     @Transactional
     public String validateUserNameAndSignUp(UserSignUpRequest userSignUpRequest) {
-        validateUsernameDuplicate(userSignUpRequest.getUsername());
+        //validateUsernameDuplicate(userSignUpRequest.getUsername());
 
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
         Team defaultTeam = teamService.findByValue(TeamEnum.NONE);
@@ -96,8 +101,7 @@ public class UserService {
         Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
-
-        User savedUser = userRepository.save(defaultUser);
+        User savedUser = userRepository.saveAndFlush(defaultUser);
 
         EmailAuth emailAuth = emailAuthRepository.save(
             EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,

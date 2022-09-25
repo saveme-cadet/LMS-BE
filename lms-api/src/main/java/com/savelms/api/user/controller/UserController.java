@@ -22,8 +22,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.sql.SQLIntegrityConstraintViolationException;
+import javax.annotation.Priority;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.core.ApplicationFilterChain;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,7 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -72,6 +79,8 @@ public class UserController {
     }
 
 
+
+
     private final UserService userService;
 
     @PreAuthorize("hasAuthority('user.read')")
@@ -94,13 +103,17 @@ public class UserController {
     public ResponseEntity<UserSignUpResponse> signUp(
         @Validated @RequestBody UserSignUpRequest request) {
 
-        String apiId = userService.validateUserNameAndSignUp(request);
+        String apiId = null;
         UserSignUpResponse response = new UserSignUpResponse();
+        try{
+            apiId = userService.validateUserNameAndSignUp(request);
+        } catch(DataIntegrityViolationException e) {
+            if(e.getCause() instanceof ConstraintViolationException) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            }
+        }
         response.setId(apiId);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
-
     }
 
     @PreAuthorize("hasAuthority('user.team.update')")
@@ -116,7 +129,6 @@ public class UserController {
     @PatchMapping("/users/{id}/role")
     public UserChangeRoleResponse changeRole(@PathVariable("id") String apiId,
         @Validated @RequestBody UserChangeRoleRequest request) {
-
         return new UserChangeRoleResponse(userService.changeRole(apiId, request));
     }
 

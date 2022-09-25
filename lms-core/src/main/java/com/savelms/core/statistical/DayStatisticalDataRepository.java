@@ -16,7 +16,7 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
 
     Optional<DayStatisticalData> findAllByUser_idAndCalendar_id(Long aLong, Long calendar_id);
 
-    @Query("select d from DayStatisticalData d " +
+    @Query("select distinct d from DayStatisticalData d " +
             "join fetch d.user u " +
             "join fetch u.userRoles ur " +
             "join fetch ur.role r " +
