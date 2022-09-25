@@ -1,6 +1,7 @@
 package com.savelms.api.user.service;
 
 
+import com.savelms.api.auth.config.authorityupdater.AuthoritiesUpdater;
 import com.savelms.api.auth.controller.dto.EmailAuthRequestDto;
 import com.savelms.api.auth.service.EmailService;
 import com.savelms.api.team.service.TeamService;
@@ -79,6 +80,7 @@ public class UserService {
 
     private final EmailService emailService;
 
+    private final AuthoritiesUpdater authoritiesUpdater;
 
     /**
      * 회원가입
@@ -88,7 +90,7 @@ public class UserService {
      */
     @Transactional
     public String validateUserNameAndSignUp(UserSignUpRequest userSignUpRequest) {
-        //validateUsernameDuplicate(userSignUpRequest.getUsername());
+        validateUsernameDuplicate(userSignUpRequest.getUsername());
 
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
         Team defaultTeam = teamService.findByValue(TeamEnum.NONE);
@@ -193,6 +195,7 @@ public class UserService {
         UserRole userRole = UserRole.createUserRole(user, role, request.getReason(), true);
         userRoleRepository.save(userRole);
         user.setNewCurrentlyUsedUserRole(userRole);
+        authoritiesUpdater.update(user);
         return user.getApiId();
     }
 

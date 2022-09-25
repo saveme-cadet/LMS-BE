@@ -5,23 +5,17 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 public class AuthoritiesUpdater {
 
-    private final UserRoleService userRoleService;
-
-    @Autowired
-    public AuthoritiesUpdater(UserRoleService userRoleService) {
-        this.userRoleService = userRoleService;
-    }
-
     public void update(User user) {
-        Set<SimpleGrantedAuthority> authorities = user.getAuthorities();
-        List<UserRole> userRoles = userRoleService.findByUser(user);
+        Set<SimpleGrantedAuthority> actualAuthorities = user.getAuthorities();
 
         Authentication newAuth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), actualAuthorities);
 
