@@ -1,5 +1,6 @@
 package com.savelms.api.user.userrole.service;
 
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
@@ -25,7 +26,20 @@ public class UserRoleService {
 
     public Map<Long, RoleEnum> findAllUserRoleByDate(LocalDate date) {
         Map<Long, RoleEnum> userRoles = new HashMap<>();
-        Map<User, List<UserRole>> userAndUserRoles = userRoleRepository.findAllByDateBefore(LocalDateTime.of(date, LocalTime.MAX))
+        Map<User, List<UserRole>> userAndUserRoles = userRoleRepository.findAllByDate(LocalDateTime.of(date, LocalTime.MAX))
+                .stream().collect(Collectors.groupingBy(UserRole::getUser));
+
+        for (User user : userAndUserRoles.keySet()) {
+            UserRole userRole = userAndUserRoles.get(user).stream().max(Comparator.comparing(UserRole::getCreatedAt)).get();
+            userRoles.put(user.getId(), userRole.getRole().getValue());
+        }
+        return userRoles;
+    }
+
+    public Map<Long, RoleEnum> findAllUserRoleByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+        Map<Long, RoleEnum> userRoles = new HashMap<>();
+        Map<User, List<UserRole>> userAndUserRoles
+                = userRoleRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX), attendStatus)
                 .stream().collect(Collectors.groupingBy(UserRole::getUser));
 
         for (User user : userAndUserRoles.keySet()) {

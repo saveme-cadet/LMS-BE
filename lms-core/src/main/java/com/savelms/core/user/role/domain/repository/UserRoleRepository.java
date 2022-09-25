@@ -1,8 +1,8 @@
 package com.savelms.core.user.role.domain.repository;
 
-import com.savelms.core.team.domain.entity.UserTeam;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.role.domain.entity.UserRole;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +17,13 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     List<UserRole> currentlyUsedUserRole(@Param("userId") Long userId);
 
     @EntityGraph(attributePaths = "user")
-    @Query("SELECT ur FROM UserRole ur WHERE ur.createdAt <= :date order by ur.createdAt desc")
-    List<UserRole> findAllByDateBefore(@Param("date") LocalDateTime date);
+    @Query("SELECT ur FROM UserRole ur WHERE ur.createdAt <= :date ORDER BY ur.createdAt DESC")
+    List<UserRole> findAllByDate(@Param("date") LocalDateTime date);
+
+    @Query("SELECT ur FROM UserRole ur JOIN FETCH ur.user u " +
+            "WHERE ur.createdAt <= :date AND u.attendStatus = :attendStatus " +
+            "ORDER BY ur.createdAt DESC")
+    List<UserRole> findAllByDateAndAttendStatus(
+            @Param("date") LocalDateTime date,
+            @Param("attendStatus") AttendStatus attendStatus);
 }

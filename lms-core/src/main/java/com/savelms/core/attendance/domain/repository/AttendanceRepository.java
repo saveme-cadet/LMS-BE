@@ -3,6 +3,7 @@ package com.savelms.core.attendance.domain.repository;
 import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
+import com.savelms.core.user.AttendStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,7 +40,14 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "join fetch ur.role r " +
         "where a.calendar.date =:date")
     List<Attendance> findAllByDateWithUser(@Param("date") LocalDate date);
-    Optional<Attendance> findAllByCalendar(Long calendarId);
-    List<Attendance> findAllByUser(Long userId);
+
+    @Query("select distinct a from Attendance a " +
+            "join fetch a.user u " +
+            "join fetch u.userRoles ur " +
+            "join fetch ur.role r " +
+            "where a.calendar.date = :date and u.attendStatus = :attendStatus")
+    List<Attendance> findAllByDateAndAttendStatusWithUser(
+            @Param("date") LocalDate date,
+            @Param("attendStatus") AttendStatus attendStatus);
 
 }
