@@ -100,8 +100,7 @@ public class AttendanceController {
          * 권한 확인하기 -> 서비스 Exceptions
          * 출결표 있는지 확인하기 -> 서비스
          */
-        attendanceRepository.findById(attendanceId)
-                .ifPresent(user -> attendanceService.checkOut(attendanceId, userApiId, reqBody.getStatus()));
+        attendanceService.checkOut(attendanceId, userApiId, reqBody.getStatus());
 
 
         //    try {
