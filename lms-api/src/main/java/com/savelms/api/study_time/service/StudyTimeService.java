@@ -115,7 +115,7 @@ public class StudyTimeService {
         Double newStudyScore = StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime());
         double differenceScore = newStudyScore - oldStudyScore;
 
-        statisticalDataRepository.updateStudyTimeScore(apiId, differenceScore, LocalDateTime.of(studyTime.getCreatedAt().toLocalDate(), LocalTime.MIN));
+        statisticalDataService.updateStudyTimeScore(apiId, differenceScore, LocalDate.now());
         return StudyTimeResponse.from(studyTime);
     }
 
