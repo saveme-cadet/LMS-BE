@@ -13,6 +13,7 @@ import com.savelms.api.user.service.UserService;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.todo.domain.entity.Todo;
 import com.savelms.core.todo.domain.repository.TodoRepository;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import java.time.LocalDate;
@@ -33,10 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class TodoService {
 
     private final UserRepository userRepository;
-    private final UserService userService;
-
-    private final CalendarService calendarService;
     private final TodoRepository todoRepository;
+    private final CalendarService calendarService;
 
 
     @Transactional
@@ -104,6 +103,41 @@ public class TodoService {
         }
         response.setCount(response.getContent().size());
         return response;
+    }
+
+    public Map<String, Double> getTodoProgressAndAttendStatus(LocalDate localDate, AttendStatus attendStatus) {
+
+        List<Todo> todos = todoRepository.findByTodoDayAndAttendStatusFetchJoin(localDate, attendStatus);
+        ListResponse<GetTodoProgressResponse> response = new ListResponse<>();
+        Map<String, Integer[]> data = new HashMap<>(40);
+
+        todos.forEach((todo) -> {
+            String apiId = todo.getUser().getApiId();
+            if (data.containsKey(apiId) == false) {
+                data.put(apiId, new Integer[]{0, 0});
+            }
+            ++data.get(apiId)[0];
+            if (todo.getComplete() == true) {
+                ++data.get(apiId)[1];
+            }
+        });
+        data.forEach((key, value) -> {
+            GetTodoProgressResponse dto = GetTodoProgressResponse.builder()
+                    .writerId(key)
+                    .progress((double)value[1]/ value[0])
+                    .build();
+            response.getContent().add(dto);
+
+            //statisticalDataService.updateTodoSuccessRate(dto.getWriterId(), dto.getProgress(), localDate);
+        });
+        response.setCount(response.getContent().size());
+
+        Map<String, Double> progressMap = new HashMap<>();
+        for (GetTodoProgressResponse progress : response.getContent()) {
+            progressMap.put(progress.getWriterId(), progress.getProgress());
+        }
+
+        return progressMap;
     }
 
     public ListResponse<GetTodoProgressResponse> getTodoProgress(LocalDate localDate) {

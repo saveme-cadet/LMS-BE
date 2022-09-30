@@ -11,8 +11,9 @@ import java.util.Optional;
 
 public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
 
-    @Query("select s from StudyTime s join fetch s.user u where s.isStudying =:isStudying")
-    Optional<List<StudyTime>> findByIsStudying(Boolean isStudying);
+    @Query("select s from StudyTime s join fetch s.user u " +
+            "where u.apiId <> :apiId and s.isStudying = :isStudying")
+    Optional<List<StudyTime>> findByIsStudying(@Param("apiId") String apiId, @Param("isStudying") Boolean isStudying);
 
     @Query("select s from StudyTime s where s.user.apiId =:apiId and s.isStudying =:isStudying order by s.id desc")
     List<StudyTime> findByUserApiIdAndIsStudying(@Param("apiId") String apiId, Boolean isStudying);

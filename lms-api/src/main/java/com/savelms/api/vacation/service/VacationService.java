@@ -5,6 +5,7 @@ import com.savelms.api.vacation.dto.UseVacationRequest;
 import com.savelms.api.vacation.dto.VacationReasonResponse;
 import com.savelms.api.vacation.dto.VacationResponse;
 import com.savelms.core.exception.VacationNotFoundException;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.vacation.domain.entity.Vacation;
@@ -70,7 +71,20 @@ public class VacationService {
     /**
      * 조회
      * */
-    public Map<Long, Double> getAllRemainingVacationByDate(LocalDate date) {
+    public Map<Long, Double> getRemainingVacationByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+        List<Vacation> vacations = vacationRepository.findAllByDateAttendStatus(date, attendStatus.name());
+        Map<Long, Double> allRemainingVacation = new HashMap<>();
+
+        Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));
+        for (List<Vacation> userVacations : collect.values()) {
+            Vacation vacation = userVacations.stream().max(Comparator.comparing(Vacation::getCreatedAt)).get();
+            allRemainingVacation.put(vacation.getUser().getId(), vacation.getRemainingDays());
+        }
+
+        return allRemainingVacation;
+    }
+
+    public Map<Long, Double> getRemainingVacationByDate(LocalDate date) {
         List<Vacation> vacations = vacationRepository.findAllByDate(date);
         Map<Long, Double> allRemainingVacation = new HashMap<>();
 

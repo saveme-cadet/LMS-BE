@@ -84,9 +84,9 @@ public class StudyTimeController {
 
     @PreAuthorize("hasAuthority('study-time.user.read')")
     @Operation(description = "현재 스터디 중인 전체 회원 조회", summary = "현재 스터디 중인 전체 회원 조회")
-    @GetMapping("/users/study_times/studying-user")
-    public ResponseEntity<List<StudyingUserResponse>> getStudyingUser() {
-        List<StudyingUserResponse> studyingUserResponse = studyTimeService.getStudyingUser();
+    @GetMapping("/users/{userId}/study_times/studying-user")
+    public ResponseEntity<List<StudyingUserResponse>> getStudyingUser(@PathVariable String userId) {
+        List<StudyingUserResponse> studyingUserResponse = studyTimeService.getStudyingUser(userId);
 
         return ResponseEntity.ok().body(studyingUserResponse);
     }
