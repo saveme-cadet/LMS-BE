@@ -53,7 +53,7 @@ public class UserDataLoader implements CommandLineRunner {
         Authority updateUser = saveNewAuthority("user.update");
         Authority updateUserRole = saveNewAuthority("user.role.update");
         Authority updateUserTeam = saveNewAuthority("user.team.update");
-        Authority updateUserAttendStatus = saveNewAuthority("user.update-attend.status");
+        Authority updateUserAttendStatus = saveNewAuthority("user.attend-status.update");
         Authority readUser = saveNewAuthority("user.read");
         Authority deleteUser = saveNewAuthority("user.delete");
 

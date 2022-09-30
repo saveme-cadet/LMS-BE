@@ -157,6 +157,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
             .email(email)
             .nickname(username)
             .apiId(UUID.randomUUID().toString())
+            .attendStatus(AttendStatus.NOT_PARTICIPATED)
             .build();
     }
     /********************************* 비니지스 로직 *********************************/

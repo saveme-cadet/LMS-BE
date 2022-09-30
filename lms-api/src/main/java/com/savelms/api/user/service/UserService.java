@@ -17,6 +17,8 @@ import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.statistical.DayStatisticalData;
+import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.team.TeamEnum;
 import com.savelms.core.team.domain.entity.Team;
 import com.savelms.core.team.domain.entity.UserTeam;
@@ -82,6 +84,8 @@ public class UserService {
 
     private final AuthoritiesUpdater authoritiesUpdater;
 
+    private final DayStatisticalDataRepository dayStatisticalDataRepository;
+
     /**
      * 회원가입
      *
@@ -103,8 +107,11 @@ public class UserService {
         Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
-        User savedUser = userRepository.saveAndFlush(defaultUser);
 
+        DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(
+            defaultUser, calendar);
+        User savedUser = userRepository.saveAndFlush(defaultUser);
+        dayStatisticalDataRepository.save(dayStatisticalData);
         EmailAuth emailAuth = emailAuthRepository.save(
             EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,
                 UUID.randomUUID().toString()));

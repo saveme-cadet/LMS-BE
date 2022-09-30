@@ -47,7 +47,9 @@ public class DayStatisticalData extends BaseEntity {
 
 
 
+
     /********************************* 비영속 필드 *********************************/
+
 
 
     /********************************* 연관관계 매핑 *********************************/
@@ -59,6 +61,20 @@ public class DayStatisticalData extends BaseEntity {
     @JoinColumn(name="CALENDAR_ID")
     private Calendar calendar;
 
+
+    /********************************* 생성메서드 *********************************/
+    public static DayStatisticalData createDayStatisticalData(User user, Calendar calendar) {
+        return DayStatisticalData.builder()
+            .attendanceScore(0.0)
+            .absentScore(0.0)
+            .todoSuccessRate(0.0)
+            .studyTimeScore(0.0)
+            .totalScore(0.0)
+            .weekAbsentScore(0.0)
+            .user(user)
+            .calendar(calendar)
+            .build();
+    }
 
     /********************************* 비니지스 로직 *********************************/
     public void updateAttendanceScore(Double attendanceScore) {
