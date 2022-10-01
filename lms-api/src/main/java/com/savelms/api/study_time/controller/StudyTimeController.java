@@ -39,7 +39,7 @@ public class StudyTimeController {
     /**
      * 생성
      * */
-    @PreAuthorize("hasAuthority('user.study-time.create')")
+//    @PreAuthorize("hasAuthority('user.study-time.create')")
     @Operation(description = "스터디 시작", summary = "스터디 시작")
     @PostMapping("/users/{userId}/study_times")
     public ResponseEntity<StudyTimeResponse> startStudy(@PathVariable String userId) {
@@ -52,7 +52,7 @@ public class StudyTimeController {
     /**
      * 조회
      * */
-    @PreAuthorize("hasAuthority('user.study-time.read')")
+//    @PreAuthorize("hasAuthority('user.study-time.read')")
     @Operation(description = "개인유저의 당일 스터디 기록 조회", summary = "개인유저의 당일 스터디 기록 조회")
     @GetMapping("/users/{userId}/study_times/today")
     public ResponseEntity<List<StudyTimeResponse>> getTodayStudyTimes(@PathVariable String userId) {
@@ -61,7 +61,7 @@ public class StudyTimeController {
         return ResponseEntity.ok().body(studyTime);
     }
 
-    @PreAuthorize("hasAuthority('user.study-time.read')")
+//    @PreAuthorize("hasAuthority('user.study-time.read')")
     @Operation(description = "개인유저의 특정 날짜 스터디 기록 조회", summary = "개인유저의 특정 날짜 스터디 기록 조회")
     @GetMapping("/users/{userId}/study_times/{date}")
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimesByDate(
@@ -73,7 +73,7 @@ public class StudyTimeController {
         return ResponseEntity.ok().body(studyTime);
     }
 
-    @PreAuthorize("hasAuthority('user.study-time.read')")
+//    @PreAuthorize("hasAuthority('user.study-time.read')")
     @Operation(description = "개인유저의 모든 스터디 기록 조회", summary = "개인유저의 모든 스터디 기록 조회")
     @GetMapping("/users/{userId}/study_times")
     public ResponseEntity<List<StudyTimeResponse>> getStudyTimes(@PathVariable String userId) {
@@ -82,7 +82,7 @@ public class StudyTimeController {
         return ResponseEntity.ok().body(studyTime);
     }
 
-    @PreAuthorize("hasAuthority('study-time.user.read')")
+//    @PreAuthorize("hasAuthority('study-time.user.read')")
     @Operation(description = "현재 스터디 중인 전체 회원 조회", summary = "현재 스터디 중인 전체 회원 조회")
     @GetMapping("/users/{userId}/study_times/studying-user")
     public ResponseEntity<List<StudyingUserResponse>> getStudyingUser(@PathVariable String userId) {
@@ -95,7 +95,7 @@ public class StudyTimeController {
     /**
      * 수정
      * */
-    @PreAuthorize("hasAuthority('user.study-time.update')")
+//    @PreAuthorize("hasAuthority('user.study-time.update')")
     @Operation(description = "스터디 종료", summary = "스터디 종료")
     @PutMapping("/users/{userId}/study_times")
     public ResponseEntity<StudyTimeResponse> endStudy(@PathVariable String userId) {
@@ -104,7 +104,7 @@ public class StudyTimeController {
         return ResponseEntity.ok().body(studyTimeResponse);
     }
 
-    @PreAuthorize("hasAuthority('study-time.update')")
+//    @PreAuthorize("hasAuthority('study-time.update')")
     @Operation(description = "스터디 시간 수정", summary = "스터디 시간 수정")
     @PatchMapping("/users/{userId}/study_times/{studyTimeId}")
     public ResponseEntity<StudyTimeResponse> updateStudyTime(@PathVariable String userId,
@@ -119,7 +119,7 @@ public class StudyTimeController {
     /**
      * 삭제
      * */
-    @PreAuthorize("hasAuthority('study-time.delete')")
+//    @PreAuthorize("hasAuthority('study-time.delete')")
     @Operation(description = "스터디 삭제", summary = "스터디 삭제")
     @DeleteMapping("/users/study_times/{studyTimeId}")
     public ResponseEntity deleteStudyTime(@PathVariable Long studyTimeId) {

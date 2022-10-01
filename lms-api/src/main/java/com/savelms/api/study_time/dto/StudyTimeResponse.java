@@ -39,7 +39,7 @@ public class StudyTimeResponse {
     public static StudyTimeResponse from(StudyTime studyTime) {
         return new StudyTimeResponse(
                 studyTime.getId(),
-                DateTimeFormatter.ofPattern(StudyTime.DATE_FORMAT).format(studyTime.getCreatedAt()),
+                DateTimeFormatter.ofPattern(StudyTime.DATE_FORMAT).format(studyTime.getBeginTime()),
                 studyTime.getBeginTime(),
                 studyTime.getEndTime(),
                 studyTime.getFinalStudyTime(),

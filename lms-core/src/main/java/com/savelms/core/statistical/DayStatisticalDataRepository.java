@@ -34,21 +34,33 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
             @Param("date") LocalDate date,
             @Param("attendStatus") AttendStatus attendStatus);
 
-    @Query("select d from DayStatisticalData d where d.user.username =:username and d.calendar.date =:date")
+    @Query("select d from DayStatisticalData d where d.user.username = :username and d.calendar.date = :date")
     Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, @Param("date") LocalDate date);
 
-    @Query("select d from DayStatisticalData d where d.user.apiId =:apiId and d.calendar.date =:date")
+    @Query("select d from DayStatisticalData d where d.user.apiId = :apiId and d.calendar.date = :date")
     Optional<DayStatisticalData> findByApiIdAndDate(@Param("apiId") String apiId, @Param("date") LocalDate date);
 
     @Query("select SUM(d.studyTimeScore) from DayStatisticalData d where d.user.username =:username " +
             "and SUBSTRING(d.calendar.date, 6, 2) =:month")
     Optional<Double> findTotalStudyTimePerMonth(@Param("username") String username, String month);
 
-    @Modifying
-    @Query(value = "update day_statistical_data d inner join User u on u.user_id = d.user_id " +
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update day_statistical_data d " +
+            "inner join User u on u.user_id = d.user_id " +
+            "inner join Calendar c on c.calendar_id = d.calendar_id " +
             "set d.study_time_score = d.study_time_score + :studyScore, d.total_score = d.total_score + (:studyScore * -1) " +
-            "where d.created_at >= :date and u.api_id = :apiId", nativeQuery = true)
+            "where u.api_id = :apiId and c.date >= :date", nativeQuery = true)
+    void bulkUpdateStudyTimeScore(@Param("apiId") String apiId,
+                                  @Param("studyScore") double studyScore,
+                                  @Param("date") LocalDate date);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update day_statistical_data d " +
+            "inner join User u on u.user_id = d.user_id " +
+            "inner join Calendar c on c.calendar_id = d.calendar_id " +
+            "set d.study_time_score = :studyScore, d.total_score = :studyScore * -1 " +
+            "where u.api_id = :apiId and c.date = :date", nativeQuery = true)
     void updateStudyTimeScore(@Param("apiId") String apiId,
-                              @Param("studyScore") double studyScore,
-                              @Param("date") LocalDateTime date);
+                                  @Param("studyScore") double studyScore,
+                                  @Param("date") LocalDate date);
 }

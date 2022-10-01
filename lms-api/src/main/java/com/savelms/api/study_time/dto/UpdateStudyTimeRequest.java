@@ -1,16 +1,38 @@
 package com.savelms.api.study_time.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+
+@Getter
 public class UpdateStudyTimeRequest {
 
-    private String beginTime;
-    private String endTime;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime testBeginTime;
 
-    public UpdateStudyTimeRequest of(String beginTime, String endTime) {
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime testEndTime;
+
+    @NotNull
+    private LocalDateTime beginTime;
+
+    @NotNull
+    private LocalDateTime endTime;
+
+    protected UpdateStudyTimeRequest() {}
+
+    public UpdateStudyTimeRequest(LocalDateTime beginTime, LocalDateTime endTime) {
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+    }
+
+    public UpdateStudyTimeRequest of(LocalDateTime beginTime, LocalDateTime endTime) {
         return new UpdateStudyTimeRequest(beginTime, endTime);
     }
 }
