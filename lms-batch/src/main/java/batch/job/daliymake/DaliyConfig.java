@@ -66,9 +66,10 @@ public class DaliyConfig {
     public Job DaliyJob() throws Exception {
         return this.jobBuilderFactory.get("DaliyJob")
                 .incrementer(new RunIdIncrementer())
-                .start(this.ItemDailyWriterStep())
-                .next(this.saveDayStatisticalDataStep())
-                .next(this.saveAttendanceStep())
+//                .start(this.ItemDailyWriterStep())
+//                .next(saveUserStep())
+//                .next(this.saveDayStatisticalDataStep())
+                .start(this.saveAttendanceStep())
                 .build();
     }
 

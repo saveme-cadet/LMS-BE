@@ -62,7 +62,7 @@ public class AttendanceTasklet implements Tasklet {
             //     DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar(x, day.getId());
             attendanceData.add(Attendance.builder()
                             .calendar(day)
-                            .user(userRepository.getById(x.longValue()))
+                            .user(userRepository.getById(x))
                             .checkInStatus(AttendanceStatus.NONE)
                             .checkOutStatus(AttendanceStatus.NONE)
                             .build());
