@@ -69,7 +69,7 @@ public class DaliyConfig {
                 .start(this.ItemDailyWriterStep())
 //                .next(saveUserStep())
                 .next(this.saveDayStatisticalDataStep())
-                .start(this.saveAttendanceStep())
+                .next(this.saveAttendanceStep())
                 .build();
     }
 

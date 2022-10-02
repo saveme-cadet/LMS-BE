@@ -58,6 +58,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now().minusDays(1));
+        final Calendar nowDay = calendarRepository.findAllByDate(LocalDate.now());
         System.out.println("=============================" + "+++++++++++++++++" + day.getDate());
         // ===================================== 매일 1일 0으로 초기화 ========================= //
         if (LocalDate.now().getDayOfMonth() == 1) {
@@ -70,7 +71,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                         .user(userRepository.getById(x))
                         .todoSuccessRate((double) 0)
                         .weekAbsentScore((double) 0)
-                        .calendar(day)
+                        .calendar(nowDay)
                         .totalScore((double) 0)
                         .studyTimeScore((double) 0)
                         .build());
@@ -86,7 +87,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                         .user(userRepository.getById(x))
                         .todoSuccessRate(dayStatisticalData.getTodoSuccessRate())
                         .weekAbsentScore(dayStatisticalData.getWeekAbsentScore())
-                        .calendar(day)
+                        .calendar(nowDay)
                         .totalScore(dayStatisticalData.getTotalScore())
                         .studyTimeScore(dayStatisticalData.getStudyTimeScore())
                         .build());
