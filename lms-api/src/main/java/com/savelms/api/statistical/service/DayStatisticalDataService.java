@@ -56,32 +56,6 @@ public class DayStatisticalDataService {
     }
 
     private List<DayLogDto> getDayLogsByDate(LocalDate date) {
-//        final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date);
-//
-//        for (Long x : teams.keySet()) {
-//            System.out.println("x 1 == " + teams.get(x));
-//        }
-//        final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date);
-//        for (Long x : roles.keySet()) {
-//            System.out.println("x 2 == " + roles.get(x));
-//        }
-//        final Map<Long, AttendanceDto> attendances = attendanceService.getAllAttendanceByDate(date);
-//        for (Long x : attendances.keySet()) {
-//            System.out.println("x 3 == " + attendances.get(x));
-//        }
-//        final Map<Long, Double> remainingVacations = vacationService.getRemainingVacationByDate(date);
-//        for (Long x : remainingVacations.keySet()) {
-//            System.out.println("x 4 == " + remainingVacations.get(x));
-//        }
-//        final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDate(date);
-////        for (Long x : teams.keySet()) {
-////            System.out.println("x 5 == " + dayStatisticalData.get(x));
-////        }
-//        final List<GetTodoProgressResponse> todoProgress = todoService.getTodoProgress(date).getContent();
-////        for (Long x : todoProgress.keySet()) {
-////            System.out.println("x 6 == " + todoProgress.get(x));
-////        }
-//        Map<String, Double> progressMap = getTodoProgressByUserId(todoProgress);
 
         final Map<Long, TeamEnum> teamsP = userTeamService.findAllUserTeamByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
         final Map<Long, RoleEnum> rolesP = userRoleService.findAllUserRoleByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
@@ -89,7 +63,6 @@ public class DayStatisticalDataService {
         final Map<Long, Double> remainingVacationsP = vacationService.getRemainingVacationByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
         final Map<String, Double> todoProgressP = todoService.getTodoProgressAndAttendStatus(date, AttendStatus.PARTICIPATED);
         final List<DayStatisticalData> dayStatisticalDataP = statisticalDataRepository.findAllByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
-
 
         final Map<Long, TeamEnum> teamsN = userTeamService.findAllUserTeamByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
         final Map<Long, RoleEnum> rolesN = userRoleService.findAllUserRoleByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
@@ -119,7 +92,6 @@ public class DayStatisticalDataService {
         final Map<Long, Double> remainingVacations = vacationService.getRemainingVacationByDateAndAttendStatus(date, attendStatus);
         final Map<String, Double> todoProgress = todoService.getTodoProgressAndAttendStatus(date, attendStatus);
         final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDateAndAttendStatus(date, attendStatus);
-
 
         return dayStatisticalData.stream()
                 .map(statisticalDataToDayLogDtoInAdmin(date, teams, roles, remainingVacations, attendances, todoProgress))

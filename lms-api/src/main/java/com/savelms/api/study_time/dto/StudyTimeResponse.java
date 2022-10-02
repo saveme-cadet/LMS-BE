@@ -19,6 +19,7 @@ public class StudyTimeResponse {
     private LocalDateTime endTime;
     private String finalStudyTime;
     private Double studyTimeScore;
+    private boolean isStudy;
 
     private StudyTimeResponse(
             Long studyTimeId,
@@ -26,7 +27,8 @@ public class StudyTimeResponse {
             LocalDateTime beginTime,
             LocalDateTime endTime,
             String finalStudyTime,
-            Double studyTimeScore)
+            Double studyTimeScore,
+            boolean isStudy)
     {
         this.studyTimeId = studyTimeId;
         this.createdDate = createdDate;
@@ -34,6 +36,7 @@ public class StudyTimeResponse {
         this.endTime = endTime;
         this.finalStudyTime = finalStudyTime;
         this.studyTimeScore = studyTimeScore;
+        this.isStudy = isStudy;
     }
 
     public static StudyTimeResponse from(StudyTime studyTime) {
@@ -43,6 +46,7 @@ public class StudyTimeResponse {
                 studyTime.getBeginTime(),
                 studyTime.getEndTime(),
                 studyTime.getFinalStudyTime(),
-                StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()));
+                StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime()),
+                studyTime.getIsStudying());
     }
 }

@@ -68,8 +68,8 @@ public class StudyTimeService {
                 endTime,
                 studyScore,
                 finalStudyTime);
+        System.out.println("beginTime = " + beginTime + " endTime = " + endTime + " studyScore = " + studyScore + " finalStudyScore " +finalStudyTime);
         studyTimeRepository.save(studyTime);
-        return ;
     }
 
 
@@ -161,15 +161,10 @@ public class StudyTimeService {
 
             dividStudy(apiId,
                     request.getEndTime().toLocalDate(),
-                    LocalDateTime.of(request.getBeginTime().toLocalDate(),
-                            LocalTime.of(0,0,0)),
+                    LocalDateTime.of(request.getEndTime().toLocalDate(), LocalTime.of(0,0,0)),
                     request.getEndTime(),
                     secondScore,
-                    StudyTime.getFinalStudyTime(
-                            LocalDateTime.of(request.getBeginTime().toLocalDate(),
-                                    LocalTime.of(0,0,0)),
-                            request.getEndTime())
-
+                    StudyTime.getFinalStudyTime(LocalDateTime.of(request.getEndTime().toLocalDate(), LocalTime.of(0,0,0)), request.getEndTime())
                     );
             newStudyScore += secondScore;
         } else {
