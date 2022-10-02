@@ -14,11 +14,11 @@ public class UpdateStudyTimeRequest {
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime testBeginTime;
+    //private LocalDateTime testBeginTime;
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 //    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime testEndTime;
+    //private LocalDateTime testEndTime;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")

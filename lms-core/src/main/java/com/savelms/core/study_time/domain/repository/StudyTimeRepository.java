@@ -27,5 +27,15 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     List<StudyTime> findByUserApiIdAndDate(@Param("apiId") String apiId, @Param("date") LocalDate date);
 
 
+    /**
+     *
+     * @param userId
+     * @param calendarId
+     * @return
+     *
+     *  findByUserApiIdAndDate 정상 작동 안됌
+     *  where 절에서 u.api_id
+     */
     List<StudyTime> findByUserIdAndCalendarId(Long userId, Long calendarId);
 }
+
