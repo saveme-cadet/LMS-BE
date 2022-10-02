@@ -42,7 +42,7 @@ public class DayStatisticalDataService {
     private final DayStatisticalDataRepository statisticalDataRepository;
 
     public List<DayLogDto> getDayLogs(LocalDate date, AttendStatus attendStatus) {
-        if (attendStatus == null) {
+        if (attendStatus.toString().equals("")) {
             return getDayLogsByDate(date);
         }
 
