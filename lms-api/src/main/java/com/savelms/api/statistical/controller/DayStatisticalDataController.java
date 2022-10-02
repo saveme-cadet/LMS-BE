@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,8 +25,11 @@ public class DayStatisticalDataController {
 
     public final DayStatisticalDataService dayStatisticalDataService;
 
+
+    @PreAuthorize("hasAuthority('day-log.read')")
     @GetMapping("/day-logs")
-    public ResponseEntity<List<DayLogDto>> getDayLogs(
+    public ResponseEntity<List<DayLogDto>>
+    getDayLogs(
             @RequestParam("date") @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date,
             @RequestParam(value = "attendStatus", required = false) AttendStatus attendStatus)
     {

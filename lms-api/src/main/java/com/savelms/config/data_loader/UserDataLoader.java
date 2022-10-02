@@ -100,6 +100,8 @@ public class UserDataLoader implements CommandLineRunner {
         Authority readUserAttendance = saveNewAuthority("user.attendance.read");
         Authority deleteUserAttendance = saveNewAuthority("user.attendance.delete");
 
+        Authority readDayLog = saveNewAuthority("day-log.read");
+
 
         //Authority createUser = saveNewAuthority("user.create");
         //Role 생성
@@ -113,20 +115,20 @@ public class UserDataLoader implements CommandLineRunner {
             createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
             createStudyTime, updateStudyTime, readStudyTime, deleteStudyTime,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
-            createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance
-            );
+            createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance,
+            readDayLog);
         managerRole.addAuthorities(createUser, updateUser, updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
             createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
-                            updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance
-        );
+                            updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance,
+            readDayLog);
         userRole.addAuthorities(createUser, readUser,updateUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
             createUserVacation, updateUserVacation,readUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
-                             updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance
-        );
+                             updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance,
+            readDayLog);
 
         unauthorizedRole.addAuthorities(createUser, updateUser);
 
