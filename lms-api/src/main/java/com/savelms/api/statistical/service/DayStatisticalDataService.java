@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -76,6 +77,8 @@ public class DayStatisticalDataService {
         final Map<String, Double> todoProgress = todoService.getTodoProgressAndAttendStatus(date, attendStatus);
         final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDateAndAttendStatus(date, attendStatus);
 
+//        List<DayLogDto> dayLogDtos = new LinkedList<>();
+//        return dayLogDtos;
         return dayStatisticalData.stream()
                 .map(statisticalDataToDayLogDto(date, teams, roles, remainingVacations, attendances, todoProgress))
                 .collect(Collectors.toUnmodifiableList());

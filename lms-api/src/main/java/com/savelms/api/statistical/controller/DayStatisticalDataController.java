@@ -35,7 +35,7 @@ public class DayStatisticalDataController {
     {
         List<DayLogDto> dayLogs = dayStatisticalDataService.getDayLogs(date, attendStatus);
 
-        return ResponseEntity.ok().body(dayLogs);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/admin-day-logs")

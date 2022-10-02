@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +48,28 @@ public class StudyTimeService {
         studyTimeRepository.save(studyTime);
         
         return StudyTimeResponse.from(studyTime);
+    }
+
+    @Transactional
+    public void dividStudy(String apiId,
+                           LocalDate date,
+                           LocalDateTime beginTime,
+                           LocalDateTime endTime,
+                           Double studyScore,
+                           String finalStudyTime ) {
+        User user = userRepository.findByApiId(apiId)
+                .orElseThrow( () -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        Calendar calendar = calendarRepository.findAllByDate(date);
+
+        StudyTime studyTime = StudyTime.of(user,
+                calendar,
+                beginTime,
+                endTime,
+                studyScore,
+                finalStudyTime);
+        studyTimeRepository.save(studyTime);
+        return ;
     }
 
 
@@ -115,18 +138,53 @@ public class StudyTimeService {
         LocalDate requestedEndTime = request.getEndTime().toLocalDate();
         Double oldStudyScore = studyTime.getStudyScore();
         LocalDate studiedDate = studyTime.getEndTime().toLocalDate();
-        Double newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), request.getEndTime());
+        Double newStudyScore = 0.0;
 
-        final Optional<StudyTime> studyTime1 = studyTimeRepository.findAllById(studyTimeId);
-        studyTime1.ifPresent(studyTime2 -> {
-                    studyTime2.setBeginTime(request.getBeginTime());
-                    studyTime2.setEndTime(request.getEndTime());
-                    studyTime2.setStudyScore(newStudyScore);
-                    studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), request.getEndTime()));
-                    studyTimeRepository.save(studyTime2);
-                });
+        if (request.getBeginTime().getDayOfMonth() != request.getEndTime().getDayOfMonth()) {
+            newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), LocalDateTime.of(request.getBeginTime().toLocalDate(), LocalTime.of(23,59,59)));
 
-        double differenceScore = newStudyScore - oldStudyScore;
+            final Optional<StudyTime> studyTime1 = studyTimeRepository.findAllById(studyTimeId);
+            Double finalNewStudyScore = newStudyScore;
+            studyTime1.ifPresent(studyTime2 -> {
+                studyTime2.setBeginTime(request.getBeginTime());
+                studyTime2.setEndTime(LocalDateTime.of(request.getBeginTime().toLocalDate(), LocalTime.of(23,59,59)));
+                studyTime2.setStudyScore(finalNewStudyScore);
+                studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), LocalDateTime.of(request.getBeginTime().toLocalDate(), LocalTime.of(23,59,59))));
+                studyTimeRepository.save(studyTime2);
+            });
+
+            Double secondScore = StudyTime.getStudyScore(
+                    LocalDateTime.of(
+                            request.getEndTime().toLocalDate(),
+                            LocalTime.of(0,0,0)),
+                    request.getEndTime());
+
+            dividStudy(apiId,
+                    request.getEndTime().toLocalDate(),
+                    LocalDateTime.of(request.getBeginTime().toLocalDate(),
+                            LocalTime.of(0,0,0)),
+                    request.getEndTime(),
+                    secondScore,
+                    StudyTime.getFinalStudyTime(
+                            LocalDateTime.of(request.getBeginTime().toLocalDate(),
+                                    LocalTime.of(0,0,0)),
+                            request.getEndTime())
+
+                    );
+            newStudyScore += secondScore;
+        } else {
+            newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), request.getEndTime());
+            final Optional<StudyTime> studyTime1 = studyTimeRepository.findAllById(studyTimeId);
+            Double finalNewStudyScore1 = newStudyScore;
+            studyTime1.ifPresent(studyTime2 -> {
+                studyTime2.setBeginTime(request.getBeginTime());
+                studyTime2.setEndTime(request.getEndTime());
+                studyTime2.setStudyScore(finalNewStudyScore1);
+                studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), request.getEndTime()));
+                studyTimeRepository.save(studyTime2);
+            });
+        }
+
 
         if (!studiedDate.isEqual(requestedEndTime)) {
             DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate)
@@ -148,9 +206,10 @@ public class StudyTimeService {
         }
         final Optional<DayStatisticalData> dayStatisticalData = dayStatDataRepository.findAllByUser_idAndCalendar_id(userRepository.findByApiId(apiId).get().getId(),
                 calendarRepository.findAllByDate(studiedDate).getId());
+        Double finalNewStudyScore2 = newStudyScore;
         dayStatisticalData.ifPresent(dayStatisticalData1 -> {
-            dayStatisticalData1.setStudyTimeScore(dayStatisticalData1.getStudyTimeScore() - oldStudyScore + newStudyScore);
-            dayStatisticalData1.setTotalScore(dayStatisticalData1.getTotalScore() - oldStudyScore + newStudyScore);
+            dayStatisticalData1.setStudyTimeScore(dayStatisticalData1.getStudyTimeScore() - oldStudyScore + finalNewStudyScore2);
+            dayStatisticalData1.setTotalScore(dayStatisticalData1.getTotalScore() - oldStudyScore + finalNewStudyScore2);
         });
         //dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, differenceScore, studiedDate);
 

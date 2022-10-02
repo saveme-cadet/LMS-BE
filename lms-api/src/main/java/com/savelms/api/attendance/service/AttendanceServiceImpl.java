@@ -6,6 +6,7 @@ import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.attendance.domain.repository.AttendanceRepository;
+import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
@@ -15,6 +16,8 @@ import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +42,7 @@ public class AttendanceServiceImpl implements AttendanceService{
     private final DayStatisticalDataRepository statisticalDataRepository;
     private final UserRepository userRepository;
     private final VacationService vacationService;
-
+    private final CalendarRepository calendarRepository;
 //
 //    public void updateCheckIn(TableCheckInDto tableCheckInDto, LocalDate date){
 //        DayTable dayTable = DtoConverter.fromCheckInTableDto(tableCheckInDto);
@@ -250,6 +253,13 @@ public class AttendanceServiceImpl implements AttendanceService{
     }
 
     public Map<Long, AttendanceDto> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+//        return attendanceRepository.findAttendanceById(calendarRepository.findAllByDate(date).getId())
+//                .stream().filter(x -> x.getUser().getAttendStatus().equals(attendStatus))
+//                .collect(Collectors.toMap(
+//                        attendance -> attendance.getUser().getId(),
+//                        AttendanceDto::new
+//                ));
+
         return attendanceRepository.findAllByDateAndAttendStatusWithUser(date, attendStatus)
                 .stream()
                 .collect(Collectors.toMap(
@@ -259,6 +269,7 @@ public class AttendanceServiceImpl implements AttendanceService{
     }
 
     public Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date) {
+
         return attendanceRepository.findAllByDateWithUser(date)
             .stream()
             .collect(Collectors.toMap(

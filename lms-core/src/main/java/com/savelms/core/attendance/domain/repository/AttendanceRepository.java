@@ -50,4 +50,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             @Param("date") LocalDate date,
             @Param("attendStatus") AttendStatus attendStatus);
 
+    List<Attendance> findAllByCalendar(Long id);
+
 }

@@ -44,6 +44,9 @@ public class UserTeamService {
     public Map<Long, TeamEnum> findAllUserTeamByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
         Map<Long, TeamEnum> userTeams = new HashMap<>();
         Map<User, List<UserTeam>> userAndUserTeams
+//                = userTeamRepository.findAllByCreatedAt(LocalDateTime.of(date, LocalTime.MAX))
+//                .stream().filter(x -> x.getUser().getAttendStatus().equals(attendStatus))
+//                .collect(Collectors.groupingBy(UserTeam::getUser));
                 = userTeamRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX), attendStatus)
                     .stream().collect(Collectors.groupingBy(UserTeam::getUser));
 

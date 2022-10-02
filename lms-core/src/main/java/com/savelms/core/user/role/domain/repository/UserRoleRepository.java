@@ -26,4 +26,6 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     List<UserRole> findAllByDateAndAttendStatus(
             @Param("date") LocalDateTime date,
             @Param("attendStatus") AttendStatus attendStatus);
+
+    List<UserRole> findAllByCreatedAt(LocalDateTime date);
 }

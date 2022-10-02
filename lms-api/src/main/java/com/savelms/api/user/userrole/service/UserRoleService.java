@@ -1,5 +1,6 @@
 package com.savelms.api.user.userrole.service;
 
+import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
@@ -41,6 +42,10 @@ public class UserRoleService {
         Map<User, List<UserRole>> userAndUserRoles
                 = userRoleRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX), attendStatus)
                 .stream().collect(Collectors.groupingBy(UserRole::getUser));
+
+//        = userTeamRepository.findAllByCreatedAt(LocalDateTime.of(date, LocalTime.MAX))
+//                .stream().filter(x -> x.getUser().getAttendStatus().equals(attendStatus))
+//                .collect(Collectors.groupingBy(UserTeam::getUser));
 
         for (User user : userAndUserRoles.keySet()) {
             UserRole userRole = userAndUserRoles.get(user).stream().max(Comparator.comparing(UserRole::getCreatedAt)).get();
