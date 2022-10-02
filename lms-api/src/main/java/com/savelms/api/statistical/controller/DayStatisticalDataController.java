@@ -26,7 +26,7 @@ public class DayStatisticalDataController {
     public final DayStatisticalDataService dayStatisticalDataService;
 
 
-    @PreAuthorize("hasAuthority('day-log.read')")
+    //@PreAuthorize("hasAuthority('day-log.read')")
     @GetMapping("/day-logs")
     public ResponseEntity<List<DayLogDto>>
     getDayLogs(
@@ -35,7 +35,7 @@ public class DayStatisticalDataController {
     {
         List<DayLogDto> dayLogs = dayStatisticalDataService.getDayLogs(date, attendStatus);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(dayLogs);
     }
 
     @GetMapping("/admin-day-logs")

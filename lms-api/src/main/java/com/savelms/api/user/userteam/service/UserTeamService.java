@@ -37,6 +37,7 @@ public class UserTeamService {
         for (User user : userAndUserTeams.keySet()) {
             UserTeam userTeam = userAndUserTeams.get(user).stream().max(Comparator.comparing(UserTeam::getCreatedAt)).get();
             userTeams.put(user.getId(), userTeam.getTeam().getValue());
+            System.out.println(userTeams.get(user.getId()) + " " + userTeam.getTeam().getValue());
         }
         return userTeams;
     }

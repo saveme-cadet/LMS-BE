@@ -56,17 +56,60 @@ public class DayStatisticalDataService {
     }
 
     private List<DayLogDto> getDayLogsByDate(LocalDate date) {
-        final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date);
-        final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date);
-        final Map<Long, AttendanceDto> attendances = attendanceService.getAllAttendanceByDate(date);
-        final Map<Long, Double> remainingVacations = vacationService.getRemainingVacationByDate(date);
-        final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDate(date);
-        final List<GetTodoProgressResponse> todoProgress = todoService.getTodoProgress(date).getContent();
-        Map<String, Double> progressMap = getTodoProgressByUserId(todoProgress);
+//        final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date);
+//
+//        for (Long x : teams.keySet()) {
+//            System.out.println("x 1 == " + teams.get(x));
+//        }
+//        final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date);
+//        for (Long x : roles.keySet()) {
+//            System.out.println("x 2 == " + roles.get(x));
+//        }
+//        final Map<Long, AttendanceDto> attendances = attendanceService.getAllAttendanceByDate(date);
+//        for (Long x : attendances.keySet()) {
+//            System.out.println("x 3 == " + attendances.get(x));
+//        }
+//        final Map<Long, Double> remainingVacations = vacationService.getRemainingVacationByDate(date);
+//        for (Long x : remainingVacations.keySet()) {
+//            System.out.println("x 4 == " + remainingVacations.get(x));
+//        }
+//        final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDate(date);
+////        for (Long x : teams.keySet()) {
+////            System.out.println("x 5 == " + dayStatisticalData.get(x));
+////        }
+//        final List<GetTodoProgressResponse> todoProgress = todoService.getTodoProgress(date).getContent();
+////        for (Long x : todoProgress.keySet()) {
+////            System.out.println("x 6 == " + todoProgress.get(x));
+////        }
+//        Map<String, Double> progressMap = getTodoProgressByUserId(todoProgress);
 
-        return dayStatisticalData.stream()
-                .map(statisticalDataToDayLogDto(date, teams, roles, remainingVacations, attendances, progressMap))
+        final Map<Long, TeamEnum> teamsP = userTeamService.findAllUserTeamByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
+        final Map<Long, RoleEnum> rolesP = userRoleService.findAllUserRoleByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
+        final Map<Long, AttendanceDto> attendancesP = attendanceService.getAllAttendanceByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
+        final Map<Long, Double> remainingVacationsP = vacationService.getRemainingVacationByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
+        final Map<String, Double> todoProgressP = todoService.getTodoProgressAndAttendStatus(date, AttendStatus.PARTICIPATED);
+        final List<DayStatisticalData> dayStatisticalDataP = statisticalDataRepository.findAllByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
+
+
+        final Map<Long, TeamEnum> teamsN = userTeamService.findAllUserTeamByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
+        final Map<Long, RoleEnum> rolesN = userRoleService.findAllUserRoleByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
+        final Map<Long, AttendanceDto> attendancesN = attendanceService.getAllAttendanceByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
+        final Map<Long, Double> remainingVacationsN = vacationService.getRemainingVacationByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
+        final Map<String, Double> todoProgressN = todoService.getTodoProgressAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
+        final List<DayStatisticalData> dayStatisticalDataN = statisticalDataRepository.findAllByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
+
+        List<DayLogDto> list1 = dayStatisticalDataP.stream()
+                .map(statisticalDataToDayLogDto(date, teamsP, rolesP, remainingVacationsP, attendancesP, todoProgressP))
                 .collect(Collectors.toUnmodifiableList());
+        List<DayLogDto> list2 = dayStatisticalDataN.stream()
+                .map(statisticalDataToDayLogDto(date, teamsN, rolesN, remainingVacationsN, attendancesN, todoProgressN))
+                .collect(Collectors.toUnmodifiableList());
+
+        for(int i = 0; i < list2.size(); i++) {
+            list1.add(list2.get(i));
+        }
+
+        return list1;
     }
 
     private List<DayLogDto> getDayLogsByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
@@ -77,10 +120,9 @@ public class DayStatisticalDataService {
         final Map<String, Double> todoProgress = todoService.getTodoProgressAndAttendStatus(date, attendStatus);
         final List<DayStatisticalData> dayStatisticalData = statisticalDataRepository.findAllByDateAndAttendStatus(date, attendStatus);
 
-//        List<DayLogDto> dayLogDtos = new LinkedList<>();
-//        return dayLogDtos;
+
         return dayStatisticalData.stream()
-                .map(statisticalDataToDayLogDto(date, teams, roles, remainingVacations, attendances, todoProgress))
+                .map(statisticalDataToDayLogDtoInAdmin(date, teams, roles, remainingVacations, attendances, todoProgress))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -101,8 +143,42 @@ public class DayStatisticalDataService {
             Double vacation = remainingVacations.computeIfAbsent(userId, (k) -> 0.0);
             TeamEnum team = teams.computeIfAbsent(userId, (k) -> TeamEnum.NONE);
             RoleEnum role = roles.computeIfAbsent(userId, (k) -> RoleEnum.ROLE_UNAUTHORIZED);
-            AttendanceDto attendance = attendances.computeIfAbsent(userId,
-                    (k) -> new AttendanceDto(apiId, 0L, AttendanceStatus.NONE, AttendanceStatus.NONE));
+            AttendanceDto attendance = attendances.get(user.getId());
+            Double progress = progressMap.get(apiId);
+            return DayLogDto.of(
+                    apiId,
+                    attendance.getAttendanceId(),
+                    nickname,
+                    attendStatus,
+                    attendance.getCheckInStatus(),
+                    attendance.getCheckOutStatus(),
+                    role,
+                    team,
+                    progress,
+                    date,
+                    vacation,
+                    DayStatisticalDataDto.from(statisticalData));
+        };
+    }
+
+    private Function<DayStatisticalData, DayLogDto> statisticalDataToDayLogDtoInAdmin(
+            LocalDate date,
+            Map<Long, TeamEnum> teams,
+            Map<Long, RoleEnum> roles,
+            Map<Long, Double> remainingVacations,
+            Map<Long, AttendanceDto> attendances,
+            Map<String, Double> progressMap) {
+        return (DayStatisticalData statisticalData) -> {
+            User user = statisticalData.getUser();
+            Long userId = user.getId();
+            String apiId = user.getApiId();
+            AttendStatus attendStatus = user.getAttendStatus();
+            String nickname = user.getNickname();
+
+            Double vacation = remainingVacations.computeIfAbsent(userId, (k) -> 0.0);
+            TeamEnum team = teams.computeIfAbsent(userId, (k) -> TeamEnum.NONE);
+            RoleEnum role = roles.computeIfAbsent(userId, (k) -> RoleEnum.ROLE_UNAUTHORIZED);
+            AttendanceDto attendance = attendances.get(user.getId());
             Double progress = progressMap.get(apiId);
             return DayLogDto.of(
                     apiId,

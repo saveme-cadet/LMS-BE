@@ -16,11 +16,10 @@ import java.util.stream.Stream;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
-    List<Attendance> findByCalendar(Calendar calendar);
     Optional<Attendance> findAllByUserIdAndCalendarId(Long userId, Long calId);
 
     Optional<Attendance> findAllByCalendarId(Long calendarId);
-    List<Attendance> findAllByUserId(Long userId);
+    List<Attendance> findByCalendarId(Long calendarId);
 
     Stream<Attendance> findAttendanceByUserId(Long userId);
 
@@ -40,6 +39,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "join fetch ur.role r " +
         "where a.calendar.date =:date")
     List<Attendance> findAllByDateWithUser(@Param("date") LocalDate date);
+
 
     @Query("select distinct a from Attendance a " +
             "join fetch a.user u " +

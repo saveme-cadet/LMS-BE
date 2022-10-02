@@ -253,12 +253,6 @@ public class AttendanceServiceImpl implements AttendanceService{
     }
 
     public Map<Long, AttendanceDto> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
-//        return attendanceRepository.findAttendanceById(calendarRepository.findAllByDate(date).getId())
-//                .stream().filter(x -> x.getUser().getAttendStatus().equals(attendStatus))
-//                .collect(Collectors.toMap(
-//                        attendance -> attendance.getUser().getId(),
-//                        AttendanceDto::new
-//                ));
 
         return attendanceRepository.findAllByDateAndAttendStatusWithUser(date, attendStatus)
                 .stream()
@@ -270,12 +264,16 @@ public class AttendanceServiceImpl implements AttendanceService{
 
     public Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date) {
 
-        return attendanceRepository.findAllByDateWithUser(date)
-            .stream()
-            .collect(Collectors.toMap(
-                attendance -> attendance.getUser().getId(),
-                AttendanceDto::new
-            ));
+
+
+        List<Attendance> list = attendanceRepository.findByCalendarId(calendarRepository.findAllByDate(date).getId());
+        Map<Long, AttendanceDto> map = new HashMap<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            map.put(list.get(i).getId(), new AttendanceDto(list.get(i).getUser().getApiId(), list.get(i).getId(), list.get(i).getCheckInStatus(), list.get(i).getCheckOutStatus()));
+        }
+
+        return map;
     }
 
 
