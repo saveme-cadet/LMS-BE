@@ -41,9 +41,11 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.EntityNotFoundException;
 
 import com.savelms.core.vacation.domain.entity.Vacation;
@@ -144,7 +146,16 @@ public class UserService {
 
         List<User> users = userCustomRepository.findAllAndSortAndPage(offset, size);
 
-        List<UserResponseDto> userResponseDtoDatas = users.stream()
+        List<User> participateUser = new LinkedList<>();
+        List<User> notParticipateuser = new LinkedList<>();
+        for (User x : users) {
+            if (x.getAttendStatus().equals(AttendStatus.PARTICIPATED)) {
+                participateUser.add(x);
+            } else if (x.getAttendStatus().equals(AttendStatus.NOT_PARTICIPATED)) {
+                notParticipateuser.add(x);
+            }
+        }
+        List<UserResponseDto> userResponseDtoDatas = participateUser.stream()
             .map((u) ->
                 UserResponseDto.builder()
                     .id(u.getApiId())
@@ -162,8 +173,41 @@ public class UserService {
                             .max(comparingLong(Vacation::getId))
                             .orElse(Vacation.of(0D, 0D, 0D, "", u))
                             .getRemainingDays())
+                        .attendanceScore(
+                                dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(u.getId(),
+                                        calendarRepository.findByDate(LocalDate.now()).get().getId()).get().getAttendanceScore())
+                        .totalScore(dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(u.getId(),
+                                calendarRepository.findByDate(LocalDate.now()).get().getId()).get().getTotalScore())
+                        .weekAbsentScore(dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(u.getId(),
+                                calendarRepository.findByDate(LocalDate.now()).get().getId()).get().getWeekAbsentScore())
                     .build())
             .collect(Collectors.toList());
+        List<UserResponseDto> userResponseDtoDatas2 = notParticipateuser.stream()
+                .map((u) ->
+                        UserResponseDto.builder()
+                                .id(u.getApiId())
+                                .attendStatus(u.getAttendStatus())
+                                .nickname(u.getNickname())
+                                .role(userRoleRepository.currentlyUsedUserRole(u.getId())
+                                        .get(0)
+                                        .getRole()
+                                        .getValue())
+                                .team(userTeamRepository.currentlyUsedUserTeam(u.getId())
+                                        .get(0)
+                                        .getTeam()
+                                        .getValue())
+                                .vacation(u.getVacations().stream()
+                                        .max(comparingLong(Vacation::getId))
+                                        .orElse(Vacation.of(0D, 0D, 0D, "", u))
+                                        .getRemainingDays())
+                                .attendanceScore((double)0)
+                                .totalScore((double)0)
+                                .weekAbsentScore((double)0)
+                                .build())
+                .collect(Collectors.toList());
+
+        List<UserResponseDto> res = Stream.concat(userResponseDtoDatas.stream(), userResponseDtoDatas2.stream())
+                .collect(Collectors.toList());
         return ListResponse.<UserResponseDto>builder()
             .count(userResponseDtoDatas.size())
             .content(userResponseDtoDatas)

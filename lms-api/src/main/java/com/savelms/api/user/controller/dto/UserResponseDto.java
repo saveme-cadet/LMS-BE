@@ -38,4 +38,16 @@ public class UserResponseDto {
     @Schema(description = "가진 휴가 일 수", example = "1, 2")
     @NotNull
     private final Double vacation;
+
+    @Schema(description = "출석 점수", example = "1, 2")
+    @NotNull
+    private final Double attendanceScore;
+
+    @Schema(description = "총 결석 점수(결석 점수 - 아오지 점수)", example = "1, 2")
+    @NotNull
+    private final Double totalScore;
+
+    @Schema(description = "이 번주 결석 점수", example = "1, 2")
+    @NotNull
+    private final Double weekAbsentScore;
 }
