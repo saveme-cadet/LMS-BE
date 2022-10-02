@@ -125,27 +125,27 @@ public class StudyTimeService {
                     studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), request.getEndTime()));
                     studyTimeRepository.save(studyTime2);
                 });
-        //studyTime.updateStudyTime(request.getBeginTime(), request.getEndTime());
-//        double differenceScore = newStudyScore - oldStudyScore;
-//
-//        if (!studiedDate.isEqual(requestedEndTime)) {
-//            DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate)
-//                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
-//            DayStatisticalData prevDayData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate.minusDays(1))
-//                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
-//            DayStatisticalData nextDayData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate.plusDays(1))
-//                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
-//
-//            if (requestedEndTime.isBefore(studiedDate)) {
-//                prevDayData.updateStudyTimeScore(studyTime.getStudyScore());
-//
-//            } else {
-//                dayStatData.updateStudyTimeScore(oldStudyScore * -1);
-//                nextDayData.updateStudyTimeScore(oldStudyScore);
-//                studiedDate = studiedDate.plusDays(1);
-//            }
-//            studyTime.setCalendar(calendarRepository.findAllByDate(requestedEndTime));
-//        }
+
+        double differenceScore = newStudyScore - oldStudyScore;
+
+        if (!studiedDate.isEqual(requestedEndTime)) {
+            DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate)
+                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
+            DayStatisticalData prevDayData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate.minusDays(1))
+                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
+            DayStatisticalData nextDayData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate.plusDays(1))
+                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
+
+            if (requestedEndTime.isBefore(studiedDate)) {
+                prevDayData.updateStudyTimeScore(studyTime.getStudyScore());
+
+            } else {
+                dayStatData.updateStudyTimeScore(oldStudyScore * -1);
+                nextDayData.updateStudyTimeScore(oldStudyScore);
+                studiedDate = studiedDate.plusDays(1);
+            }
+            studyTime.setCalendar(calendarRepository.findAllByDate(requestedEndTime));
+        }
         //dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, differenceScore, studiedDate);
 
         StudyTime studyTime3 = studyTimeRepository.findById(studyTimeId)
