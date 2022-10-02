@@ -146,6 +146,12 @@ public class StudyTimeService {
             }
             studyTime.setCalendar(calendarRepository.findAllByDate(requestedEndTime));
         }
+        final Optional<DayStatisticalData> dayStatisticalData = dayStatDataRepository.findAllByUser_idAndCalendar_id(userRepository.findByApiId(apiId).get().getId(),
+                calendarRepository.findAllByDate(studiedDate).getId());
+        dayStatisticalData.ifPresent(dayStatisticalData1 -> {
+            dayStatisticalData1.setStudyTimeScore(dayStatisticalData1.getStudyTimeScore() - oldStudyScore + newStudyScore);
+            dayStatisticalData1.setTotalScore(dayStatisticalData1.getTotalScore() - oldStudyScore + newStudyScore);
+        });
         //dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, differenceScore, studiedDate);
 
         StudyTime studyTime3 = studyTimeRepository.findById(studyTimeId)
