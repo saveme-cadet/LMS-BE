@@ -33,4 +33,13 @@ public class DayStatisticalDataController {
 
         return ResponseEntity.ok().body(dayLogs);
     }
+
+    @GetMapping("/admin-day-logs")
+    public ResponseEntity<List<DayLogDto>> getDayLogsAdmin(
+            @RequestParam("date") @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date)
+    {
+        List<DayLogDto> dayLogs = dayStatisticalDataService.getDayLogsAdmin(date);
+
+        return ResponseEntity.ok().body(dayLogs);
+    }
 }
