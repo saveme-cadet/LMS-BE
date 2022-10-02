@@ -6,7 +6,6 @@ import com.savelms.core.exception.StudyTimeMeasurementException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -20,12 +19,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @Entity
 @Table(name = "STUDY_TIME")
@@ -58,9 +55,8 @@ public class StudyTime extends BaseEntity {
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CALENDAR_ID", nullable = false, updatable = false)
+    @JoinColumn(name = "CALENDAR_ID", nullable = false)
     private Calendar calendar;
 
 
@@ -78,6 +74,9 @@ public class StudyTime extends BaseEntity {
                 .build();
     }
 
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
 
     public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
         double second = (double) Duration.between(beginTime, endTime).getSeconds();
@@ -88,6 +87,8 @@ public class StudyTime extends BaseEntity {
     }
 
     public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+        validateUpdateStudyTime(beginTime, endTime);
+
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.studyScore = getStudyScore(this.beginTime, this.endTime);
@@ -101,7 +102,7 @@ public class StudyTime extends BaseEntity {
         this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
     }
 
-    private String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+    public static String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
         validateStudyTime(beginTime, endTime);
@@ -111,7 +112,7 @@ public class StudyTime extends BaseEntity {
                 between.toSecondsPart());
     }
 
-    private void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+    public static void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
         if (endTime.isBefore(beginTime)) {
@@ -121,6 +122,18 @@ public class StudyTime extends BaseEntity {
         }
     }
 
+    private void validateUpdateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+        LocalDateTime beginMinDay = this.beginTime.minusDays(1).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime beginMaxDay = this.beginTime.plusDays(1).withHour(23).withMinute(59).withSecond(59);
+        LocalDateTime endMinDay = this.endTime.minusDays(1).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endMaxDay = this.endTime.plusDays(1).withHour(23).withMinute(59).withSecond(59);
+
+        if (beginTime.isBefore(beginMinDay) || beginTime.isAfter(beginMaxDay)) {
+            throw new StudyTimeMeasurementException("요청한 시작시간이 유효범위를 넘었습니다.");
+        } else if (endTime.isBefore(endMinDay) || endTime.isAfter(endMaxDay)) {
+            throw new StudyTimeMeasurementException("요청한 종료시간이 유효범위를 넘었습니다.");
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

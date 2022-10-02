@@ -58,7 +58,8 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
 
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now().minusDays(1));
-
+        final Calendar nowDay = calendarRepository.findAllByDate(LocalDate.now());
+        System.out.println("=============================" + "+++++++++++++++++" + day.getDate());
         // ===================================== 매일 1일 0으로 초기화 ========================= //
         if (LocalDate.now().getDayOfMonth() == 1) {
             for (Long x : attendUserList) {
@@ -67,9 +68,10 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                 data.add(DayStatisticalData.builder()
                         .absentScore((double) 0)
                         .attendanceScore((double) 0)
-                        .user(userRepository.getById(x.longValue()))
+                        .user(userRepository.getById(x))
                         .todoSuccessRate((double) 0)
-                        .calendar(day)
+                        .weekAbsentScore((double) 0)
+                        .calendar(nowDay)
                         .totalScore((double) 0)
                         .studyTimeScore((double) 0)
                         .build());
@@ -77,18 +79,22 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
         } else {
             // ===================================== !(매일 1일 0으로 초기화) ========================= //
             for (Long x : attendUserList) {
-                System.out.println("=============================" + x + "===================");
+                //System.out.println("=============================" + x + "===================");
                 DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
                 data.add(DayStatisticalData.builder()
                         .absentScore(dayStatisticalData.getAbsentScore())
                         .attendanceScore(dayStatisticalData.getAttendanceScore())
-                        .user(userRepository.getById(x.longValue()))
+                        .user(userRepository.getById(x))
                         .todoSuccessRate(dayStatisticalData.getTodoSuccessRate())
-                        .calendar(day)
+                        .weekAbsentScore(dayStatisticalData.getWeekAbsentScore())
+                        .calendar(nowDay)
                         .totalScore(dayStatisticalData.getTotalScore())
                         .studyTimeScore(dayStatisticalData.getStudyTimeScore())
                         .build());
             }
+        }
+        for(DayStatisticalData x : data) {
+            System.out.println(x.getAbsentScore() + " " + x.getCalendar());
         }
 
         return  data;

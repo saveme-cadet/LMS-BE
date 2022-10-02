@@ -49,6 +49,11 @@ public class DayStatisticalDataService {
         return getDayLogsByDateAndAttendStatus(date, attendStatus);
     }
 
+    public List<DayLogDto> getDayLogsAdmin(LocalDate date) {
+
+        return getDayLogsByDate(date);
+    }
+
     private List<DayLogDto> getDayLogsByDate(LocalDate date) {
         final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDate(date);
         final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDate(date);

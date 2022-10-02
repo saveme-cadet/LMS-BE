@@ -67,6 +67,7 @@ public class DaliyConfig {
         return this.jobBuilderFactory.get("DaliyJob")
                 .incrementer(new RunIdIncrementer())
                 .start(this.ItemDailyWriterStep())
+//                .next(saveUserStep())
                 .next(this.saveDayStatisticalDataStep())
                 .next(this.saveAttendanceStep())
                 .build();

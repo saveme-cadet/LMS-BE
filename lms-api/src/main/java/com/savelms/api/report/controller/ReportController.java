@@ -42,7 +42,7 @@ public class ReportController {
          user 권한 확인 후 role 이 manager 일 시 진행
          */
 
-        Optional<com.savelms.core.user.domain.entity.User> user1 = userRepository.findByUsername(user.getUsername());
+        //Optional<com.savelms.core.user.domain.entity.User> user1 = userRepository.findByUsername(user.getUsername());
 
 //        if (user1.get().getUserRoles().equals(RoleEnum.ROLE_MANAGER)) {
 //            // reportRepository 에 있는 모든 유저 response
