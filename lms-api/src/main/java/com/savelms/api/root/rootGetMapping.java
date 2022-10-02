@@ -15,9 +15,9 @@ public class rootGetMapping implements ErrorController {
         return "hello Spring6";
     }
 
-    @RequestMapping("/error")
-    public String error() {
-        return "error";
-    }
+//    @RequestMapping("/error")
+//    public String error() {
+//        return "error";
+//    }
 
 }
