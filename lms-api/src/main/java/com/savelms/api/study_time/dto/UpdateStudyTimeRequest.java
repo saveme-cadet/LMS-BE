@@ -21,11 +21,9 @@ public class UpdateStudyTimeRequest {
     //private LocalDateTime testEndTime;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime beginTime;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime endTime;
 
     protected UpdateStudyTimeRequest() {}

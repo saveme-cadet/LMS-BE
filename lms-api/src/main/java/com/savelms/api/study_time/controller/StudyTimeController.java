@@ -112,9 +112,9 @@ public class StudyTimeController {
     public ResponseEntity<StudyTimeResponse> updateStudyTime(@PathVariable String userId,
                                                              @PathVariable Long studyTimeId,
                                                              @RequestBody UpdateStudyTimeRequest request) {
-        //StudyTimeResponse studyTimeResponse = studyTimeService.updateStudyTime(userId, studyTimeId, request);
+        StudyTimeResponse studyTimeResponse = studyTimeService.updateStudyTime(userId, studyTimeId, request);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(studyTimeResponse);
     }
 
 

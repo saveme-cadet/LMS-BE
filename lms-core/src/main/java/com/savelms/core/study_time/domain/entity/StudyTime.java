@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @Entity
 @Table(name = "STUDY_TIME")
@@ -101,7 +102,7 @@ public class StudyTime extends BaseEntity {
         this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
     }
 
-    private String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+    public static String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
         validateStudyTime(beginTime, endTime);
@@ -111,7 +112,7 @@ public class StudyTime extends BaseEntity {
                 between.toSecondsPart());
     }
 
-    private void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+    public static void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
         if (endTime.isBefore(beginTime)) {

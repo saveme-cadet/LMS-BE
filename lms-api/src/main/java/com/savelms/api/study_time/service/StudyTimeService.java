@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -113,9 +115,18 @@ public class StudyTimeService {
         LocalDate requestedEndTime = request.getEndTime().toLocalDate();
         Double oldStudyScore = studyTime.getStudyScore();
         LocalDate studiedDate = studyTime.getEndTime().toLocalDate();
+        Double newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), request.getEndTime());
 
-        studyTime.updateStudyTime(request.getBeginTime(), request.getEndTime());
-        double differenceScore = studyTime.getStudyScore() - oldStudyScore;
+        final Optional<StudyTime> studyTime1 = studyTimeRepository.findAllById(studyTimeId);
+        studyTime1.ifPresent(studyTime2 -> {
+                    studyTime2.setBeginTime(request.getBeginTime());
+                    studyTime2.setEndTime(request.getEndTime());
+                    studyTime2.setStudyScore(newStudyScore);
+                    studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), request.getEndTime()));
+                    studyTimeRepository.save(studyTime2);
+                });
+        //studyTime.updateStudyTime(request.getBeginTime(), request.getEndTime());
+        double differenceScore = newStudyScore - oldStudyScore;
 
         if (!studiedDate.isEqual(requestedEndTime)) {
             DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate)
@@ -137,7 +148,9 @@ public class StudyTimeService {
         }
         dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, differenceScore, studiedDate);
 
-        return StudyTimeResponse.from(studyTime);
+        StudyTime studyTime3 = studyTimeRepository.findById(studyTimeId)
+                    .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
+        return StudyTimeResponse.from(studyTime3);
     }
 
 
