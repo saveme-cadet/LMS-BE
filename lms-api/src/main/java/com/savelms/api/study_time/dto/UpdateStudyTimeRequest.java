@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -20,9 +21,11 @@ public class UpdateStudyTimeRequest {
     private LocalDateTime testEndTime;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime beginTime;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime endTime;
 
     protected UpdateStudyTimeRequest() {}
