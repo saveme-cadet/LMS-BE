@@ -7,6 +7,7 @@ import com.savelms.core.exception.ExceptionResponse;
 import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.api.study_time.service.StudyTimeService;
 import com.savelms.core.study_time.domain.entity.StudyTime;
+import com.savelms.core.user.domain.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,7 @@ public class StudyTimeController {
             @PathVariable String userId,
             @PathVariable @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date
     ) {
+
         List<StudyTimeResponse> studyTime = studyTimeService.getStudyTimesByDate(userId, date);
 
         return ResponseEntity.ok().body(studyTime);

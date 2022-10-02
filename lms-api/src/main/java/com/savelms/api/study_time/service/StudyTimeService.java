@@ -65,7 +65,9 @@ public class StudyTimeService {
     }
 
     public List<StudyTimeResponse> getStudyTimesByDate(String apiId, LocalDate date) {
-        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, date);
+
+        //List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(userRepository.findByApiId(apiId).get().getId(), date);
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserIdAndDate(userRepository.findByApiId(apiId).get().getId(), date);
 
         return studyTimes.stream()
                 .map(StudyTimeResponse::from)
