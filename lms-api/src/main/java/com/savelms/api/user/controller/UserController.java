@@ -132,7 +132,16 @@ public class UserController {
         return new UserChangeRoleResponse(userService.changeRole(apiId, request));
     }
 
-    @PreAuthorize("hasAuthority('user.attend-status.update')")
+    /**
+     *
+     * @param apiId
+     * @param request
+     * @return
+     *
+     *      @PreAuthorize("hasAuthority('user.attend-status.update')")
+     *      주석 처리
+     */
+    //@PreAuthorize("hasAuthority('user.attend-status.update')")
     @PatchMapping("/users/{id}/attendStatus")
     public UserChangeAttendStatusResponse changeAttendStatus(@PathVariable("id") String apiId,
         @Validated @RequestBody UserChangeAttendStatusRequest request) {
