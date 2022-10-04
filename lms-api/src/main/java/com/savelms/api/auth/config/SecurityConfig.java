@@ -25,7 +25,7 @@ import java.util.List;
 // spring security 필터를 스프링 필터체인에 동록
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)//Secured, PrePost 어노테이션 활성화
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)//Secured, PrePost 어노테이션 활성화
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
