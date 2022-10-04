@@ -28,4 +28,6 @@ public interface VacationRepository extends JpaRepository<Vacation, Long>, Vacat
             "where date(v.created_at) <= :date and u.attend_status = :attendStatus " +
             "order by v.vacation_id desc", nativeQuery = true)
     List<Vacation> findAllByDateAttendStatus(@Param("date") LocalDate date, @Param("attendStatus") String attendStatus);
+
+    //List<Vacation> findAllBy
 }

@@ -37,6 +37,7 @@ public class UserTeamService {
         for (User user : userAndUserTeams.keySet()) {
             UserTeam userTeam = userAndUserTeams.get(user).stream().max(Comparator.comparing(UserTeam::getCreatedAt)).get();
             userTeams.put(user.getId(), userTeam.getTeam().getValue());
+            System.out.println(userTeams.get(user.getId()) + " " + userTeam.getTeam().getValue());
         }
         return userTeams;
     }
@@ -44,6 +45,9 @@ public class UserTeamService {
     public Map<Long, TeamEnum> findAllUserTeamByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
         Map<Long, TeamEnum> userTeams = new HashMap<>();
         Map<User, List<UserTeam>> userAndUserTeams
+//                = userTeamRepository.findAllByCreatedAt(LocalDateTime.of(date, LocalTime.MAX))
+//                .stream().filter(x -> x.getUser().getAttendStatus().equals(attendStatus))
+//                .collect(Collectors.groupingBy(UserTeam::getUser));
                 = userTeamRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX), attendStatus)
                     .stream().collect(Collectors.groupingBy(UserTeam::getUser));
 

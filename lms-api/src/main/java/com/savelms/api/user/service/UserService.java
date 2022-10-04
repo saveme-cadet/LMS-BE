@@ -6,13 +6,7 @@ import com.savelms.api.auth.controller.dto.EmailAuthRequestDto;
 import com.savelms.api.auth.service.EmailService;
 import com.savelms.api.team.service.TeamService;
 import com.savelms.api.todo.controller.dto.ListResponse;
-import com.savelms.api.user.controller.dto.UserChangeAttendStatusRequest;
-import com.savelms.api.user.controller.dto.UserChangePasswordRequest;
-import com.savelms.api.user.controller.dto.UserChangeRoleRequest;
-import com.savelms.api.user.controller.dto.UserChangeTeamRequest;
-import com.savelms.api.user.controller.dto.UserParticipatingIdResponse;
-import com.savelms.api.user.controller.dto.UserResponseDto;
-import com.savelms.api.user.controller.dto.UserSignUpRequest;
+import com.savelms.api.user.controller.dto.*;
 import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
@@ -141,6 +135,23 @@ public class UserService {
             });
     }
 
+    public List<UserAdminPageDto> findUserInAdminPage() {
+        List<User> users = userRepository.findAllByAttendStatus(AttendStatus.NOT_PARTICIPATED);
+
+        List<UserAdminPageDto> userReponseDtoDatas = users.stream()
+                .map((u) ->
+                    UserAdminPageDto.builder()
+                            .apiId(u.getApiId())
+                            .attendStatus(u.getAttendStatus())
+                            .nickname(u.getNickname())
+                            .build())
+                .collect(Collectors.toList());
+
+
+        return userReponseDtoDatas;
+    }
+
+
 
     public ListResponse<UserResponseDto> findUserList(Long offset, Long size) {
 
@@ -252,9 +263,17 @@ public class UserService {
 
     @Transactional
     public String changeAttendStatus(String apiId, UserChangeAttendStatusRequest request) {
+        System.out.println("===================++++++++===============================");
+        System.out.println("===================++++++++===============================");
+        System.out.println("===================++++++++===============================");
         User user = userRepository.findByApiId(apiId).orElseThrow(() ->
             new EntityNotFoundException("apiId에 해당하는 user가 없습니다."));
         user.changeAttendStatus(request.getAttendStatus());
+        System.out.println("===================++++++++===============================+++++++++");
+        System.out.println("===================++++++++===============================+++++++++");
+        System.out.println("===================++++++++===============================+++++++++");
+        System.out.println(user.getAttendStatus()+ "++++++++++++++++++++++++++++++++++++");
+        System.out.println("==================================== " + user.getApiId());
         return user.getApiId();
     }
 

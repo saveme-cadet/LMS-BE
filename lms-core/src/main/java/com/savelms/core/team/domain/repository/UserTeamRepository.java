@@ -27,4 +27,6 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
     List<UserTeam> findAllByDateAndAttendStatus(
             @Param("date") LocalDateTime date,
             @Param("attendStatus") AttendStatus attendStatus);
+
+    //List<UserTeam> findAllByCreatedAt(LocalDateTime date);
 }

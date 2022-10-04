@@ -74,6 +74,23 @@ public class StudyTime extends BaseEntity {
                 .build();
     }
 
+    public static StudyTime of (User user,
+                                Calendar calendar,
+                                LocalDateTime beginTime,
+                                LocalDateTime endTime,
+                                Double studyScore,
+                                String finalStudyTime) {
+        return StudyTime.builder()
+                .user(user)
+                .calendar(calendar)
+                .beginTime(beginTime)
+                .endTime(endTime)
+                .isStudying(false)
+                .studyScore(studyScore)
+                .finalStudyTime(finalStudyTime)
+                .build();
+    }
+
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
