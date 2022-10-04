@@ -16,9 +16,10 @@ public class AuthoritiesUpdater {
 
     public void update(User user) {
         Set<SimpleGrantedAuthority> actualAuthorities = user.getAuthorities();
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Authentication newAuth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), actualAuthorities);
 
         SecurityContextHolder.getContext().setAuthentication(newAuth);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
