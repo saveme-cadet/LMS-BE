@@ -141,7 +141,7 @@ public class UserController {
      *      @PreAuthorize("hasAuthority('user.attend-status.update')")
      *      주석 처리
      */
-    //@PreAuthorize("hasAuthority('user.attend-status.update')")
+    @PreAuthorize("hasAuthority('user.attend-status.update')")
     @PatchMapping("/users/{id}/attendStatus")
     public UserChangeAttendStatusResponse changeAttendStatus(@PathVariable("id") String apiId,
         @Validated @RequestBody UserChangeAttendStatusRequest request) {
