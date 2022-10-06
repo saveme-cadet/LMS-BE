@@ -63,13 +63,14 @@ public class DaliyConfig {
     }
 
     @Bean
-    public Job DaliyJob() throws Exception {
-        return this.jobBuilderFactory.get("DaliyJob")
+    public Job DailyJob() throws Exception {
+        return this.jobBuilderFactory.get("DailyJob")
                 .incrementer(new RunIdIncrementer())
+               // .start(saveAttendanceStep())
                 //.start(this.ItemDailyWriterStep())
-//                .next(saveUserStep())
-                //.next(this.saveDayStatisticalDataStep())
-                .start(this.saveAttendanceStep())
+               //.start(saveUserStep())
+                .start(this.saveDayStatisticalDataStep())
+               // .start(this.saveAttendanceStep())
                 .build();
     }
 

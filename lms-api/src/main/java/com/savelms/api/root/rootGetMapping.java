@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-public class rootGetMapping implements ErrorController {
+public class rootGetMapping  {
     @GetMapping("/spring")
     public String helloSpring(){
 
