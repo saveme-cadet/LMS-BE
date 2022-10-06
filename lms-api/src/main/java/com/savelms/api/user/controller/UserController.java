@@ -16,6 +16,7 @@ import com.savelms.api.user.controller.dto.UserSignUpRequest;
 import com.savelms.api.user.controller.dto.UserSignUpResponse;
 import com.savelms.api.user.controller.error.ErrorResult;
 import com.savelms.api.user.service.UserService;
+import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.DuplicateUsernameException;
 import com.savelms.core.user.domain.entity.User;
 import io.swagger.v3.oas.annotations.Parameter;

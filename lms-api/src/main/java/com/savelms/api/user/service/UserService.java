@@ -220,8 +220,8 @@ public class UserService {
         List<UserResponseDto> res = Stream.concat(userResponseDtoDatas.stream(), userResponseDtoDatas2.stream())
                 .collect(Collectors.toList());
         return ListResponse.<UserResponseDto>builder()
-            .count(userResponseDtoDatas.size())
-            .content(userResponseDtoDatas)
+            .count(res.size())
+            .content(res)
             .build();
     }
 
