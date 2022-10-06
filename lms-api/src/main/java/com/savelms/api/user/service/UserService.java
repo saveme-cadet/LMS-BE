@@ -156,7 +156,7 @@ public class UserService {
     public ListResponse<UserResponseDto> findUserList(Long offset, Long size) {
 
         List<User> users = userCustomRepository.findAllAndSortAndPage(offset, size);
-
+        log.info("users : {}", users.size());
         List<User> participateUser = new LinkedList<>();
         List<User> notParticipateuser = new LinkedList<>();
         for (User x : users) {
@@ -166,6 +166,7 @@ public class UserService {
                 notParticipateuser.add(x);
             }
         }
+        log.info("notParticipateUser : {}", notParticipateuser .size());
         List<UserResponseDto> userResponseDtoDatas = participateUser.stream()
             .map((u) ->
                 UserResponseDto.builder()
@@ -216,7 +217,7 @@ public class UserService {
                                 .weekAbsentScore((double)0)
                                 .build())
                 .collect(Collectors.toList());
-
+        log.info("userResponseDtoDatas2 : {}", userResponseDtoDatas2.size());
         List<UserResponseDto> res = Stream.concat(userResponseDtoDatas.stream(), userResponseDtoDatas2.stream())
                 .collect(Collectors.toList());
         return ListResponse.<UserResponseDto>builder()
