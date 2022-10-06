@@ -77,10 +77,10 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                         .build());
             }
         } else {
-            // ===================================== !(매일 1일 0으로 초기화) ========================= //
             for (Long x : attendUserList) {
-                //System.out.println("=============================" + x + "===================");
+                System.out.println("=============================" + x + "===================");
                 DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
+                System.out.println(":::: " + dayStatisticalData.getAbsentScore());
                 data.add(DayStatisticalData.builder()
                         .absentScore(dayStatisticalData.getAbsentScore())
                         .attendanceScore(dayStatisticalData.getAttendanceScore())
@@ -92,10 +92,12 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                         .studyTimeScore(dayStatisticalData.getStudyTimeScore())
                         .build());
             }
+
         }
-        for(DayStatisticalData x : data) {
-            System.out.println(x.getAbsentScore() + " " + x.getCalendar());
-        }
+        System.out.println("=========================");
+//        for(DayStatisticalData x : data) {
+//            System.out.println(x.getUser().getId() + " " + x.getCalendar());
+//        }
 
         return  data;
 
