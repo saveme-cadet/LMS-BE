@@ -11,6 +11,7 @@ import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.exception.PasswordNotMatchException;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.team.TeamEnum;
@@ -31,10 +32,7 @@ import com.savelms.core.user.role.domain.entity.Role;
 import com.savelms.core.user.role.domain.entity.UserRole;
 import com.savelms.core.user.role.domain.repository.RoleRepository;
 import com.savelms.core.user.role.domain.repository.UserRoleRepository;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -45,8 +43,6 @@ import javax.persistence.EntityNotFoundException;
 import com.savelms.core.vacation.domain.entity.Vacation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
-import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +77,7 @@ public class UserService {
     private final AuthoritiesUpdater authoritiesUpdater;
 
     private final DayStatisticalDataRepository dayStatisticalDataRepository;
+
 
     /**
      * 회원가입
@@ -318,6 +315,10 @@ public class UserService {
 
         User user = userRepository.findByUsername(username).orElseThrow(() ->
             new EntityNotFoundException("username에 해당하는 user가 없습니다."));
+        if (bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword()) == false) {
+            throw new PasswordNotMatchException("기존 비밀번호가 일치하지 않습니다.");
+        }
+
         user.updatePassword(bCryptPasswordEncoder.encode(request.getPassword()));
     }
 }
