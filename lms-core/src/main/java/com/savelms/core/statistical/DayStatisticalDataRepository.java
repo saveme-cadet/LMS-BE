@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +38,14 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
 
     @Query("select d from DayStatisticalData d where d.user.apiId = :apiId and d.calendar.date = :date")
     Optional<DayStatisticalData> findByApiIdAndDate(@Param("apiId") String apiId, @Param("date") LocalDate date);
+
+//    @Query("select d from DayStatisticalData d " +
+//            "join d.user u " +
+//            "join d.calendar c " +
+//            "where u.apiId = :apiId and c.date >= :begin and d.calendar.date <= :end")
+//    Optional<DayStatisticalData> findByApiIdAndDate(@Param("apiId") String apiId,
+//                                                    @Param("begin") LocalDate begin,
+//                                                    @Param("begin") LocalDate end);
 
     @Query("select SUM(d.studyTimeScore) from DayStatisticalData d where d.user.username =:username " +
             "and SUBSTRING(d.calendar.date, 6, 2) =:month")

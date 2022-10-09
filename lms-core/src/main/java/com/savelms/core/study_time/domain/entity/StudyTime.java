@@ -74,20 +74,20 @@ public class StudyTime extends BaseEntity {
                 .build();
     }
 
-    public static StudyTime of (User user,
-                                Calendar calendar,
-                                LocalDateTime beginTime,
-                                LocalDateTime endTime,
-                                Double studyScore,
-                                String finalStudyTime) {
+    public static StudyTime of (
+            User user,
+            Calendar calendar,
+            LocalDateTime beginTime,
+            LocalDateTime endTime)
+    {
         return StudyTime.builder()
                 .user(user)
                 .calendar(calendar)
                 .beginTime(beginTime)
                 .endTime(endTime)
                 .isStudying(false)
-                .studyScore(studyScore)
-                .finalStudyTime(finalStudyTime)
+                .studyScore(StudyTime.getStudyScore(beginTime, endTime))
+                .finalStudyTime(StudyTime.getFinalStudyTime(beginTime, endTime))
                 .build();
     }
 
@@ -97,6 +97,8 @@ public class StudyTime extends BaseEntity {
 
     public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
         double second = (double) Duration.between(beginTime, endTime).getSeconds();
+        System.out.println("second : " + second);
+
         double studyTimeScore = second / (8 * 60 * 60);
 
         double score = Math.round(studyTimeScore * 100) / 100.0;
@@ -104,8 +106,6 @@ public class StudyTime extends BaseEntity {
     }
 
     public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
-        validateUpdateStudyTime(beginTime, endTime);
-
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.studyScore = getStudyScore(this.beginTime, this.endTime);
@@ -136,19 +136,6 @@ public class StudyTime extends BaseEntity {
             throw new StudyTimeMeasurementException("종료시간이 시작시간보다 작을 수 없습니다.");
         } else if (between.toHours() >= 24) {
             throw new StudyTimeMeasurementException("스터디 시간은 24시간 이상 넘어가면 측정이 불가능합니다.");
-        }
-    }
-
-    private void validateUpdateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
-        LocalDateTime beginMinDay = this.beginTime.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-        LocalDateTime beginMaxDay = this.beginTime.plusDays(1).withHour(23).withMinute(59).withSecond(59);
-        LocalDateTime endMinDay = this.endTime.minusDays(1).withHour(0).withMinute(0).withSecond(0);
-        LocalDateTime endMaxDay = this.endTime.plusDays(1).withHour(23).withMinute(59).withSecond(59);
-
-        if (beginTime.isBefore(beginMinDay) || beginTime.isAfter(beginMaxDay)) {
-            throw new StudyTimeMeasurementException("요청한 시작시간이 유효범위를 넘었습니다.");
-        } else if (endTime.isBefore(endMinDay) || endTime.isAfter(endMaxDay)) {
-            throw new StudyTimeMeasurementException("요청한 종료시간이 유효범위를 넘었습니다.");
         }
     }
 

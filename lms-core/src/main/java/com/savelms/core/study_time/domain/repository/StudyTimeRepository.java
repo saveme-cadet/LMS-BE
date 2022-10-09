@@ -21,9 +21,9 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
     @Query("select s from StudyTime s where s.user.apiId =:apiId")
     List<StudyTime> findByUserApiId(@Param("apiId") String apiId);
 
-    @Query(value = "select s.* from study_time s " +
-            "join user u on u.user_id = s.user_id " +
-            "where u.api_id = :apiId and date(s.begin_time) = :date or date(s.end_time) = :date", nativeQuery = true)
+    @Query(value = "select s from StudyTime s " +
+            "join s.user u join s.calendar c " +
+            "where u.apiId = :apiId and c.date = :date")
     List<StudyTime> findByUserApiIdAndDate(@Param("apiId") String apiId, @Param("date") LocalDate date);
 
     Optional<StudyTime> findAllById(Long id);

@@ -7,3 +7,7 @@ dependencies {
     implementation 'junit:junit:4.13.2'
     implementation group: 'org.passay', name: 'passay', version: '1.6.2'
 }
+
+springBoot {
+    mainClass = 'com.savelms.api.ApiApplication'
+}

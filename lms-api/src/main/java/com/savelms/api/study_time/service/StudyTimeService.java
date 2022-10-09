@@ -6,6 +6,7 @@ import com.savelms.api.study_time.dto.StudyingUserResponse;
 import com.savelms.api.study_time.dto.UpdateStudyTimeRequest;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
+import com.savelms.core.exception.StudyTimeMeasurementException;
 import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
@@ -22,13 +23,13 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class StudyTimeService {
 
@@ -36,12 +37,11 @@ public class StudyTimeService {
     private final StudyTimeRepository studyTimeRepository;
     private final CalendarRepository calendarRepository;
     private final DayStatisticalDataRepository dayStatDataRepository;
+    private final DayStatisticalDataService dayStatDataService;
 
-    @Transactional
-    public StudyTimeResponse startStudy(String apiId) {
+    public StudyTimeResponse createStudyTime(String apiId) {
         User user = userRepository.findByApiId(apiId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-
         Calendar calendar = calendarRepository.findAllByDate(LocalDate.now());
 
         StudyTime studyTime = StudyTime.of(user, calendar);
@@ -50,37 +50,27 @@ public class StudyTimeService {
         return StudyTimeResponse.from(studyTime);
     }
 
-    @Transactional
-    public void dividStudy(String apiId,
-                           LocalDate date,
-                           LocalDateTime beginTime,
-                           LocalDateTime endTime,
-                           Double studyScore,
-                           String finalStudyTime ) {
-        User user = userRepository.findByApiId(apiId)
-                .orElseThrow( () -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public StudyTime createStudyTime(User user, LocalDateTime beginTime, LocalDateTime endTime) {
+        Calendar calendar = calendarRepository.findAllByDate(endTime.toLocalDate());
 
-        Calendar calendar = calendarRepository.findAllByDate(date);
-
-        StudyTime studyTime = StudyTime.of(user,
-                calendar,
-                beginTime,
-                endTime,
-                studyScore,
-                finalStudyTime);
-        System.out.println("beginTime = " + beginTime + " endTime = " + endTime + " studyScore = " + studyScore + " finalStudyScore " +finalStudyTime);
+        StudyTime studyTime = StudyTime.of(user, calendar, beginTime, endTime);
         studyTimeRepository.save(studyTime);
+
+        return studyTime;
     }
 
 
+    @Transactional(readOnly = true)
     public List<StudyTimeResponse> getStudyTimes(String apiId) {
         List<StudyTime> studyTimes = studyTimeRepository.findByUserApiId(apiId);
 
         return studyTimes.stream()
                 .map(StudyTimeResponse::from)
+                .sorted(Comparator.comparing(StudyTimeResponse::getBeginTime))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<StudyTimeResponse> getTodayStudyTimes(String apiId) {
         List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, LocalDate.now());
 
@@ -89,18 +79,16 @@ public class StudyTimeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<StudyTimeResponse> getStudyTimesByDate(String apiId, LocalDate date) {
-
-        //List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(userRepository.findByApiId(apiId).get().getId(), date);
-
-        List<StudyTime> studyTimes = studyTimeRepository.findByUserIdAndCalendarId(userRepository.findByApiId(apiId).get().getId()
-                , calendarRepository.findAllByDate(date).getId());
+        List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndDate(apiId, date);
 
         return studyTimes.stream()
                 .map(StudyTimeResponse::from)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<StudyingUserResponse> getStudyingUser(String userId) {
         List<StudyTime> studyTimes = studyTimeRepository.findByIsStudying(userId, true)
                 .orElseThrow(() -> new StudyTimeNotFoundException("공부 중인 회원이 없습니다."));
@@ -111,7 +99,6 @@ public class StudyTimeService {
     }
 
 
-    @Transactional
     public StudyTimeResponse endStudy(String apiId) {
         List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndIsStudying(apiId, true);
         DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, LocalDate.now())
@@ -125,96 +112,78 @@ public class StudyTimeService {
         studyTime.endStudyTime();
 
         Double studyScore = StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime());
-        dayStatData.updateStudyTimeScore(studyScore);
+        dayStatData.increaseAndDecreaseStudyTimeScore(studyScore);
 
         return StudyTimeResponse.from(studyTime);
     }
 
-    @Transactional
     public StudyTimeResponse updateStudyTime(String apiId, Long studyTimeId, UpdateStudyTimeRequest request) {
-        StudyTime studyTime = studyTimeRepository.findById(studyTimeId)
+        StudyTime curStudyTime = studyTimeRepository.findById(studyTimeId)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
 
-        LocalDate requestedEndTime = request.getEndTime().toLocalDate();
-        Double oldStudyScore = studyTime.getStudyScore();
-        LocalDate studiedDate = studyTime.getEndTime().toLocalDate();
-        Double newStudyScore = 0.0;
+        validateUpdateStudyTime(curStudyTime.getBeginTime(), curStudyTime.getEndTime(), request.getBeginTime(), request.getEndTime());
 
-        if (request.getBeginTime().getDayOfMonth() != request.getEndTime().getDayOfMonth()) {
-            newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), LocalDateTime.of(request.getBeginTime().toLocalDate(), LocalTime.of(23,59,59)));
+        LocalDate requestedBeginDate = request.getBeginTime().toLocalDate();
+        LocalDate requestedEndDate = request.getEndTime().toLocalDate();
+        LocalDate currentBeginDate = curStudyTime.getBeginTime().toLocalDate();
+        LocalDate currentEndDate = curStudyTime.getEndTime().toLocalDate();
 
-            final Optional<StudyTime> studyTime1 = studyTimeRepository.findAllById(studyTimeId);
-            Double finalNewStudyScore = newStudyScore;
-            studyTime1.ifPresent(studyTime2 -> {
-                studyTime2.setBeginTime(request.getBeginTime());
-                studyTime2.setEndTime(LocalDateTime.of(request.getBeginTime().toLocalDate(), LocalTime.of(23,59,59)));
-                studyTime2.setStudyScore(finalNewStudyScore);
-                studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), LocalDateTime.of(request.getBeginTime().toLocalDate(), LocalTime.of(23,59,59))));
-                studyTimeRepository.save(studyTime2);
-            });
+        LocalDate bulkUpdateDate = currentEndDate.plusDays(1);
+        Double oldStudyScore = curStudyTime.getStudyScore();
+        Double newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), request.getEndTime()) - oldStudyScore;
+        Double bulkUpdateDateScore = newStudyScore;
 
-            Double secondScore = StudyTime.getStudyScore(
-                    LocalDateTime.of(
-                            request.getEndTime().toLocalDate(),
-                            LocalTime.of(0,0,0)),
-                    request.getEndTime());
+        LocalDateTime curStudyNewBeginTime = request.getBeginTime();
+        LocalDateTime curStudyNewEndTime = request.getEndTime();
 
-            dividStudy(apiId,
-                    request.getEndTime().toLocalDate(),
-                    LocalDateTime.of(request.getEndTime().toLocalDate(), LocalTime.of(0,0,0)),
-                    request.getEndTime(),
-                    secondScore,
-                    StudyTime.getFinalStudyTime(LocalDateTime.of(request.getEndTime().toLocalDate(), LocalTime.of(0,0,0)), request.getEndTime())
-                    );
-            newStudyScore += secondScore;
-        } else {
-            newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), request.getEndTime());
-            final Optional<StudyTime> studyTime1 = studyTimeRepository.findAllById(studyTimeId);
-            Double finalNewStudyScore1 = newStudyScore;
-            studyTime1.ifPresent(studyTime2 -> {
-                studyTime2.setBeginTime(request.getBeginTime());
-                studyTime2.setEndTime(request.getEndTime());
-                studyTime2.setStudyScore(finalNewStudyScore1);
-                studyTime2.setFinalStudyTime(StudyTime.getFinalStudyTime(request.getBeginTime(), request.getEndTime()));
-                studyTimeRepository.save(studyTime2);
-            });
-        }
+        if (!requestedBeginDate.isEqual(requestedEndDate)) {
+            LocalDateTime newStudyBeginTime = request.getBeginTime();
+            LocalDateTime newStudyEndTime = request.getEndTime();
 
+            if (requestedBeginDate.isBefore(currentBeginDate) && requestedEndDate.isEqual(currentEndDate)) {
+                curStudyNewBeginTime = LocalDateTime.of(currentBeginDate, LocalTime.MIN);
 
-        if (!studiedDate.isEqual(requestedEndTime)) {
-            DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate)
-                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
-            DayStatisticalData prevDayData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate.minusDays(1))
-                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
-            DayStatisticalData nextDayData = dayStatDataRepository.findByApiIdAndDate(apiId, studiedDate.plusDays(1))
-                    .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
+                newStudyBeginTime = request.getBeginTime();
+                newStudyEndTime = LocalDateTime.of(requestedBeginDate, LocalTime.of(23, 59, 59));
 
-            if (requestedEndTime.isBefore(studiedDate)) {
-                prevDayData.updateStudyTimeScore(studyTime.getStudyScore());
+                StudyTime newStudyTime = createStudyTime(curStudyTime.getUser(), newStudyBeginTime, newStudyEndTime);
+                dayStatDataService.updateStudyTimeScore(apiId, newStudyEndTime.toLocalDate(), newStudyTime.getStudyScore());
+            } else if(requestedEndDate.isAfter(currentEndDate)) {
+                curStudyNewEndTime = LocalDateTime.of(currentBeginDate, LocalTime.of(23, 59, 59));
 
-            } else {
-                dayStatData.updateStudyTimeScore(oldStudyScore * -1);
-                nextDayData.updateStudyTimeScore(oldStudyScore);
-                studiedDate = studiedDate.plusDays(1);
+                newStudyBeginTime = LocalDateTime.of(requestedEndDate, LocalTime.MIN);
+                newStudyEndTime = request.getEndTime();
+
+                createStudyTime(curStudyTime.getUser(), newStudyBeginTime, newStudyEndTime);
+                dayStatDataService.updateStudyTimeScore(apiId, newStudyEndTime.toLocalDate(), newStudyScore);
+
+                bulkUpdateDate = newStudyEndTime.toLocalDate().plusDays(1);
+                newStudyScore = StudyTime.getStudyScore(curStudyNewBeginTime, curStudyNewEndTime) - oldStudyScore;
             }
-            studyTime.setCalendar(calendarRepository.findAllByDate(requestedEndTime));
         }
-        final Optional<DayStatisticalData> dayStatisticalData = dayStatDataRepository.findAllByUser_idAndCalendar_id(userRepository.findByApiId(apiId).get().getId(),
-                calendarRepository.findAllByDate(studiedDate).getId());
-        Double finalNewStudyScore2 = newStudyScore;
-        dayStatisticalData.ifPresent(dayStatisticalData1 -> {
-            dayStatisticalData1.setStudyTimeScore(dayStatisticalData1.getStudyTimeScore() - oldStudyScore + finalNewStudyScore2);
-            dayStatisticalData1.setTotalScore(dayStatisticalData1.getTotalScore() - oldStudyScore + finalNewStudyScore2);
-        });
-        //dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, differenceScore, studiedDate);
 
-        StudyTime studyTime3 = studyTimeRepository.findById(studyTimeId)
-                    .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));
-        return StudyTimeResponse.from(studyTime3);
+        curStudyTime.updateStudyTime(curStudyNewBeginTime, curStudyNewEndTime);
+        dayStatDataService.updateStudyTimeScore(apiId, currentEndDate, newStudyScore);
+
+        dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, bulkUpdateDateScore, bulkUpdateDate);
+
+        return StudyTimeResponse.from(curStudyTime);
+    }
+
+    private void validateUpdateStudyTime(LocalDateTime curBeginTime, LocalDateTime curEndTime, LocalDateTime requestedBeginTime, LocalDateTime requestedEndTime) {
+        LocalDateTime beginMinDay = curBeginTime.minusDays(1).withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime beginMaxDay = curBeginTime.plusDays(1).withHour(23).withMinute(59).withSecond(59);
+        LocalDateTime endMinDay = curEndTime.withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime endMaxDay = curEndTime.plusDays(1).withHour(23).withMinute(59).withSecond(59);
+
+        if (requestedBeginTime.isBefore(beginMinDay) || requestedBeginTime.isAfter(beginMaxDay)) {
+            throw new StudyTimeMeasurementException("요청한 시작시간이 유효범위를 넘었습니다.");
+        } else if (requestedEndTime.isBefore(endMinDay) || requestedEndTime.isAfter(endMaxDay)) {
+            throw new StudyTimeMeasurementException("요청한 종료시간이 유효범위를 넘었습니다.");
+        }
     }
 
 
-    @Transactional
     public void deleteStudyTime(Long studyTimeId) {
         StudyTime studyTime = studyTimeRepository.findById(studyTimeId)
                 .orElseThrow(() -> new StudyTimeNotFoundException("존재하는 공부 내역이 없습니다."));

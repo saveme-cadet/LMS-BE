@@ -90,7 +90,7 @@ public class DayStatisticalData extends BaseEntity {
         this.absentScore = todoSuccessRate;
     }
 
-    public void updateStudyTimeScore(Double studyTimeScore) {
+    public void increaseAndDecreaseStudyTimeScore(Double studyTimeScore) {
         this.studyTimeScore += studyTimeScore;
         this.totalScore -= studyTimeScore;
     }

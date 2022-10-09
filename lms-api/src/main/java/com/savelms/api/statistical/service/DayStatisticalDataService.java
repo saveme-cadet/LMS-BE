@@ -3,10 +3,8 @@ package com.savelms.api.statistical.service;
 import com.savelms.api.attendance.service.AttendanceService;
 import com.savelms.api.statistical.dto.DayStatisticalDataDto;
 import com.savelms.api.statistical.dto.DayLogDto;
-import com.savelms.api.todo.controller.dto.GetTodoProgressResponse;
 import com.savelms.api.todo.service.TodoService;
 import com.savelms.api.user.controller.dto.UserAdminPageDto;
-import com.savelms.api.user.controller.dto.UserResponseDto;
 import com.savelms.api.user.service.UserService;
 import com.savelms.api.user.userrole.service.UserRoleService;
 import com.savelms.api.user.userteam.service.UserTeamService;
@@ -16,11 +14,9 @@ import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.team.TeamEnum;
-import com.savelms.core.team.domain.entity.UserTeam;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.role.RoleEnum;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,7 +56,6 @@ public class DayStatisticalDataService {
     }
 
     private List<DayLogDto> getDayLogsByDate(LocalDate date) {
-
         final Map<Long, TeamEnum> teamsP = userTeamService.findAllUserTeamByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
         final Map<Long, RoleEnum> rolesP = userRoleService.findAllUserRoleByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
         final Map<Long, AttendanceDto> attendancesP = attendanceService.getAllAttendanceByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
@@ -91,7 +86,6 @@ public class DayStatisticalDataService {
         mergedList.addAll(list1);
         mergedList.addAll(list2);
 
-
         return mergedList;
     }
 
@@ -106,36 +100,6 @@ public class DayStatisticalDataService {
         return dayStatisticalData.stream()
                 .map(statisticalDataToDayLogDtoInAdmin(date, teams, roles, remainingVacations, attendances, todoProgress))
                 .collect(Collectors.toUnmodifiableList());
-    }
-
-
-    private Function<DayStatisticalData, DayLogDto> statisticalDataToDayLogDto(
-            LocalDate date) {
-        return (DayStatisticalData statisticalData) -> {
-            User user = statisticalData.getUser();
-            String apiId = user.getApiId();
-            AttendStatus attendStatus = user.getAttendStatus();
-            String nickname = user.getNickname();
-
-            Double vacation = 0.0;
-            TeamEnum team = TeamEnum.NONE;
-            RoleEnum role = RoleEnum.ROLE_UNAUTHORIZED;
-            AttendanceDto attendance = new AttendanceDto(apiId, 0L, AttendanceStatus.NONE, AttendanceStatus.NONE);
-            Double progress = 0.0;
-            return DayLogDto.of(
-                    apiId,
-                    attendance.getAttendanceId(),
-                    nickname,
-                    attendStatus,
-                    attendance.getCheckInStatus(),
-                    attendance.getCheckOutStatus(),
-                    role,
-                    team,
-                    progress,
-                    date,
-                    vacation,
-                    DayStatisticalDataDto.from(statisticalData));
-        };
     }
 
     private Function<DayStatisticalData, DayLogDto> statisticalDataToDayLogDtoInAdmin(
@@ -155,7 +119,7 @@ public class DayStatisticalDataService {
             Double vacation = remainingVacations.computeIfAbsent(userId, (k) -> 0.0);
             TeamEnum team = teams.computeIfAbsent(userId, (k) -> TeamEnum.NONE);
             RoleEnum role = roles.computeIfAbsent(userId, (k) -> RoleEnum.ROLE_UNAUTHORIZED);
-            AttendanceDto attendance = attendances.get(user.getId());
+            AttendanceDto attendance = attendances.computeIfAbsent(userId, (k) -> new AttendanceDto(apiId, null, AttendanceStatus.NONE, AttendanceStatus.NONE));
             Double progress = progressMap.get(apiId);
             return DayLogDto.of(
                     apiId,
@@ -173,21 +137,9 @@ public class DayStatisticalDataService {
         };
     }
 
-    private Map<String, Double> getTodoProgressByUserId(List<GetTodoProgressResponse> todoProgress) {
-        Map<String, Double> progressMap = new HashMap<>();
-        for (GetTodoProgressResponse progress : todoProgress) {
-            progressMap.put(progress.getWriterId(), progress.getProgress());
-        }
 
-        return progressMap;
-    }
-
-    public void updateStudyTimeScore(String apiId, Double studyScore, LocalDate date) {
+    public void updateStudyTimeScore(String apiId, LocalDate date, Double score) {
         statisticalDataRepository.findByApiIdAndDate(apiId, date)
-                .ifPresentOrElse(dayStatisticalData -> {
-                    dayStatisticalData.updateStudyTimeScore(studyScore);
-                }, () -> {
-                    log.warn("통계 테이블에 당일 레코드가 존재하지 않아 점수가 업데이트되지 않았습니다.");
-                });
+                .ifPresent(curStatData -> curStatData.increaseAndDecreaseStudyTimeScore(score));
     }
 }

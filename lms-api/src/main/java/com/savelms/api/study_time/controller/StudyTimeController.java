@@ -7,7 +7,6 @@ import com.savelms.core.exception.ExceptionResponse;
 import com.savelms.core.exception.StudyTimeNotFoundException;
 import com.savelms.api.study_time.service.StudyTimeService;
 import com.savelms.core.study_time.domain.entity.StudyTime;
-import com.savelms.core.user.domain.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -44,7 +41,7 @@ public class StudyTimeController {
     @Operation(description = "스터디 시작", summary = "스터디 시작")
     @PostMapping("/users/{userId}/study_times")
     public ResponseEntity<StudyTimeResponse> startStudy(@PathVariable String userId) {
-        StudyTimeResponse studyTime = studyTimeService.startStudy(userId);
+        StudyTimeResponse studyTime = studyTimeService.createStudyTime(userId);
 
         return ResponseEntity.ok().body(studyTime);
     }
