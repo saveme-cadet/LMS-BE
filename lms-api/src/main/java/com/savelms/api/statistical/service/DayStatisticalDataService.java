@@ -56,31 +56,8 @@ public class DayStatisticalDataService {
     }
 
     private List<DayLogDto> getDayLogsByDate(LocalDate date) {
-        final Map<Long, TeamEnum> teamsP = userTeamService.findAllUserTeamByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
-        final Map<Long, RoleEnum> rolesP = userRoleService.findAllUserRoleByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
-        final Map<Long, AttendanceDto> attendancesP = attendanceService.getAllAttendanceByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
-        final Map<Long, Double> remainingVacationsP = vacationService.getRemainingVacationByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
-        final Map<String, Double> todoProgressP = todoService.getTodoProgressAndAttendStatus(date, AttendStatus.PARTICIPATED);
-        final List<DayStatisticalData> dayStatisticalDataP = statisticalDataRepository.findAllByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
-
-        final List<UserAdminPageDto> userList = userService.findUserInAdminPage();
-
-        List<DayLogDto> list1 = dayStatisticalDataP.stream()
-                .map(statisticalDataToDayLogDtoInAdmin(date, teamsP, rolesP, remainingVacationsP, attendancesP, todoProgressP))
-                .collect(Collectors.toUnmodifiableList());
-        List<DayLogDto> list2 = new LinkedList<>();
-        for (UserAdminPageDto x : userList) {
-            list2.add(new DayLogDto(x.getApiId(),
-                    0L,
-                    x.getNickname(),
-                    AttendStatus.NOT_PARTICIPATED,
-                    AttendanceStatus.NONE,
-                    AttendanceStatus.NONE,
-                    RoleEnum.ROLE_UNAUTHORIZED,
-                    TeamEnum.NONE,
-                    0.0,
-                    0.0));
-        }
+        List<DayLogDto> list1 = getDayLogsByDateAndAttendStatus(date, AttendStatus.PARTICIPATED);
+        List<DayLogDto> list2 = getDayLogsByDateAndAttendStatus(date, AttendStatus.NOT_PARTICIPATED);
 
         List<DayLogDto> mergedList = new LinkedList<>();
         mergedList.addAll(list1);
@@ -120,7 +97,7 @@ public class DayStatisticalDataService {
             TeamEnum team = teams.computeIfAbsent(userId, (k) -> TeamEnum.NONE);
             RoleEnum role = roles.computeIfAbsent(userId, (k) -> RoleEnum.ROLE_UNAUTHORIZED);
             AttendanceDto attendance = attendances.computeIfAbsent(userId, (k) -> new AttendanceDto(apiId, null, AttendanceStatus.NONE, AttendanceStatus.NONE));
-            Double progress = progressMap.get(apiId);
+            Double progress = progressMap.computeIfAbsent(apiId, (k) -> 0.0);
             return DayLogDto.of(
                     apiId,
                     attendance.getAttendanceId(),
