@@ -1,6 +1,8 @@
 package com.savelms.core.vacation.domain.entity;
 
 import com.savelms.core.BaseEntity;
+import com.savelms.core.exception.ExceptionStatus;
+import com.savelms.core.exception.vacation.VacationException;
 import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,9 +27,6 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Vacation extends BaseEntity {
 
-    /**
-     * 필드
-     * */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="VACATION_ID")
@@ -48,10 +47,6 @@ public class Vacation extends BaseEntity {
     @JoinColumn(name="USER_ID", nullable = false, updatable = false)
     private User user;
 
-
-    /**
-     * 생성자
-     * */
     protected Vacation() {}
 
     public static Vacation of(Double remainingDays, Double addedDays, Double usedDays, String reason, User user) {
@@ -64,17 +59,13 @@ public class Vacation extends BaseEntity {
                 .build();
     }
 
-
-    /**
-     * 비즈니스 로직
-     * */
     public void addVacationDays(Long vacationDays) {
         this.remainingDays += vacationDays;
     }
 
     public void useVacationDays(Long usedDays, String reason) {
         if ((this.remainingDays - usedDays) < 0) {
-            throw new IllegalArgumentException("사용할 휴가가 부족합니다.");
+            throw new VacationException(ExceptionStatus.VACATION_NOT_ENOUGH);
         }
 
         this.remainingDays -= usedDays;

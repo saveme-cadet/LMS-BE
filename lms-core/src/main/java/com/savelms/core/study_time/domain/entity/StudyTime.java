@@ -2,7 +2,8 @@ package com.savelms.core.study_time.domain.entity;
 
 import com.savelms.core.BaseEntity;
 import com.savelms.core.calendar.domain.entity.Calendar;
-import com.savelms.core.exception.StudyTimeMeasurementException;
+import com.savelms.core.exception.ExceptionStatus;
+import com.savelms.core.exception.study_time.StudyTimeException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
@@ -97,7 +98,6 @@ public class StudyTime extends BaseEntity {
 
     public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
         double second = (double) Duration.between(beginTime, endTime).getSeconds();
-        System.out.println("second : " + second);
 
         double studyTimeScore = second / (8 * 60 * 60);
 
@@ -133,9 +133,9 @@ public class StudyTime extends BaseEntity {
         Duration between = Duration.between(beginTime, endTime);
 
         if (endTime.isBefore(beginTime)) {
-            throw new StudyTimeMeasurementException("종료시간이 시작시간보다 작을 수 없습니다.");
+            throw new StudyTimeException(ExceptionStatus.STUDY_TIME_END_LESS_THEN_BEGIN);
         } else if (between.toHours() >= 24) {
-            throw new StudyTimeMeasurementException("스터디 시간은 24시간 이상 넘어가면 측정이 불가능합니다.");
+            throw new StudyTimeException(ExceptionStatus.STUDY_TIME_OVER_24_HOURS);
         }
     }
 
