@@ -8,8 +8,6 @@ import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.exception.StudyTimeMeasurementException;
 import com.savelms.core.exception.StudyTimeNotFoundException;
-import com.savelms.core.statistical.DayStatisticalData;
-import com.savelms.core.statistical.DayStatisticalDataRepository;
 import com.savelms.core.study_time.domain.entity.StudyTime;
 import com.savelms.core.study_time.domain.repository.StudyTimeRepository;
 import com.savelms.core.user.domain.entity.User;
@@ -19,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,7 +33,6 @@ public class StudyTimeService {
     private final UserRepository userRepository;
     private final StudyTimeRepository studyTimeRepository;
     private final CalendarRepository calendarRepository;
-    private final DayStatisticalDataRepository dayStatDataRepository;
     private final DayStatisticalDataService dayStatDataService;
 
     public StudyTimeResponse createStudyTime(String apiId) {
@@ -76,6 +72,7 @@ public class StudyTimeService {
 
         return studyTimes.stream()
                 .map(StudyTimeResponse::from)
+                .sorted(Comparator.comparing(StudyTimeResponse::getBeginTime))
                 .collect(Collectors.toList());
     }
 
@@ -85,6 +82,7 @@ public class StudyTimeService {
 
         return studyTimes.stream()
                 .map(StudyTimeResponse::from)
+                .sorted(Comparator.comparing(StudyTimeResponse::getBeginTime))
                 .collect(Collectors.toList());
     }
 
@@ -95,14 +93,13 @@ public class StudyTimeService {
 
         return studyTimes.stream()
                 .map(StudyingUserResponse::new)
+                .sorted(Comparator.comparing(StudyingUserResponse::getBeginTime))
                 .collect(Collectors.toList());
     }
 
 
     public StudyTimeResponse endStudy(String apiId) {
         List<StudyTime> studyTimes = studyTimeRepository.findByUserApiIdAndIsStudying(apiId, true);
-        DayStatisticalData dayStatData = dayStatDataRepository.findByApiIdAndDate(apiId, LocalDate.now())
-                .orElseThrow(() -> new EntityNotFoundException("존재하는 통계 내역이 없습니다."));
 
         if (studyTimes.isEmpty()) {
             throw new StudyTimeNotFoundException("아직 스터디를 시작하지 않았습니다.");
@@ -112,7 +109,7 @@ public class StudyTimeService {
         studyTime.endStudyTime();
 
         Double studyScore = StudyTime.getStudyScore(studyTime.getBeginTime(), studyTime.getEndTime());
-        dayStatData.increaseAndDecreaseStudyTimeScore(studyScore);
+        dayStatDataService.updateStudyTimeScore(apiId, LocalDate.now(), studyScore);
 
         return StudyTimeResponse.from(studyTime);
     }
@@ -128,10 +125,8 @@ public class StudyTimeService {
         LocalDate currentBeginDate = curStudyTime.getBeginTime().toLocalDate();
         LocalDate currentEndDate = curStudyTime.getEndTime().toLocalDate();
 
-        LocalDate bulkUpdateDate = currentEndDate.plusDays(1);
         Double oldStudyScore = curStudyTime.getStudyScore();
         Double newStudyScore = StudyTime.getStudyScore(request.getBeginTime(), request.getEndTime()) - oldStudyScore;
-        Double bulkUpdateDateScore = newStudyScore;
 
         LocalDateTime curStudyNewBeginTime = request.getBeginTime();
         LocalDateTime curStudyNewEndTime = request.getEndTime();
@@ -157,15 +152,12 @@ public class StudyTimeService {
                 createStudyTime(curStudyTime.getUser(), newStudyBeginTime, newStudyEndTime);
                 dayStatDataService.updateStudyTimeScore(apiId, newStudyEndTime.toLocalDate(), newStudyScore);
 
-                bulkUpdateDate = newStudyEndTime.toLocalDate().plusDays(1);
                 newStudyScore = StudyTime.getStudyScore(curStudyNewBeginTime, curStudyNewEndTime) - oldStudyScore;
             }
         }
 
         curStudyTime.updateStudyTime(curStudyNewBeginTime, curStudyNewEndTime);
         dayStatDataService.updateStudyTimeScore(apiId, currentEndDate, newStudyScore);
-
-        dayStatDataRepository.bulkUpdateStudyTimeScore(apiId, bulkUpdateDateScore, bulkUpdateDate);
 
         return StudyTimeResponse.from(curStudyTime);
     }
