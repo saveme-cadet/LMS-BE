@@ -197,7 +197,7 @@ public class UserDataLoader implements CommandLineRunner {
         unauthorizedRole.getAuthorities().clear();
         unauthorizedRole.addAuthorities(createUser, updateUser);
 
-        //roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
+        roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
         //Team 생성
 //        Team red = Team.builder()
 //            .value(TeamEnum.RED)
