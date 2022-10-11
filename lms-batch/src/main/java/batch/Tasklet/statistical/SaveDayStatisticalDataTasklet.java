@@ -107,10 +107,6 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
             }
 
         }
-        System.out.println("=========================");
-//        for(DayStatisticalData x : data) {
-//            System.out.println(x.getUser().getId() + " " + x.getCalendar());
-//        }
 
         return  data;
 
