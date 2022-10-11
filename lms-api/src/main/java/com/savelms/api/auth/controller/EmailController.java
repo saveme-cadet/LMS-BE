@@ -30,10 +30,6 @@ class EmailController {
     private final EmailService emailService;
     private final UserService userService;
 
-    @ExceptionHandler
-    public ResponseEntity<String> handleException(EmailAuthTokenNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
 
     @PostMapping("/auth/password-inquery")
     public ResponseEntity<Void> passwordInquery(@Validated @Parameter @RequestBody UserPasswordInqueryRequest request) {
@@ -50,7 +46,7 @@ class EmailController {
                 emailService.confirmEmailAndUpdateWithRandomPassword(requestDto);
             }
         } catch (EmailAuthTokenNotFoundException eatnfe) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이메일 인증에 실패햐였습니다.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이메일 인증에 실패하였거나, 이미 만료된 토큰 사용했기 때문에 인증이 진행되지않습니다.");
         }
         return ResponseEntity.status(HttpStatus.OK).body("이메일 인증에 성공하였습니다.");
     }
