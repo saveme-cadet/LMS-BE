@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
 
     @Query("select s from StudyTime s join fetch s.user u " +
             "where u.apiId <> :apiId and s.isStudying = :isStudying")
-    Optional<List<StudyTime>> findByIsStudying(@Param("apiId") String apiId, @Param("isStudying") Boolean isStudying);
+    List<StudyTime> findByIsStudying(@Param("apiId") String apiId, @Param("isStudying") Boolean isStudying);
 
     @Query("select s from StudyTime s where s.user.apiId =:apiId and s.isStudying =:isStudying order by s.id desc")
     List<StudyTime> findByUserApiIdAndIsStudying(@Param("apiId") String apiId, Boolean isStudying);
@@ -26,18 +27,15 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
             "where u.apiId = :apiId and c.date = :date")
     List<StudyTime> findByUserApiIdAndDate(@Param("apiId") String apiId, @Param("date") LocalDate date);
 
-    Optional<StudyTime> findAllById(Long id);
+    @Query(value = "select s from StudyTime s " +
+            "join s.user u join s.calendar c " +
+            "where u.apiId = :apiId " +
+            "and s.beginTime <= :beginTime and s.endTime >= :beginTime " +
+            "or s.beginTime <= :endTime and s.endTime >= :endTime")
+    List<StudyTime> findByUserApiIdAndBeginTimeAndEndTimeBetween(
+            @Param("apiId") String apiId,
+            @Param("beginTime") LocalDateTime beginTime,
+            @Param("endTime") LocalDateTime endTime);
 
-
-    /**
-     *
-     * @param userId
-     * @param calendarId
-     * @return
-     *
-     *  findByUserApiIdAndDate 정상 작동 안됌
-     *  where 절에서 u.api_id
-     */
-    List<StudyTime> findByUserIdAndCalendarId(Long userId, Long calendarId);
 }
 

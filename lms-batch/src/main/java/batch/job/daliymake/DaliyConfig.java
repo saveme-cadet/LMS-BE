@@ -62,7 +62,7 @@ public class DaliyConfig {
         this.studyTimeRepository = studyTimeRepository;
     }
 
-    @Bean
+    @Bean(name = "DailyJob")
     public Job DailyJob() throws Exception {
         return this.jobBuilderFactory.get("DailyJob")
                 .incrementer(new RunIdIncrementer())
@@ -70,7 +70,7 @@ public class DaliyConfig {
                 //.start(this.ItemDailyWriterStep())
                //.start(saveUserStep())
                 .start(this.saveDayStatisticalDataStep())
-               // .start(this.saveAttendanceStep())
+                .next(this.saveAttendanceStep())
                 .build();
     }
 

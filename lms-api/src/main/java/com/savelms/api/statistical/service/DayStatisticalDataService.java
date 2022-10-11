@@ -145,6 +145,7 @@ public class DayStatisticalDataService {
 
     public void updateStudyTimeScore(String apiId, LocalDate date, Double score) {
         statisticalDataRepository.findByApiIdAndDate(apiId, date)
-                .ifPresent(curStatData -> curStatData.increaseAndDecreaseStudyTimeScore(score));
+                .ifPresentOrElse(curStatData -> curStatData.increaseAndDecreaseStudyTimeScore(score),
+                        () -> log.warn("[study_time] - 통계 데이터가 존재하지 않습니다."));
     }
 }

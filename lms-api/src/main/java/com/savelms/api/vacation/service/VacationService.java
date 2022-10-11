@@ -4,7 +4,9 @@ import com.savelms.api.vacation.dto.AddVacationRequest;
 import com.savelms.api.vacation.dto.UseVacationRequest;
 import com.savelms.api.vacation.dto.VacationReasonResponse;
 import com.savelms.api.vacation.dto.VacationResponse;
-import com.savelms.core.exception.VacationNotFoundException;
+import com.savelms.core.exception.ExceptionStatus;
+import com.savelms.core.exception.user.UserException;
+import com.savelms.core.exception.vacation.VacationException;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
@@ -32,7 +34,7 @@ public class VacationService {
      * */
     public VacationResponse useVacation(UseVacationRequest vacationRequest, String userApiId) {
         Vacation vacation = vacationRepository.findFirstByUserApiId(userApiId)
-                .orElseThrow(() -> new VacationNotFoundException("존재하는 휴가가 없습니다."));
+                .orElseThrow(() -> new UserException(ExceptionStatus.USER_NOT_FOUND));
 
         checkRemainingDays(vacation.getRemainingDays(), vacationRequest.getUsedDays());
         double remainingDays = vacation.getRemainingDays() - vacationRequest.getUsedDays();
@@ -53,7 +55,7 @@ public class VacationService {
 
     private VacationResponse createVacation(Double remainingDays, Double addedDays, Double usedDays, String reason, String userApiId) {
         User user = userRepository.findByApiId(userApiId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new UserException(ExceptionStatus.USER_NOT_FOUND));
 
         Vacation vacation = Vacation.of(remainingDays, addedDays, usedDays, reason, user);
         vacationRepository.save(vacation);
@@ -63,7 +65,7 @@ public class VacationService {
 
     private void checkRemainingDays(Double remainingDays, Double usedDays) {
         if ((remainingDays - usedDays) < 0) {
-            throw new VacationNotFoundException("사용할 휴가가 부족합니다.");
+            throw new VacationException(ExceptionStatus.VACATION_NOT_FOUND);
         }
     }
 
@@ -73,19 +75,6 @@ public class VacationService {
      * */
     public Map<Long, Double> getRemainingVacationByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
         List<Vacation> vacations = vacationRepository.findAllByDateAttendStatus(date, attendStatus.name());
-        Map<Long, Double> allRemainingVacation = new HashMap<>();
-
-        Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));
-        for (List<Vacation> userVacations : collect.values()) {
-            Vacation vacation = userVacations.stream().max(Comparator.comparing(Vacation::getCreatedAt)).get();
-            allRemainingVacation.put(vacation.getUser().getId(), vacation.getRemainingDays());
-        }
-
-        return allRemainingVacation;
-    }
-
-    public Map<Long, Double> getRemainingVacationByDate(LocalDate date) {
-        List<Vacation> vacations = vacationRepository.findAllByDate(date);
         Map<Long, Double> allRemainingVacation = new HashMap<>();
 
         Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));

@@ -1,13 +1,34 @@
 package com.savelms.core.exception;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 public class ExceptionResponse {
-    private LocalDateTime timeStamp;
+
+    private int status;
+    private String code;
     private String message;
-    private String exception;
-    private String path;
+    private LocalDateTime timeStamp;
+
+    protected ExceptionResponse() {}
+
+    private ExceptionResponse(int status, String code, String message) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    protected ExceptionResponse(ExceptionStatus status) {
+        this.status = status.getStatus();
+        this.code = status.getCode().getCode();
+        this.message = status.getMessage();
+        this.timeStamp = LocalDateTime.now();
+    }
+
+    public static ExceptionResponse from(ExceptionStatus status) {
+        return new ExceptionResponse(status.getStatus(), status.getCode().getCode(), status.getMessage());
+    }
 }
