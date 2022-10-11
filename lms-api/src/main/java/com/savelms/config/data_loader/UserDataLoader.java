@@ -110,6 +110,7 @@ public class UserDataLoader implements CommandLineRunner {
         Role userRole = saveNewRole(RoleEnum.ROLE_USER);
         Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
 
+        adminRole.getAuthorities().clear();
         adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
             createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo,
             createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
@@ -117,19 +118,22 @@ public class UserDataLoader implements CommandLineRunner {
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
             createAttendance, updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance, deleteUserAttendance,
             readDayLog);
+        managerRole.getAuthorities().clear();
+
         managerRole.addAuthorities(createUser, updateUser, updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
             createVacation, createUserVacation, updateVacation, updateUserVacation, readVacation, readUserVacation, deleteVacation, deleteUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
                             updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance,
             readDayLog);
-        userRole.addAuthorities(createUser, readUser,updateUser,
+        userRole.getAuthorities().clear();
+        userRole.addAuthorities(createUser, readUser, updateUser,
             createUserTodo, updateUserTodo, readTodo, readUserTodo, deleteUserTodo,
             createUserVacation, updateUserVacation,readUserVacation,
             createUserStudyTime, updateUserStudyTime, readUserStudyTime, readStudyTimeUser, deleteUserStudyTime,
                              updateAttendance, readAttendance, deleteAttendance, createUserAttendance, updateUserAttendance, readUserAttendance,
             readDayLog);
-
+        unauthorizedRole.getAuthorities().clear();
         unauthorizedRole.addAuthorities(createUser, updateUser);
 
         roleRepository.saveAll(Arrays.asList(adminRole, managerRole, userRole, unauthorizedRole));
