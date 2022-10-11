@@ -1,4 +1,4 @@
-package com.savelms.config.data_loader;
+package com.savelms.api.config.data_loader;
 
 import com.savelms.core.calendar.DayType;
 import com.savelms.core.calendar.domain.entity.Calendar;
@@ -105,10 +105,15 @@ public class UserDataLoader implements CommandLineRunner {
 
         //Authority createUser = saveNewAuthority("user.create");
         //Role 생성
-        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN);
-        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER);
-        Role userRole = saveNewRole(RoleEnum.ROLE_USER);
-        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
+//        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN);
+//        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER);
+//        Role userRole = saveNewRole(RoleEnum.ROLE_USER);
+//        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
+
+        Role adminRole = roleRepository.findByValue(RoleEnum.ROLE_ADMIN).get();
+        Role managerRole = roleRepository.findByValue(RoleEnum.ROLE_MANAGER).get();
+        Role userRole = roleRepository.findByValue(RoleEnum.ROLE_USER).get();
+        Role unauthorizedRole = roleRepository.findByValue(RoleEnum.ROLE_UNAUTHORIZED).get();
 
         adminRole.getAuthorities().clear();
 //        adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
