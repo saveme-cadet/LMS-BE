@@ -240,7 +240,7 @@ public class UserDataLoader implements CommandLineRunner {
 //
 //        userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
 //
-        캘린더_생성_7_10월();
+//        캘린더_생성_7_10월();
     }
 
 
