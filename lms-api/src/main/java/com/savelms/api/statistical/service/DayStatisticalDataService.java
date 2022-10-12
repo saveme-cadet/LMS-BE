@@ -70,7 +70,7 @@ public class DayStatisticalDataService {
     }
 
     private List<DayLogDto> getDayLogsByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByAttendStatus(attendStatus);
         final Map<Long, TeamEnum> teams = userTeamService.findAllUserTeamByDateAndAttendStatus(date, attendStatus);
         final Map<Long, RoleEnum> roles = userRoleService.findAllUserRoleByDateAndAttendStatus(date, attendStatus);
         final Map<Long, AttendanceDto> attendances = attendanceService.getAllAttendanceByDateAndAttendStatus(date, attendStatus);
