@@ -10,6 +10,7 @@ import com.savelms.api.user.userrole.service.UserRoleService;
 import com.savelms.api.user.userteam.service.UserTeamService;
 import com.savelms.api.vacation.service.VacationService;
 import com.savelms.core.attendance.domain.AttendanceStatus;
+import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.statistical.DayStatisticalData;
 import com.savelms.core.statistical.DayStatisticalDataRepository;
@@ -79,14 +80,18 @@ public class DayStatisticalDataService {
         Map<Long, DayStatisticalDataDto> dayStatisticalDataDtoMap = dayStatisticalData.stream()
             .collect(
                 Collectors.toMap((d) -> d.getUser().getId(), d -> DayStatisticalDataDto.from(d)));
+        AttendanceDto defaultAttendance = new AttendanceDto();
+        defaultAttendance.setAttendanceId(null);
+        defaultAttendance.setCheckInStatus(AttendanceStatus.NONE);
+        defaultAttendance.setCheckOutStatus(AttendanceStatus.NONE);
         return users.stream()
             .map(u -> (
                 DayLogDto.of(u.getApiId(),
-                    attendances.get(u.getId()).getAttendanceId(),
+                    attendances.getOrDefault(u.getId(), defaultAttendance).getAttendanceId(),
                     u.getNickname(),
                     u.getAttendStatus(),
-                    attendances.get(u.getId()).getCheckInStatus(),
-                    attendances.get(u.getId()).getCheckOutStatus(),
+                    attendances.getOrDefault(u.getId(), defaultAttendance).getCheckInStatus(),
+                    attendances.getOrDefault(u.getId(), defaultAttendance).getCheckOutStatus(),
                     roles.get(u.getId()),
                     teams.get(u.getId()),
                     todoProgress.getOrDefault(u.getApiId(), 0.0),
