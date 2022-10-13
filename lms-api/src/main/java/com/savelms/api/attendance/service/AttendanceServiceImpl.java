@@ -165,7 +165,7 @@ public class AttendanceServiceImpl implements AttendanceService{
             if (status == VACATION) {
                 vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), apiId);
             }
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findByApiIdAndDate(apiId, findAttendanceOptional.get().getCalendar().getDate());
+            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), findAttendanceOptional.get().getId());
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(result);
                 userInfo.setAttendanceScore(participateResult);
@@ -226,7 +226,7 @@ public class AttendanceServiceImpl implements AttendanceService{
             if (status == VACATION) {
                 vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), userApiId);
             }
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findByApiIdAndDate(userApiId, findAttendanceOptional.get().getCalendar().getDate());
+            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), findAttendanceOptional.get().getId());
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(result);
                 userInfo.setAttendanceScore(participateResult);
