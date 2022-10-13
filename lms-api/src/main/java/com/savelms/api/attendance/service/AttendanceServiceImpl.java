@@ -120,7 +120,7 @@ public class AttendanceServiceImpl implements AttendanceService{
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
         Optional<User> user = userRepository.findByApiId(apiId);            // 변경 권한 확인하기
 
-        if (user.get().getUserRoles().equals(RoleEnum.ROLE_ADMIN) || user.get().getUserRoles().equals(RoleEnum.ROLE_MANAGER)) {
+
 
 
             final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
@@ -172,7 +172,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                 userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
-        }
+
     }
 
     @Override
@@ -182,7 +182,7 @@ public class AttendanceServiceImpl implements AttendanceService{
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
         Optional<User> user = userRepository.findByApiId(userApiId);            // 변경 권한 확인하기
 
-        if (user.get().getUserRoles().equals(RoleEnum.ROLE_ADMIN) || user.get().getUserRoles().equals(RoleEnum.ROLE_MANAGER)) {
+
 
             final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
             if (original.get().getCheckInStatus().equals(VACATION)) {
@@ -233,7 +233,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                 userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
-        }
+
     }
 
     private boolean validateUserAndDatePermission(Attendance attendance, User user, LocalDate date) {
