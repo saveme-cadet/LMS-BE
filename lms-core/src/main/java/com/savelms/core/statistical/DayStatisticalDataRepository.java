@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface DayStatisticalDataRepository extends JpaRepository<DayStatisticalData, Long> {
 
-    DayStatisticalData findByuser_idAndCalendar_id(Long id, Long calendar_id);
+    List<DayStatisticalData> findByuser_idAndCalendar_id(Long id, Long calendar_id);
 
     boolean existsByuser_idAndCalendar_id(Long id, Long calendar_id);
 

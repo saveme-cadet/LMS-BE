@@ -59,8 +59,8 @@ public class CheckDangerUserTasklet implements Tasklet {
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
         for (Long x : attendUserList) {
-            DayStatisticalData dataRepository = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
-            if (dataRepository.getWeekAbsentScore() >= 3) {
+            List<DayStatisticalData> dataRepository = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
+            if (dataRepository.get(0).getWeekAbsentScore() >= 3) {
                 String userName = userRepository.findById(x).get().getUsername();
                 String userNickName = userRepository.findById(x).get().getNickname();
                 reportList.add(WeekReport.builder()

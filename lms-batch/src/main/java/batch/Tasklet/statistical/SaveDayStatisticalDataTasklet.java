@@ -80,17 +80,17 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
             for (Long x : attendUserList) {
                 System.out.println("=============================" + x + "===================");
                 if (dayStatisticalDataRepository.existsByuser_idAndCalendar_id(x, day.getId())) {
-                    DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
-                    System.out.println(":::: " + dayStatisticalData.getAbsentScore());
+                    List<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
+                    System.out.println(":::: " + dayStatisticalData.get(0).getAbsentScore());
                     data.add(DayStatisticalData.builder()
-                            .absentScore(dayStatisticalData.getAbsentScore())
-                            .attendanceScore(dayStatisticalData.getAttendanceScore())
+                            .absentScore(dayStatisticalData.get(0).getAbsentScore())
+                            .attendanceScore(dayStatisticalData.get(0).getAttendanceScore())
                             .user(userRepository.getById(x))
-                            .todoSuccessRate(dayStatisticalData.getTodoSuccessRate())
-                            .weekAbsentScore(dayStatisticalData.getWeekAbsentScore())
+                            .todoSuccessRate(dayStatisticalData.get(0).getTodoSuccessRate())
+                            .weekAbsentScore(dayStatisticalData.get(0).getWeekAbsentScore())
                             .calendar(nowDay)
-                            .totalScore(dayStatisticalData.getTotalScore())
-                            .studyTimeScore(dayStatisticalData.getStudyTimeScore())
+                            .totalScore(dayStatisticalData.get(0).getTotalScore())
+                            .studyTimeScore(dayStatisticalData.get(0).getStudyTimeScore())
                             .build());
                 } else {
                     data.add(DayStatisticalData.builder()
