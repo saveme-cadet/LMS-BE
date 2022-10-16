@@ -173,14 +173,14 @@ public class AttendanceServiceImpl implements AttendanceService{
         Long calendarId = findAttendanceOptional.get().getId();
         for(int i = 0; i < noOfDaysBetween + 1; i++) {
             System.out.println("calendarId === " + calendarId);
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
-            System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
-            change.ifPresent(userInfo -> {
-                userInfo.setAbsentScore(result);
-                userInfo.setAttendanceScore(participateResult);
-                userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
-                statisticalDataRepository.save(userInfo);
-            });
+//            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
+//            System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
+//            change.ifPresent(userInfo -> {
+//                userInfo.setAbsentScore(result);
+//                userInfo.setAttendanceScore(participateResult);
+//                userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
+//                statisticalDataRepository.save(userInfo);
+//            });
             calendarId++;
         }
     }
@@ -243,14 +243,14 @@ public class AttendanceServiceImpl implements AttendanceService{
             Long calendarId = findAttendanceOptional.get().getId();
             for(int i = 0; i < noOfDaysBetween + 1; i++) {
                 System.out.println("calendar Id ===== " + calendarId);
-                final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
-                System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
-                change.ifPresent(userInfo -> {
-                    userInfo.setAbsentScore(result);
-                    userInfo.setAttendanceScore(participateResult);
-                    userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
-                    statisticalDataRepository.save(userInfo);
-                });
+//                final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
+//                System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
+//                change.ifPresent(userInfo -> {
+//                    userInfo.setAbsentScore(result);
+//                    userInfo.setAttendanceScore(participateResult);
+//                    userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
+//                    statisticalDataRepository.save(userInfo);
+//                });
                 calendarId++;
             }
     }
