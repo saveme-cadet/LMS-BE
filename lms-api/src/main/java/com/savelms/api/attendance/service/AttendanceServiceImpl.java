@@ -150,6 +150,7 @@ public class AttendanceServiceImpl implements AttendanceService{
             list1.addAll(list2);
 
 
+
             double score = 0;
             double participateScore = 0;
             for (AttendanceStatus a : list1) {
@@ -161,6 +162,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     participateScore += 0.5;
                 }
             }
+        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
             final double result = score;
             final double participateResult = participateScore;
@@ -226,6 +228,7 @@ public class AttendanceServiceImpl implements AttendanceService{
                     participateScore += 0.5;
                 }
             }
+        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
             final double result = score;
             final double participateResult = participateScore;
