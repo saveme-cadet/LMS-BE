@@ -170,7 +170,7 @@ public class AttendanceServiceImpl implements AttendanceService{
         long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
         Long calendarId = findAttendanceOptional.get().getId();
         for(int i = 0; i < noOfDaysBetween + 1; i++) {
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), calendarId);
+            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(result);
                 userInfo.setAttendanceScore(participateResult);
@@ -237,7 +237,7 @@ public class AttendanceServiceImpl implements AttendanceService{
 
             Long calendarId = findAttendanceOptional.get().getId();
             for(int i = 0; i < noOfDaysBetween + 1; i++) {
-                final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), calendarId);
+                final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
                 change.ifPresent(userInfo -> {
                     userInfo.setAbsentScore(result);
                     userInfo.setAttendanceScore(participateResult);
