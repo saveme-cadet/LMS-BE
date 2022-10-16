@@ -20,6 +20,7 @@ import com.savelms.core.user.role.domain.entity.UserRole;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -165,14 +166,28 @@ public class AttendanceServiceImpl implements AttendanceService{
             if (status == VACATION) {
                 vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), apiId);
             }
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), findAttendanceOptional.get().getId());
+
+        Date dateBefore = java.sql.Timestamp.valueOf(String.valueOf(findAttendanceOptional.get().getCalendar().getDate()));
+        Date dateAfter = java.sql.Timestamp.valueOf(String.valueOf(LocalDate.now()));
+
+        long dateBeforeInMs = dateBefore.getTime();
+        long dateAfterInMs = dateAfter.getTime();
+
+        long timeDiff = Math.abs(dateAfterInMs - dateBeforeInMs);
+
+        long daysDiff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+
+        Long calendarId = findAttendanceOptional.get().getId();
+        for(int i = 0; i < daysDiff + 1; i++) {
+            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), calendarId);
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(result);
                 userInfo.setAttendanceScore(participateResult);
                 userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
-
+            calendarId++;
+        }
     }
 
     @Override
@@ -226,14 +241,27 @@ public class AttendanceServiceImpl implements AttendanceService{
             if (status == VACATION) {
                 vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), userApiId);
             }
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), findAttendanceOptional.get().getId());
-            change.ifPresent(userInfo -> {
-                userInfo.setAbsentScore(result);
-                userInfo.setAttendanceScore(participateResult);
-                userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
-                statisticalDataRepository.save(userInfo);
-            });
+            Date dateBefore = java.sql.Timestamp.valueOf(String.valueOf(findAttendanceOptional.get().getCalendar().getDate()));
+            Date dateAfter = java.sql.Timestamp.valueOf(String.valueOf(LocalDate.now()));
 
+            long dateBeforeInMs = dateBefore.getTime();
+            long dateAfterInMs = dateAfter.getTime();
+
+            long timeDiff = Math.abs(dateAfterInMs - dateBeforeInMs);
+
+            long daysDiff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+
+            Long calendarId = findAttendanceOptional.get().getId();
+            for(int i = 0; i < daysDiff + 1; i++) {
+                final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), calendarId);
+                change.ifPresent(userInfo -> {
+                    userInfo.setAbsentScore(result);
+                    userInfo.setAttendanceScore(participateResult);
+                    userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
+                    statisticalDataRepository.save(userInfo);
+                });
+                calendarId++;
+            }
     }
 
     private boolean validateUserAndDatePermission(Attendance attendance, User user, LocalDate date) {
