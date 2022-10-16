@@ -19,6 +19,7 @@ import com.savelms.core.user.role.domain.entity.UserRole;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -166,19 +167,9 @@ public class AttendanceServiceImpl implements AttendanceService{
             if (status == VACATION) {
                 vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), apiId);
             }
-
-        Date dateBefore = java.sql.Timestamp.valueOf(String.valueOf(findAttendanceOptional.get().getCalendar().getDate()));
-        Date dateAfter = java.sql.Timestamp.valueOf(String.valueOf(LocalDate.now()));
-
-        long dateBeforeInMs = dateBefore.getTime();
-        long dateAfterInMs = dateAfter.getTime();
-
-        long timeDiff = Math.abs(dateAfterInMs - dateBeforeInMs);
-
-        long daysDiff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
-
+        long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
         Long calendarId = findAttendanceOptional.get().getId();
-        for(int i = 0; i < daysDiff + 1; i++) {
+        for(int i = 0; i < noOfDaysBetween + 1; i++) {
             final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), calendarId);
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(result);
@@ -241,18 +232,11 @@ public class AttendanceServiceImpl implements AttendanceService{
             if (status == VACATION) {
                 vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), userApiId);
             }
-            Date dateBefore = java.sql.Timestamp.valueOf(String.valueOf(findAttendanceOptional.get().getCalendar().getDate()));
-            Date dateAfter = java.sql.Timestamp.valueOf(String.valueOf(LocalDate.now()));
 
-            long dateBeforeInMs = dateBefore.getTime();
-            long dateAfterInMs = dateAfter.getTime();
-
-            long timeDiff = Math.abs(dateAfterInMs - dateBeforeInMs);
-
-            long daysDiff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
+            long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
 
             Long calendarId = findAttendanceOptional.get().getId();
-            for(int i = 0; i < daysDiff + 1; i++) {
+            for(int i = 0; i < noOfDaysBetween + 1; i++) {
                 final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(user.get().getId(), calendarId);
                 change.ifPresent(userInfo -> {
                     userInfo.setAbsentScore(result);
