@@ -1,8 +1,6 @@
 package com.savelms.core.vacation.domain.entity;
 
 import com.savelms.core.BaseEntity;
-import com.savelms.core.exception.ExceptionStatus;
-import com.savelms.core.exception.vacation.VacationException;
 import com.savelms.core.user.domain.entity.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -59,28 +57,6 @@ public class Vacation extends BaseEntity {
                 .build();
     }
 
-    public void addVacationDays(Long vacationDays) {
-        this.remainingDays += vacationDays;
-    }
-
-    public void useVacationDays(Long usedDays, String reason) {
-        if ((this.remainingDays - usedDays) < 0) {
-            throw new VacationException(ExceptionStatus.VACATION_NOT_ENOUGH);
-        }
-
-        this.remainingDays -= usedDays;
-        this.usedDays += usedDays;
-        this.reason = reason;
-    }
-
-    public void updateReason(String reason) {
-        this.reason = reason;
-    }
-
-
-    /**
-     * equals AND hashCode
-     * */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
