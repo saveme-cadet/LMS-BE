@@ -30,13 +30,16 @@ public class VacationService {
 
 
     /**
-     * 생성
+     * 1. 사용가능한 휴가가 남았는지 확인
+     *   1-1. 휴가가 없으면 예외 던지기
+     * 2. 현재 남은 휴가에서 사용할 휴가수를 뺌
+     * 3. 새로구한 남은 휴가수랑 휴가 사용이유로 새 엔티티 생성해서 테이블에 저장
      * */
     public VacationResponse useVacation(UseVacationRequest vacationRequest, String userApiId) {
         Vacation vacation = vacationRepository.findFirstByUserApiId(userApiId)
                 .orElseThrow(() -> new UserException(ExceptionStatus.USER_NOT_FOUND));
 
-        checkRemainingDays(vacation.getRemainingDays(), vacationRequest.getUsedDays());
+        validateRemainingVacation(vacation.getRemainingDays(), vacationRequest.getUsedDays());
         double remainingDays = vacation.getRemainingDays() - vacationRequest.getUsedDays();
 
         return createVacation(remainingDays, 0.0, vacationRequest.getUsedDays(), vacationRequest.getReason(), userApiId);
@@ -63,7 +66,7 @@ public class VacationService {
         return new VacationResponse(vacation);
     }
 
-    private void checkRemainingDays(Double remainingDays, Double usedDays) {
+    private void validateRemainingVacation(Double remainingDays, Double usedDays) {
         if ((remainingDays - usedDays) < 0) {
             throw new VacationException(ExceptionStatus.VACATION_NOT_FOUND);
         }
