@@ -92,7 +92,6 @@ public class AttendanceServiceImpl implements AttendanceService {
                 weekAbsentScore += 0.5;
             }
         }
-        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
         double result = score;
         double participateResult = participateScore;
@@ -102,10 +101,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
         Long calendarId = findAttendanceOptional.get().getCalendar().getId();
         for (int i = 0; i < noOfDaysBetween + 1; i++) {
-            System.out.println("calendarId === " + calendarId);
             Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
             Optional<Attendance> attendStatus = attendanceRepository.findByUserIdAndCalendarId(findAttendanceOptional.get().getUser().getId(), calendarId);
-            System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
             if (i != 0) {
                 if (attendStatus.get().getCheckInStatus() == TARDY) {
                     score += 0.25;
@@ -189,7 +186,6 @@ public class AttendanceServiceImpl implements AttendanceService {
                 weekAbsentScore += 0.5;
             }
         }
-        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
         double result = score;
         double participateResult = participateScore;
@@ -202,7 +198,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Long calendarId = findAttendanceOptional.get().getCalendar().getId();
         for (int i = 0; i < noOfDaysBetween + 1; i++) {
-            System.out.println("calendar Id ===== " + calendarId);
             Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
             Optional<Attendance> attendStatus = attendanceRepository.findByUserIdAndCalendarId(findAttendanceOptional.get().getUser().getId(), calendarId);
             if (i != 0) {
@@ -263,6 +258,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 //        boolean isManager = (tryUserRole == RoleEnum.ROLE_MANAGER);
 
         //오늘 날짜이면서, 변경 권한이 있는 유저
+
+
         return isToday && (isUserSelf || isManager);
     }
 
