@@ -2,11 +2,13 @@ package com.savelms.api.statistical.dto;
 
 import com.savelms.core.statistical.DayStatisticalData;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@Builder
 public class DayStatisticalDataDto {
 
     private Double attendanceScore;

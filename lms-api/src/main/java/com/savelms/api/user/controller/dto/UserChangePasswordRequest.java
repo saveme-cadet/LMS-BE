@@ -13,7 +13,6 @@ public class UserChangePasswordRequest {
 
     @Schema(name= "oldPassword" , example = "영어 대문자 + 영어 소문자 + 특수문자 + 길이 8~30, 현재 비밀번호")
     @NotBlank
-    @ValidPassword
     private String oldPassword;
 
     @Schema(name= "password" , example = "영어 대문자 + 영어 소문자 + 특수문자 + 길이 8~30, 바꾸려는 비밀번호")

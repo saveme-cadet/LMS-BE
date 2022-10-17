@@ -60,18 +60,10 @@ public class EmailService {
         Optional<EmailAuth> validAuthByEmail = emailAuthCustomRepository.findValidAuthByEmail(
             requestDto.getEmail(),
             requestDto.getAuthToken(), LocalDateTime.now());
-        EmailAuth emailAuth = null;
-
+        EmailAuth emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
         User user = userRepository.findByApiId(requestDto.getId())
             .orElseThrow(EntityNotFoundException::new);
-        if (validAuthByEmail.isEmpty()) {
-            if (user.getEmailAuth() == true) {
-                return EmailAuthResponseDto.builder()
-                    .userId(user.getApiId())
-                    .build();
-            }
-        }
-        emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
+
         Role role = roleRepository.findByValue(RoleEnum.ROLE_USER)
             .orElseThrow(EntityNotFoundException::new);
 
@@ -94,19 +86,10 @@ public class EmailService {
         Optional<EmailAuth> validAuthByEmail = emailAuthCustomRepository.findValidAuthByEmail(
             requestDto.getEmail(),
             requestDto.getAuthToken(), LocalDateTime.now());
-        EmailAuth emailAuth = null;
+        EmailAuth emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
 
         User user = userRepository.findByApiId(requestDto.getId())
             .orElseThrow(EntityNotFoundException::new);
-        if (validAuthByEmail.isEmpty()) {
-            if (user.getEmailAuth() == true) {
-                return EmailAuthResponseDto.builder()
-                    .userId(user.getApiId())
-                    .build();
-            } else if (user.getEmailAuth() == false) {
-                emailAuth = validAuthByEmail.orElseThrow(EmailAuthTokenNotFoundException::new);
-            }
-        }
         Role role = roleRepository.findByValue(RoleEnum.ROLE_USER)
             .orElseThrow(EntityNotFoundException::new);
 
