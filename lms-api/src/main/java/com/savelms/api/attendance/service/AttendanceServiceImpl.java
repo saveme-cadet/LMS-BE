@@ -134,7 +134,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(finalResult);
                 userInfo.setAttendanceScore(finalParticipateResult);
-                userInfo.setAbsentScore(finalWeekAbsentScore);
+                userInfo.setWeekAbsentScore(finalWeekAbsentScore);
                 userInfo.setTotalScore(finalResult - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
@@ -233,7 +233,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(finalResult);
                 userInfo.setAttendanceScore(finalParticipateResult);
-                userInfo.setAbsentScore(finalWeekAbsentScore);
+                userInfo.setWeekAbsentScore(finalWeekAbsentScore);
                 userInfo.setTotalScore(finalResult - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
