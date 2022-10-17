@@ -8,6 +8,7 @@ import com.savelms.api.team.service.TeamService;
 import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.controller.dto.*;
 import com.savelms.api.user.role.service.RoleService;
+import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
@@ -269,27 +270,30 @@ public class UserService {
             new EntityNotFoundException("apiId에 해당하는 user가 없습니다."));
         user.changeAttendStatus(request.getAttendStatus());
 
-        Calendar calendar = calendarRepository.findByDate(LocalDate.now()).orElseThrow(() ->
-            new EntityNotFoundException("오늘 날짜에 해당하는 calendar가 없습니다."));
+        if (request.getAttendStatus() == AttendStatus.PARTICIPATED) {
+            Calendar calendar = calendarRepository.findByDate(LocalDate.now()).orElseThrow(() ->
+                new EntityNotFoundException("오늘 날짜에 해당하는 calendar가 없습니다."));
 
-        Optional<DayStatisticalData> dayStatisticalDataOptional = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(
-            user.getId(), calendar.getId());
-        Optional<Attendance> attendanceOptional = attendanceRepository.findByUserIdAndCalendarId(user.getId(), calendar.getId());
+            Optional<DayStatisticalData> dayStatisticalDataOptional = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(
+                user.getId(), calendar.getId());
+            Optional<Attendance> attendanceOptional = attendanceRepository.findByUserIdAndCalendarId(user.getId(), calendar.getId());
 
-        if (attendanceOptional.isEmpty()) {
-            Attendance attendance = Attendance.builder()
-                .user(user)
-                .calendar(calendar)
-                .build();
-            attendanceRepository.save(attendance);
+            if (attendanceOptional.isEmpty()) {
+                Attendance attendance = Attendance.builder()
+                    .user(user)
+                    .calendar(calendar)
+                    .build();
+                attendanceRepository.save(attendance);
+            }
+
+            if (dayStatisticalDataOptional.isEmpty()) {
+                DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(user,
+                    calendar);
+
+                dayStatisticalDataRepository.save(dayStatisticalData);
+            }
         }
 
-        if (dayStatisticalDataOptional.isEmpty()) {
-            DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(user,
-                calendar);
-
-            dayStatisticalDataRepository.save(dayStatisticalData);
-        }
 
         return user.getApiId();
     }
