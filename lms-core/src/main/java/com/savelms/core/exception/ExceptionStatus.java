@@ -9,8 +9,8 @@ public enum ExceptionStatus {
     EMAIL_NOT_FOUND(400, ExceptionCode.ENTITY_NOT_FOUND, "존재하지 않는 이메일입니다."),
     PASSWORD_NOT_FOUND(400, ExceptionCode.ENTITY_NOT_FOUND,"패스워드를 잘못 입력하셨습니다."),
     USER_NOT_FOUND(400, ExceptionCode.ENTITY_NOT_FOUND, "존재하지 않는 회원입니다."),
-    VACATION_NOT_FOUND(400, ExceptionCode.ENTITY_NOT_FOUND, "존재하지 않는 채널 회원입니다."),
-    STUDY_TIME_NOT_FOUND(400, ExceptionCode.STUDY_TIME_NOT_FOUND, "존재하지 않는 채널입니다."),
+    VACATION_NOT_FOUND(400, ExceptionCode.ENTITY_NOT_FOUND, "존재하지 않는 휴가 기록입니다."),
+    STUDY_TIME_NOT_FOUND(400, ExceptionCode.STUDY_TIME_NOT_FOUND, "존재하지 않는 아오지 기록입니다."),
 
     EMAIL_DUPLICATION(400, ExceptionCode.ENTITY_DUPLICATION,"이미 존재하는 이메일입니다."),
     NICKNAME_DUPLICATION(400, ExceptionCode.ENTITY_DUPLICATION,"이미 존재하는 닉네임입니다."),
