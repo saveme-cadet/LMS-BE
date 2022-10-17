@@ -49,8 +49,7 @@ public class VacationController {
         + "(hasAuthority('user.vacation.read') AND @customAuthenticationManager.userIdMatches(authentication, #userId))")
     @Operation(description = "남은 휴가 조회")
     @GetMapping("/users/{userId}/vacations/remaining-vacations")
-    public ResponseEntity<VacationResponse>
-    getRemainingVacation(@PathVariable("userId") String userId) {
+    public ResponseEntity<VacationResponse> getRemainingVacation(@PathVariable("userId") String userId) {
         VacationResponse vacationResponse = vacationService.getRemainingVacation(userId);
 
         return ResponseEntity.ok().body(vacationResponse);

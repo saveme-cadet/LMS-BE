@@ -1,14 +1,10 @@
 package com.savelms.api.vacation.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 public class UseVacationRequest {
 
     @NotNull
@@ -17,4 +13,10 @@ public class UseVacationRequest {
     @NotNull
     private String reason;
 
+    public UseVacationRequest() {}
+
+    public UseVacationRequest(Double usedDays, String reason) {
+        this.usedDays = usedDays;
+        this.reason = reason;
+    }
 }

@@ -1,15 +1,18 @@
 package com.savelms.api.vacation.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
+@Getter
 public class AddVacationRequest {
 
     @NotNull
     private Double addedDays;
 
+    public AddVacationRequest() {}
+
+    public AddVacationRequest(Double addedDays) {
+        this.addedDays = addedDays;
+    }
 }
