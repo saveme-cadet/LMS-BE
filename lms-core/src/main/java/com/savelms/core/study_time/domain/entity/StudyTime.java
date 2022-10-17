@@ -7,6 +7,7 @@ import com.savelms.core.exception.study_time.StudyTimeException;
 import com.savelms.core.user.domain.entity.User;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -96,15 +97,6 @@ public class StudyTime extends BaseEntity {
         this.calendar = calendar;
     }
 
-    public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
-        double second = (double) Duration.between(beginTime, endTime).getSeconds();
-
-        double studyTimeScore = second / (8 * 60 * 60);
-
-        double score = Math.round(studyTimeScore * 100) / 100.0;
-        return score >= 0 ? score : 0.0;
-    }
-
     public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         this.beginTime = beginTime;
         this.endTime = endTime;
@@ -117,6 +109,15 @@ public class StudyTime extends BaseEntity {
         this.isStudying = false;
         this.studyScore = getStudyScore(this.beginTime, this.endTime);
         this.finalStudyTime = getFinalStudyTime(this.beginTime, this.endTime);
+    }
+
+    public static Double getStudyScore(LocalDateTime beginTime, LocalDateTime endTime) {
+        double second = (double) Duration.between(beginTime, endTime).getSeconds();
+
+        double studyTimeScore = second / (8 * 60 * 60);
+
+        double score = Math.round(studyTimeScore * 100) / 100.0;
+        return score >= 0 ? score : 0.0;
     }
 
     public static String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
@@ -136,6 +137,8 @@ public class StudyTime extends BaseEntity {
             throw new StudyTimeException(ExceptionStatus.STUDY_TIME_END_LESS_THEN_BEGIN);
         } else if (between.toHours() >= 24) {
             throw new StudyTimeException(ExceptionStatus.STUDY_TIME_OVER_24_HOURS);
+        } else if (!endTime.toLocalDate().isEqual(LocalDate.now())) {
+            throw new StudyTimeException(ExceptionStatus.STUDY_TIME_ONLY_TODAY);
         }
     }
 
