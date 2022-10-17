@@ -55,7 +55,7 @@ public class CheckInTasklet implements Tasklet {
             혹은 진짜 결석일 수도 있으니
              */
 
-            Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
+            Optional<Attendance> attendances = attendanceRepository.findByUserIdAndCalendarId(x, day.getId());
             if (attendances.get().getCheckInStatus().equals(AttendanceStatus.NONE)) {
                 attendances.ifPresent(attendance -> {
                     attendance.setCheckInStatus(AttendanceStatus.ABSENT);

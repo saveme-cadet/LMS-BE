@@ -1,13 +1,10 @@
 package com.savelms.core.attendance.domain.repository;
 
-import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.attendance.domain.entity.Attendance;
-import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.user.AttendStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.stream.Stream;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
-    Optional<Attendance> findAllByUserIdAndCalendarId(Long userId, Long calId);
+    Optional<Attendance> findByUserIdAndCalendarId(Long userId, Long calId);
 
     Optional<Attendance> findAllByCalendarId(Long calendarId);
     List<Attendance> findByCalendarId(Long calendarId);

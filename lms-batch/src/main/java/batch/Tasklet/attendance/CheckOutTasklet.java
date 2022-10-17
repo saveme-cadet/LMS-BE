@@ -50,7 +50,7 @@ public class CheckOutTasklet implements Tasklet {
 
 
         for (Long x : attendUserList) {
-            Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
+            Optional<Attendance> attendances = attendanceRepository.findByUserIdAndCalendarId(x, day.getId());
             /*
             AttendStatus를 NONE에서 ABSENT 변경
             체크를 안해줬으니 자동으로 ABSENT로 변경해준다.

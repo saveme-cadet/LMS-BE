@@ -9,6 +9,7 @@ import com.savelms.api.todo.controller.dto.ListResponse;
 import com.savelms.api.user.controller.dto.*;
 import com.savelms.api.user.role.service.RoleService;
 import com.savelms.core.attendance.domain.entity.Attendance;
+import com.savelms.core.attendance.domain.repository.AttendanceRepository;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
 import com.savelms.core.exception.PasswordNotMatchException;
@@ -35,6 +36,7 @@ import com.savelms.core.user.role.domain.repository.UserRoleRepository;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,6 +80,7 @@ public class UserService {
 
     private final DayStatisticalDataRepository dayStatisticalDataRepository;
 
+    private final AttendanceRepository attendanceRepository;
 
     /**
      * 회원가입
@@ -101,10 +104,10 @@ public class UserService {
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
 
-        DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(
-            defaultUser, calendar);
+//        DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(
+//            defaultUser, calendar);
         User savedUser = userRepository.saveAndFlush(defaultUser);
-        dayStatisticalDataRepository.save(dayStatisticalData);
+//        dayStatisticalDataRepository.save(dayStatisticalData);
         EmailAuth emailAuth = emailAuthRepository.save(
             EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,
                 UUID.randomUUID().toString()));
@@ -261,17 +264,33 @@ public class UserService {
 
     @Transactional
     public String changeAttendStatus(String apiId, UserChangeAttendStatusRequest request) {
-        System.out.println("===================++++++++===============================");
-        System.out.println("===================++++++++===============================");
-        System.out.println("===================++++++++===============================");
+
         User user = userRepository.findByApiId(apiId).orElseThrow(() ->
             new EntityNotFoundException("apiId에 해당하는 user가 없습니다."));
         user.changeAttendStatus(request.getAttendStatus());
-        System.out.println("===================++++++++===============================+++++++++");
-        System.out.println("===================++++++++===============================+++++++++");
-        System.out.println("===================++++++++===============================+++++++++");
-        System.out.println(user.getAttendStatus()+ "++++++++++++++++++++++++++++++++++++");
-        System.out.println("==================================== " + user.getApiId());
+
+        Calendar calendar = calendarRepository.findByDate(LocalDate.now()).orElseThrow(() ->
+            new EntityNotFoundException("오늘 날짜에 해당하는 calendar가 없습니다."));
+
+        Optional<DayStatisticalData> dayStatisticalDataOptional = dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(
+            user.getId(), calendar.getId());
+        Optional<Attendance> attendanceOptional = attendanceRepository.findByUserIdAndCalendarId(user.getId(), calendar.getId());
+
+        if (attendanceOptional.isEmpty()) {
+            Attendance attendance = Attendance.builder()
+                .user(user)
+                .calendar(calendar)
+                .build();
+            attendanceRepository.save(attendance);
+        }
+
+        if (dayStatisticalDataOptional.isEmpty()) {
+            DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(user,
+                calendar);
+
+            dayStatisticalDataRepository.save(dayStatisticalData);
+        }
+
         return user.getApiId();
     }
 
@@ -315,7 +334,7 @@ public class UserService {
 
         User user = userRepository.findByUsername(username).orElseThrow(() ->
             new EntityNotFoundException("username에 해당하는 user가 없습니다."));
-        if (bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword()) == false) {
+        if (!bCryptPasswordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new PasswordNotMatchException("기존 비밀번호가 일치하지 않습니다.");
         }
 

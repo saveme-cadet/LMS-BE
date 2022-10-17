@@ -48,7 +48,7 @@ public class AbsentScoreTasklet implements Tasklet {
         double score = 0;
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
         for (Long x : attendUserList) {
-            Optional<Attendance> attendances = attendanceRepository.findAllByUserIdAndCalendarId(x, day.getId());
+            Optional<Attendance> attendances = attendanceRepository.findByUserIdAndCalendarId(x, day.getId());
             if (attendances.get().getCheckInStatus().equals(AttendanceStatus.ABSENT)) {
                 score += 0.5;
             }
