@@ -81,6 +81,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         double score = 0;
         double participateScore = 0;
+        double weekAbsentScore = 0;
         for (AttendanceStatus a : list1) {
             if (a == TARDY) {
                 score += 0.25;
@@ -88,6 +89,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 score += 0.5;
             } else if (a == PRESENT) {
                 participateScore += 0.5;
+                weekAbsentScore += 0.5;
             }
         }
         System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
@@ -111,6 +113,8 @@ public class AttendanceServiceImpl implements AttendanceService {
                     score += 0.5;
                 } else if (attendStatus.get().getCheckInStatus() == PRESENT) {
                     participateScore += 0.5;
+                    if (Math.abs(calendarId - calendarRepository.findByDate(LocalDate.now()).get().getId()) < 7)
+                        weekAbsentScore += 0.5;
                 }
                 if (attendStatus.get().getCheckOutStatus() == TARDY) {
                     score += 0.25;
@@ -118,15 +122,19 @@ public class AttendanceServiceImpl implements AttendanceService {
                     score += 0.5;
                 } else if (attendStatus.get().getCheckOutStatus() == PRESENT) {
                     participateScore += 0.5;
+                    if (Math.abs(calendarId - calendarRepository.findByDate(LocalDate.now()).get().getId()) < 7)
+                        weekAbsentScore += 0.5;
                 }
             }
             result = score;
             participateResult = participateScore;
             double finalResult = result;
             double finalParticipateResult = participateResult;
+            double finalWeekAbsentScore = weekAbsentScore;
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(finalResult);
                 userInfo.setAttendanceScore(finalParticipateResult);
+                userInfo.setAbsentScore(finalWeekAbsentScore);
                 userInfo.setTotalScore(finalResult - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
@@ -170,6 +178,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         double score = 0;
         double participateScore = 0;
+        double weekAbsentScore = 0;
         for (AttendanceStatus a : list1) {
             if (a == TARDY) {
                 score += 0.25;
@@ -177,12 +186,14 @@ public class AttendanceServiceImpl implements AttendanceService {
                 score += 0.5;
             } else if (a == PRESENT) {
                 participateScore += 0.5;
+                weekAbsentScore += 0.5;
             }
         }
         System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
         double result = score;
         double participateResult = participateScore;
+
         if (status == VACATION) {
             vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), userApiId);
         }
@@ -201,6 +212,8 @@ public class AttendanceServiceImpl implements AttendanceService {
                     score += 0.5;
                 } else if (attendStatus.get().getCheckInStatus() == PRESENT) {
                     participateScore += 0.5;
+                    if (Math.abs(calendarId - calendarRepository.findByDate(LocalDate.now()).get().getId()) < 7)
+                        weekAbsentScore += 0.5;
                 }
                 if (attendStatus.get().getCheckOutStatus() == TARDY) {
                     score += 0.25;
@@ -208,15 +221,19 @@ public class AttendanceServiceImpl implements AttendanceService {
                     score += 0.5;
                 } else if (attendStatus.get().getCheckOutStatus() == PRESENT) {
                     participateScore += 0.5;
+                    if (Math.abs(calendarId - calendarRepository.findByDate(LocalDate.now()).get().getId()) < 7)
+                        weekAbsentScore += 0.5;
                 }
             }
             result = score;
             participateResult = participateScore;
             double finalResult = result;
             double finalParticipateResult = participateResult;
+            double finalWeekAbsentScore = weekAbsentScore;
             change.ifPresent(userInfo -> {
                 userInfo.setAbsentScore(finalResult);
                 userInfo.setAttendanceScore(finalParticipateResult);
+                userInfo.setAbsentScore(finalWeekAbsentScore);
                 userInfo.setTotalScore(finalResult - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
