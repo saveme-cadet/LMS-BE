@@ -170,7 +170,7 @@ public class StudyTimeService {
                 .orElseThrow(() -> new StudyTimeException(ExceptionStatus.STUDY_TIME_NOT_FOUND));
 
         if (!studyTime.getEndTime().toLocalDate().isEqual(LocalDate.now())) {
-            throw new StudyTimeException(ExceptionStatus.STUDY_TIME_DELETE);
+            throw new StudyTimeException(ExceptionStatus.STUDY_TIME_ONLY_TODAY);
         }
 
         dayStatDataService.updateStudyTimeScore(apiId, studyTime.getEndTime().toLocalDate(), studyTime.getStudyScore() * -1);
