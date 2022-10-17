@@ -134,7 +134,7 @@ INSERT INTO authority (authority_id, permission) VALUES
 (2, 'user.update'),
 (3, 'user.role.update'),
 (4, 'user.team.update'),
-(5, 'user.update-attend.status'),
+(5, 'user.attend-status.update'),
 (6, 'user.read'),
 (7, 'user.delete'),
 (8, 'todo.create'),
@@ -169,7 +169,8 @@ INSERT INTO authority (authority_id, permission) VALUES
 (37, 'user.attendance.create'),
 (38, 'user.attendance.update'),
 (39, 'user.attendance.read'),
-(40, 'user.attendance.delete');
+(40, 'user.attendance.delete'),
+(41, 'day-log.read');
 
 INSERT INTO role_authority (role_id, authority_id) VALUES
 (1, 1),
