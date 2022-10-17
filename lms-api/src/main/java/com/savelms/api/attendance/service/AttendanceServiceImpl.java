@@ -16,14 +16,9 @@ import com.savelms.core.user.domain.entity.User;
 import com.savelms.core.user.domain.repository.UserRepository;
 import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,79 +34,13 @@ import static com.savelms.core.attendance.domain.AttendanceStatus.*;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
-public class AttendanceServiceImpl implements AttendanceService{
+public class AttendanceServiceImpl implements AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
     private final DayStatisticalDataRepository statisticalDataRepository;
     private final UserRepository userRepository;
     private final VacationService vacationService;
     private final CalendarRepository calendarRepository;
-//
-//    public void updateCheckIn(TableCheckInDto tableCheckInDto, LocalDate date){
-//        DayTable dayTable = DtoConverter.fromCheckInTableDto(tableCheckInDto);
-//        final Optional<DayTable> original = dayTableRepository.findOptionalByCadet_IdAndTableDay(tableCheckInDto.getUserId(), date);
-//        original.filter(userTable -> userTable.getTableDay().equals(date))
-//                .ifPresent(allUser -> {
-//                    allUser.setCheckIn(dayTable.getCheckIn());
-//                    dayTableRepository.save(allUser);
-//                });
-//        Stream<Short> checkOut = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckInDto.getUserId(), 1L)
-//                .stream()
-//                .filter(x -> x.getCheckIn() != null)
-//                .filter(x -> x.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
-//                .map(x -> x.getCheckOut());
-//        Short[] checkOutList = checkOut.toArray(Short[]::new);
-//        Stream<Short> checkIn = dayTableRepository.findAllByCadet_IdAndAttendeStatus(tableCheckInDto.getUserId(), 1L)
-//                .stream()
-//                .filter(x -> x.getCheckOut() != null)
-//                .filter(x -> x.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
-//                .map(x -> x.getCheckIn());
-//        Short[] checkInList = checkIn.toArray(Short[]::new);
-//        List<Short> list1 = new ArrayList(Arrays.asList(checkInList));
-//        List<Short> list2 = new ArrayList(Arrays.asList(checkOutList));
-//        list1.addAll(list2);
-//        Short[] AllList = list1.toArray(new Short[0]);
-//
-//        double score = 0;
-//        double participateScore = 0;
-//        for (short a : AllList){
-//            if (a == 2){
-//                score += 0.25;
-//            }else if (a == 3){
-//                score += 0.5;
-//            } else if (a == 1){
-//                participateScore += 0.5;
-//            }
-//        }
-//        final double result = score;
-//        final double participateResult = participateScore;
-//        if (tableCheckInDto.getCheckIn() == 6){
-//            final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckInDto.getUserId());
-//            change.ifPresent(userInfo -> {
-//                userInfo.setVacation(userInfo.getVacation() - 0.5);
-//                userInfoRepository.save(userInfo);
-//            });
-//        }
-//        final Optional<UserInfo> change = userInfoRepository.findByWriter_Id(tableCheckInDto.getUserId());
-//        change.ifPresent(userInfo -> {
-//            userInfo.setParticipateScore(participateResult);
-//            userInfo.setAttendScore(result);
-//            userInfoRepository.save(userInfo);
-//        });
-//
-//        // 유저의 출석 점수 매일 갱신
-////            for (int i = 0; i < tableCheckInDto.getTableDay().lengthOfMonth(); i++) {
-////                LocalDate day = tableCheckInDto.getTableDay().withDayOfMonth(1).plusDays(i);
-////                System.out.println(day);
-//        final Optional<DayTable> original1 = dayTableRepository.findAllByCadet_IdAndTableDay(tableCheckInDto.getUserId(), tableCheckInDto.getTableDay());
-//        original1.filter(userTable -> userTable.getTableDay().getMonth().equals(tableCheckInDto.getTableDay().getMonth()))
-//                .ifPresent(allUser -> {
-//                    allUser.setAttendScore(result);
-//                    allUser.setParticipateScore(participateResult);
-//                    dayTableRepository.save(allUser);
-//                });
-//        //}
-//    }
 
     @Override
     @Transactional
@@ -123,62 +52,82 @@ public class AttendanceServiceImpl implements AttendanceService{
         Optional<User> user = userRepository.findByApiId(apiId);            // 변경 권한 확인하기
 
 
+        final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
+        if (original.get().getCheckInStatus().equals(VACATION)) {
+            vacationService.addVacation(new AddVacationRequest(0.5D), findAttendanceOptional.get().getUser().getApiId());
+        }
+        original
+                .ifPresent(allUser -> {
+                    allUser.setCheckInStatus(status);
+                    attendanceRepository.save(allUser);
+                });
+        Stream<AttendanceStatus> checkOut = attendanceRepository.findAttendanceByUserId(findAttendanceOptional.get().getUser().getId())
+                .filter(x -> x.getCheckOutStatus() != NONE)
+                .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
+                .filter(x -> !x.getCalendar().getDate().isAfter(findAttendanceOptional.get().getCalendar().getDate()))
+                .map(x -> x.getCheckOutStatus());
+        AttendanceStatus[] checkOutList = checkOut.toArray(AttendanceStatus[]::new);
+        Stream<AttendanceStatus> checkIn = attendanceRepository.findAttendanceByUserId(findAttendanceOptional.get().getUser().getId())
+                .filter(x -> x.getCheckInStatus() != NONE)
+                .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
+                .filter(x -> !x.getCalendar().getDate().isAfter(findAttendanceOptional.get().getCalendar().getDate()))
+                .map(x -> x.getCheckInStatus());
+        AttendanceStatus[] checkInList = checkIn.toArray(AttendanceStatus[]::new);
+
+        List<AttendanceStatus> list1 = new ArrayList(Arrays.asList(checkInList));
+        List<AttendanceStatus> list2 = new ArrayList(Arrays.asList(checkOutList));
+        list1.addAll(list2);
 
 
-            final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
-            if (original.get().getCheckInStatus().equals(VACATION)) {
-                vacationService.addVacation(new AddVacationRequest(0.5D), findAttendanceOptional.get().getUser().getApiId());
+        double score = 0;
+        double participateScore = 0;
+        for (AttendanceStatus a : list1) {
+            if (a == TARDY) {
+                score += 0.25;
+            } else if (a == ABSENT) {
+                score += 0.5;
+            } else if (a == PRESENT) {
+                participateScore += 0.5;
             }
-            original
-                    .ifPresent(allUser -> {
-                        allUser.setCheckInStatus(status);
-                        attendanceRepository.save(allUser);
-                    });
-            Stream<AttendanceStatus> checkOut = attendanceRepository.findAttendanceByUserId(findAttendanceOptional.get().getUser().getId())
-                    .filter(x -> x.getCheckOutStatus() != NONE)
-                    .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                    .map(x -> x.getCheckOutStatus());
-            AttendanceStatus[] checkOutList = checkOut.toArray(AttendanceStatus[]::new);
-            Stream<AttendanceStatus> checkIn = attendanceRepository.findAttendanceByUserId(findAttendanceOptional.get().getUser().getId())
-                    .filter(x -> x.getCheckInStatus() != NONE)
-                    .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                    .map(x -> x.getCheckInStatus());
-            AttendanceStatus[] checkInList = checkIn.toArray(AttendanceStatus[]::new);
+        }
+        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
-            List<AttendanceStatus> list1 = new ArrayList(Arrays.asList(checkInList));
-            List<AttendanceStatus> list2 = new ArrayList(Arrays.asList(checkOutList));
-            list1.addAll(list2);
-
-
-
-            double score = 0;
-            double participateScore = 0;
-            for (AttendanceStatus a : list1) {
-                if (a == TARDY) {
+        double result = score;
+        double participateResult = participateScore;
+        if (status == VACATION) {
+            vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), apiId);
+        }
+        long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
+        Long calendarId = findAttendanceOptional.get().getCalendar().getId();
+        for (int i = 0; i < noOfDaysBetween + 1; i++) {
+            System.out.println("calendarId === " + calendarId);
+            Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
+            Optional<Attendance> attendStatus = attendanceRepository.findByUserIdAndCalendarId(findAttendanceOptional.get().getUser().getId(), calendarId);
+            System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
+            if (i != 0) {
+                if (attendStatus.get().getCheckInStatus() == TARDY) {
                     score += 0.25;
-                } else if (a == ABSENT) {
+                } else if (attendStatus.get().getCheckInStatus() == ABSENT) {
                     score += 0.5;
-                } else if (a == PRESENT) {
+                } else if (attendStatus.get().getCheckInStatus() == PRESENT) {
+                    participateScore += 0.5;
+                }
+                if (attendStatus.get().getCheckOutStatus() == TARDY) {
+                    score += 0.25;
+                } else if (attendStatus.get().getCheckOutStatus() == ABSENT) {
+                    score += 0.5;
+                } else if (attendStatus.get().getCheckOutStatus() == PRESENT) {
                     participateScore += 0.5;
                 }
             }
-        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
-
-            final double result = score;
-            final double participateResult = participateScore;
-            if (status == VACATION) {
-                vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), apiId);
-            }
-        long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
-        Long calendarId = findAttendanceOptional.get().getCalendar().getId();
-        for(int i = 0; i < noOfDaysBetween + 1; i++) {
-            System.out.println("calendarId === " + calendarId);
-            final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
-            System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
+            result = score;
+            participateResult = participateScore;
+            double finalResult = result;
+            double finalParticipateResult = participateResult;
             change.ifPresent(userInfo -> {
-                userInfo.setAbsentScore(result);
-                userInfo.setAttendanceScore(participateResult);
-                userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
+                userInfo.setAbsentScore(finalResult);
+                userInfo.setAttendanceScore(finalParticipateResult);
+                userInfo.setTotalScore(finalResult - userInfo.getStudyTimeScore());
                 statisticalDataRepository.save(userInfo);
             });
             calendarId++;
@@ -192,67 +141,87 @@ public class AttendanceServiceImpl implements AttendanceService{
         Optional<Attendance> findAttendanceOptional = attendanceRepository.findById(attendanceId);
         Optional<User> user = userRepository.findByApiId(userApiId);            // 변경 권한 확인하기
 
+        final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
+        if (original.get().getCheckOutStatus().equals(VACATION)) {
+            vacationService.addVacation(new AddVacationRequest(0.5D), findAttendanceOptional.get().getUser().getApiId());
+        }
+        original
+                .ifPresent(allUser -> {
+                    allUser.setCheckOutStatus(status);
+                    attendanceRepository.save(allUser);
+                });
+        Stream<AttendanceStatus> checkOut = attendanceRepository.findAttendanceByUserId(user.get().getId())
+                .filter(x -> x.getCheckOutStatus() != NONE)
+                .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
+                .filter(x -> !x.getCalendar().getDate().isAfter(findAttendanceOptional.get().getCalendar().getDate()))
+                .map(x -> x.getCheckOutStatus());
+        AttendanceStatus[] checkOutList = checkOut.toArray(AttendanceStatus[]::new);
+        Stream<AttendanceStatus> checkIn = attendanceRepository.findAttendanceByUserId(user.get().getId())
+                .filter(x -> x.getCheckInStatus() != NONE)
+                .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
+                .filter(x -> !x.getCalendar().getDate().isAfter(findAttendanceOptional.get().getCalendar().getDate()))
+                .map(x -> x.getCheckInStatus());
+        AttendanceStatus[] checkInList = checkIn.toArray(AttendanceStatus[]::new);
+
+        List<AttendanceStatus> list1 = new ArrayList(Arrays.asList(checkInList));
+        List<AttendanceStatus> list2 = new ArrayList(Arrays.asList(checkOutList));
+        list1.addAll(list2);
 
 
-            final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
-            if (original.get().getCheckOutStatus().equals(VACATION)) {
-                vacationService.addVacation(new AddVacationRequest(0.5D), findAttendanceOptional.get().getUser().getApiId());
+        double score = 0;
+        double participateScore = 0;
+        for (AttendanceStatus a : list1) {
+            if (a == TARDY) {
+                score += 0.25;
+            } else if (a == ABSENT) {
+                score += 0.5;
+            } else if (a == PRESENT) {
+                participateScore += 0.5;
             }
-            original
-                    .ifPresent(allUser -> {
-                        allUser.setCheckOutStatus(status);
-                        attendanceRepository.save(allUser);
-                    });
-            Stream<AttendanceStatus> checkOut = attendanceRepository.findAttendanceByUserId(user.get().getId())
-                    .filter(x -> x.getCheckOutStatus() != NONE)
-                    .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                    .map(x -> x.getCheckOutStatus());
-            AttendanceStatus[] checkOutList = checkOut.toArray(AttendanceStatus[]::new);
-            Stream<AttendanceStatus> checkIn = attendanceRepository.findAttendanceByUserId(user.get().getId())
-                    .filter(x -> x.getCheckInStatus() != NONE)
-                    .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                    .map(x -> x.getCheckInStatus());
-            AttendanceStatus[] checkInList = checkIn.toArray(AttendanceStatus[]::new);
+        }
+        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
 
-            List<AttendanceStatus> list1 = new ArrayList(Arrays.asList(checkInList));
-            List<AttendanceStatus> list2 = new ArrayList(Arrays.asList(checkOutList));
-            list1.addAll(list2);
+        double result = score;
+        double participateResult = participateScore;
+        if (status == VACATION) {
+            vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), userApiId);
+        }
 
+        long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
 
-            double score = 0;
-            double participateScore = 0;
-            for (AttendanceStatus a : list1) {
-                if (a == TARDY) {
+        Long calendarId = findAttendanceOptional.get().getCalendar().getId();
+        for (int i = 0; i < noOfDaysBetween + 1; i++) {
+            System.out.println("calendar Id ===== " + calendarId);
+            Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
+            Optional<Attendance> attendStatus = attendanceRepository.findByUserIdAndCalendarId(findAttendanceOptional.get().getUser().getId(), calendarId);
+            if (i != 0) {
+                if (attendStatus.get().getCheckInStatus() == TARDY) {
                     score += 0.25;
-                } else if (a == ABSENT) {
+                } else if (attendStatus.get().getCheckInStatus() == ABSENT) {
                     score += 0.5;
-                } else if (a == PRESENT) {
+                } else if (attendStatus.get().getCheckInStatus() == PRESENT) {
+                    participateScore += 0.5;
+                }
+                if (attendStatus.get().getCheckOutStatus() == TARDY) {
+                    score += 0.25;
+                } else if (attendStatus.get().getCheckOutStatus() == ABSENT) {
+                    score += 0.5;
+                } else if (attendStatus.get().getCheckOutStatus() == PRESENT) {
                     participateScore += 0.5;
                 }
             }
-        System.out.println("score ====== " + score + " participateScore ======= " + participateScore);
-
-            final double result = score;
-            final double participateResult = participateScore;
-            if (status == VACATION) {
-                vacationService.useVacation(new UseVacationRequest(0.5D, "휴가"), userApiId);
-            }
-
-            long noOfDaysBetween = ChronoUnit.DAYS.between(findAttendanceOptional.get().getCalendar().getDate(), LocalDate.now());
-
-            Long calendarId = findAttendanceOptional.get().getCalendar().getId();
-            for(int i = 0; i < noOfDaysBetween + 1; i++) {
-                System.out.println("calendar Id ===== " + calendarId);
-                final Optional<DayStatisticalData> change = statisticalDataRepository.findAllByUser_idAndCalendar_id(findAttendanceOptional.get().getUser().getId(), calendarId);
-                System.out.println("==================================================================" + change.get().getUser().getId() + "============================== " + change.get().getCalendar().getId());
-                change.ifPresent(userInfo -> {
-                    userInfo.setAbsentScore(result);
-                    userInfo.setAttendanceScore(participateResult);
-                    userInfo.setTotalScore(result - userInfo.getStudyTimeScore());
-                    statisticalDataRepository.save(userInfo);
-                });
-                calendarId++;
-            }
+            result = score;
+            participateResult = participateScore;
+            double finalResult = result;
+            double finalParticipateResult = participateResult;
+            change.ifPresent(userInfo -> {
+                userInfo.setAbsentScore(finalResult);
+                userInfo.setAttendanceScore(finalParticipateResult);
+                userInfo.setTotalScore(finalResult - userInfo.getStudyTimeScore());
+                statisticalDataRepository.save(userInfo);
+            });
+            calendarId++;
+        }
     }
 
     private boolean validateUserAndDatePermission(Attendance attendance, User user, LocalDate date) {
@@ -300,7 +269,6 @@ public class AttendanceServiceImpl implements AttendanceService{
     public Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date) {
 
 
-
         List<Attendance> list = attendanceRepository.findByCalendarId(calendarRepository.findAllByDate(date).getId());
         Map<Long, AttendanceDto> map = new HashMap<>();
 
@@ -310,11 +278,4 @@ public class AttendanceServiceImpl implements AttendanceService{
 
         return map;
     }
-
-
-
-//    public List<> getAttendanceAllUserByDate() {
-//
-//    }
-
 }
