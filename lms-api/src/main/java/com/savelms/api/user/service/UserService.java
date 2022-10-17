@@ -292,6 +292,16 @@ public class UserService {
 
                 dayStatisticalDataRepository.save(dayStatisticalData);
             }
+        } else if (request.getAttendStatus() == AttendStatus.NOT_PARTICIPATED) {
+            Calendar calendar = calendarRepository.findByDate(LocalDate.now()).orElseThrow(() ->
+                new EntityNotFoundException("오늘 날짜에 해당하는 calendar가 없습니다."));
+
+            dayStatisticalDataRepository.findAllByUser_idAndCalendar_id(user.getId(), calendar.getId())
+                .ifPresent((ddo) ->
+                dayStatisticalDataRepository.delete(ddo));
+            attendanceRepository.findByUserIdAndCalendarId(user.getId(), calendar.getId())
+                .ifPresent((a) ->
+                    attendanceRepository.delete(a));
         }
 
 
