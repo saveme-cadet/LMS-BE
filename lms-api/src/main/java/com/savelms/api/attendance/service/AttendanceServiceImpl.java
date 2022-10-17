@@ -195,7 +195,7 @@ public class AttendanceServiceImpl implements AttendanceService{
 
 
             final Optional<Attendance> original = attendanceRepository.findById(attendanceId);
-            if (original.get().getCheckInStatus().equals(VACATION)) {
+            if (original.get().getCheckOutStatus().equals(VACATION)) {
                 vacationService.addVacation(new AddVacationRequest(0.5D), findAttendanceOptional.get().getUser().getApiId());
             }
             original
