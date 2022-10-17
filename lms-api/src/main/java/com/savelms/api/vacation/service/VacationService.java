@@ -28,10 +28,9 @@ public class VacationService {
     private final UserRepository userRepository;
     private final VacationRepository vacationRepository;
 
-
     /**
      * 1. 사용가능한 휴가가 남았는지 확인
-     *   1-1. 휴가가 없으면 예외 던지기
+     *   1-1. if 휴가가 없으면 예외 던지기 (throw new)
      * 2. 현재 남은 휴가에서 사용할 휴가수를 뺌
      * 3. 새로구한 남은 휴가수랑 휴가 사용이유로 새 엔티티 생성해서 테이블에 저장
      * */
