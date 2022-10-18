@@ -105,10 +105,8 @@ public class UserService {
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
 
-//        DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(
-//            defaultUser, calendar);
+
         User savedUser = userRepository.saveAndFlush(defaultUser);
-//        dayStatisticalDataRepository.save(dayStatisticalData);
         EmailAuth emailAuth = emailAuthRepository.save(
             EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,
                 UUID.randomUUID().toString()));
@@ -303,8 +301,6 @@ public class UserService {
                 .ifPresent((a) ->
                     attendanceRepository.delete(a));
         }
-
-
         return user.getApiId();
     }
 
