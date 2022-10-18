@@ -24,6 +24,7 @@ public abstract class BaseEntity implements Serializable {
             columnDefinition = "datetime default CURRENT_TIMESTAMP")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt;
+
     private String createId = "ADMIN";
 
     @LastModifiedDate
@@ -31,6 +32,7 @@ public abstract class BaseEntity implements Serializable {
             columnDefinition = "datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime updatedAt;
+
     private String UpdateId = "ADMIN";
 
 }
