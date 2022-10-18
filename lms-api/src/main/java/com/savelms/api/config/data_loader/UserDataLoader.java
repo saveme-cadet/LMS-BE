@@ -1,5 +1,7 @@
 package com.savelms.api.config.data_loader;
 
+import com.savelms.api.user.controller.dto.UserSignUpRequest;
+import com.savelms.api.user.service.UserService;
 import com.savelms.core.calendar.DayType;
 import com.savelms.core.calendar.domain.entity.Calendar;
 import com.savelms.core.calendar.domain.repository.CalendarRepository;
@@ -38,6 +40,8 @@ public class UserDataLoader implements CommandLineRunner {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
     private final RoleRepository roleRepository;
+
+    private final UserService userService;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
 
@@ -250,6 +254,8 @@ public class UserDataLoader implements CommandLineRunner {
         UserRole.createUserRole(unauthorized, unauthorizedRole, "initial", true);
 
         userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
+
+        userService.validateUserNameAndSignUp(new UserSignUpRequest());
 
         캘린더_생성_7_10월();
     }
