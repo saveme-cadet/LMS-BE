@@ -101,7 +101,6 @@ public class UserService {
         String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
         User defaultUser = User.createDefaultUser(userSignUpRequest.getUsername(), encodedPassword,
             userSignUpRequest.getUsername() + User.EMAILSUFFIX);
-        Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
 
