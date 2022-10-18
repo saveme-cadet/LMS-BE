@@ -228,17 +228,17 @@ public class UserDataLoader implements CommandLineRunner {
 
 
         //유저 생성
-        User admin = User.createDefaultUser("admin", passwordEncoder.encode("42Seoul!"),
+        User admin = User.createDefaultUser("admin", passwordEncoder.encode("42Admin!"),
             "admin@gmail.com");
 
-        User manager = User.createDefaultUser("manager", passwordEncoder.encode("42Seoul!"),
+        User manager = User.createDefaultUser("manager", passwordEncoder.encode("42Admin!"),
             "manager@gmail.com");
 
-        User user = User.createDefaultUser("user", passwordEncoder.encode("42Seoul!"),
+        User user = User.createDefaultUser("user", passwordEncoder.encode("42Admin!"),
             "user@gmail.com");
 
         User unauthorized = User.createDefaultUser("unauthorized",
-            passwordEncoder.encode("42Seoul!"),
+            passwordEncoder.encode("42Admin!"),
             "unauthorized@gmail.com");
 
         //UserTeam 생성
@@ -255,7 +255,76 @@ public class UserDataLoader implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
 
-        userService.validateUserNameAndSignUp(new UserSignUpRequest());
+
+
+
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeon", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("snoh", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jaewpark", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("mosong", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("dhyeon", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hyeonsok", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("cjang", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hseong", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("naykim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sohan", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("yejikim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jayoon", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sjin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeokim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("michoe", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("haryu", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("dahpark", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("polarBear", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyunkim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("donshin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("adminNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed3", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("testNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("intraNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("Kshim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyhan", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed3", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed4", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed5", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed6", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sham", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("oooNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyle", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("taeskim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("skuNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("skuNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jaebae", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("donghyki", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hena", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("yonghlee", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("seokjyoo", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("minsupk2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("joohhan", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jjin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("asdf", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyolee", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("susong", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("seongjki", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiwonlee", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jwoo", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("ccho", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("ycha", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sorkim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed3", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed4", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jimin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hahseo", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("dohykim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sooyokim", "42Seoul!"));
+
 
         캘린더_생성_7_10월();
     }
