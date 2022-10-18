@@ -49,9 +49,11 @@ public class GradeExcellentUserTasklet implements Tasklet {
         // TODO : 등수 구하기 AND 점수 초기화 하기
         for (int i = 1; i < 4; i++){
             monthReportList.add(MonthReport.builder()
-                            .UserName(dayStatisticalData.get(i).getUser().getUsername())
-                            .UserNickName(dayStatisticalData.get(i).getUser().getNickname())
+                            .UserName(dayStatisticalData.get(i - 1).getUser().getUsername())
+                            .UserNickName(dayStatisticalData.get(i - 1).getUser().getNickname())
                             .grade(i)
+                            .score(dayStatisticalData.get(i - 1).getAttendanceScore())
+                            .month(LocalDate.now())
                     .build());
         }
         return monthReportList;

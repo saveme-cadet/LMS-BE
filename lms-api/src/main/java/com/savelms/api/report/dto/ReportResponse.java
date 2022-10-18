@@ -10,7 +10,9 @@ public class ReportResponse {
     String UserName;
     String UserNickName;
 
-    public ReportResponse(WeekReport report) {
+
+
+    public ReportResponse(WeekReport report){
         this.UserName = report.getUserName();
         this.UserNickName = report.getUserNickName();
     }
