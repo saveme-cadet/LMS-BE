@@ -4,6 +4,7 @@ import com.savelms.core.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,5 +30,11 @@ public class MonthReport extends BaseEntity {
     @Setter
     @Column(nullable = false, updatable = false)
     private int grade;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDate month;
+
+    @Column(nullable = false, updatable = false)
+    private double score;
 
 }
