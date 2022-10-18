@@ -95,28 +95,30 @@ public class UserService {
 
         Role defaultRole = roleService.findByValue(RoleEnum.ROLE_UNAUTHORIZED);
         Team defaultTeam = teamService.findByValue(TeamEnum.NONE);
-        Calendar calendar = calendarRepository.findByDate(LocalDate.now())
-            .orElseThrow(() ->
-                new EntityNotFoundException("오늘의 일정이 없습니다."));
+//        Calendar calendar = calendarRepository.findByDate(LocalDate.now())
+//            .orElseThrow(() ->
+//                new EntityNotFoundException("오늘의 일정이 없습니다."));
         String encodedPassword = bCryptPasswordEncoder.encode(userSignUpRequest.getPassword());
         User defaultUser = User.createDefaultUser(userSignUpRequest.getUsername(), encodedPassword,
             userSignUpRequest.getUsername() + User.EMAILSUFFIX);
-        Attendance.createAttendance(defaultUser, calendar);
+//        Attendance.createAttendance(defaultUser, calendar);
         UserRole.createUserRole(defaultUser, defaultRole, "signUpDefault", true);
         UserTeam.createUserTeam(defaultUser, defaultTeam, "signUpDefault", true);
 
-
+//        DayStatisticalData dayStatisticalData = DayStatisticalData.createDayStatisticalData(
+//            defaultUser, calendar);
         User savedUser = userRepository.saveAndFlush(defaultUser);
-        EmailAuth emailAuth = emailAuthRepository.save(
-            EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,
-                UUID.randomUUID().toString()));
-
-        emailService.send(emailAuth.getEmail(),
-            "42Seoul 구해줘 카뎃 회원가입 이메일 인증입니다. 다음링크를 클릭하면 인증이 완료됩니다. 2일 후 만료됩니다.",
-            EmailAuth.HOST + EmailAuth.EMAILAUTHPATH + "?id=" + savedUser.getApiId()
-                + "&email=" + emailAuth.getEmail()
-                + "&authToken=" + emailAuth.getAuthToken()
-                );
+//        dayStatisticalDataRepository.save(dayStatisticalData);
+//        EmailAuth emailAuth = emailAuthRepository.save(
+//            EmailAuth.createEmailAuth(userSignUpRequest.getUsername() + User.EMAILSUFFIX,
+//                UUID.randomUUID().toString()));
+//
+//        emailService.send(emailAuth.getEmail(),
+//            "42Seoul 구해줘 카뎃 회원가입 이메일 인증입니다. 다음링크를 클릭하면 인증이 완료됩니다. 2일 후 만료됩니다.",
+//            EmailAuth.HOST + EmailAuth.EMAILAUTHPATH + "?id=" + savedUser.getApiId()
+//                + "&email=" + emailAuth.getEmail()
+//                + "&authToken=" + emailAuth.getAuthToken()
+//                );
 
         return savedUser.getApiId();
     }
