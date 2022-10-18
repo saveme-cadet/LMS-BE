@@ -176,17 +176,17 @@ public class UserDataLoader implements CommandLineRunner {
 
         //Authority createUser = saveNewAuthority("user.create");
         //Role 생성
-//        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
-//        Role userRole = saveNewRole(RoleEnum.ROLE_USER);
-//        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER);
-//        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN);
+        Role unauthorizedRole = saveNewRole(RoleEnum.ROLE_UNAUTHORIZED);
+        Role userRole = saveNewRole(RoleEnum.ROLE_USER);
+        Role managerRole = saveNewRole(RoleEnum.ROLE_MANAGER);
+        Role adminRole = saveNewRole(RoleEnum.ROLE_ADMIN);
 
 
-        Role adminRole = roleRepository.findByValue(RoleEnum.ROLE_ADMIN).get();
-        Role managerRole = roleRepository.findByValue(RoleEnum.ROLE_MANAGER).get();
-        Role userRole = roleRepository.findByValue(RoleEnum.ROLE_USER).get();
-        Role unauthorizedRole = roleRepository.findByValue(RoleEnum.ROLE_UNAUTHORIZED).get();
-
+//        Role adminRole = roleRepository.findByValue(RoleEnum.ROLE_ADMIN).get();
+//        Role managerRole = roleRepository.findByValue(RoleEnum.ROLE_MANAGER).get();
+//        Role userRole = roleRepository.findByValue(RoleEnum.ROLE_USER).get();
+//        Role unauthorizedRole = roleRepository.findByValue(RoleEnum.ROLE_UNAUTHORIZED).get();
+//
         adminRole.getAuthorities().clear();
         adminRole.addAuthorities(createUser, updateUser,updateUserRole, updateUserTeam, updateUserAttendStatus,  readUser, deleteUser,
             createTodo, createUserTodo, updateTodo, updateUserTodo, readTodo, readUserTodo, deleteTodo, deleteUserTodo,
@@ -215,121 +215,192 @@ public class UserDataLoader implements CommandLineRunner {
 
         roleRepository.saveAll(Arrays.asList(unauthorizedRole, userRole, managerRole, adminRole));
         //Team 생성
-//        Team red = Team.builder()
-//            .value(TeamEnum.RED)
-//            .build();
-//        Team blue = Team.builder()
-//            .value(TeamEnum.BLUE)
-//            .build();
-//        Team none = Team.builder()
-//            .value(TeamEnum.NONE)
-//            .build();
-//
-//        teamRepository.saveAll(Arrays.asList(red, blue, none));
+        Team red = Team.builder()
+            .value(TeamEnum.RED)
+            .build();
+        Team blue = Team.builder()
+            .value(TeamEnum.BLUE)
+            .build();
+        Team none = Team.builder()
+            .value(TeamEnum.NONE)
+            .build();
+
+        teamRepository.saveAll(Arrays.asList(red, blue, none));
 
 
         //유저 생성
-//        User admin = User.createDefaultUser("admin", passwordEncoder.encode("42Admin!"),
-//            "admin@gmail.com");
-//
-//        User manager = User.createDefaultUser("manager", passwordEncoder.encode("42Admin!"),
-//            "manager@gmail.com");
-//
-//        User user = User.createDefaultUser("user", passwordEncoder.encode("42Admin!"),
-//            "user@gmail.com");
-//
-//        User unauthorized = User.createDefaultUser("unauthorized",
-//            passwordEncoder.encode("42Admin!"),
-//            "unauthorized@gmail.com");
+        User admin = User.createDefaultUser("admin", passwordEncoder.encode("42Admin!"),
+            "admin@gmail.com");
+
+        User manager = User.createDefaultUser("manager", passwordEncoder.encode("42Admin!"),
+            "manager@gmail.com");
+
+        User user = User.createDefaultUser("user", passwordEncoder.encode("42Admin!"),
+            "user@gmail.com");
+
+        User unauthorized = User.createDefaultUser("unauthorized",
+            passwordEncoder.encode("42Admin!"),
+            "unauthorized@gmail.com");
 
         //UserTeam 생성
-//        UserTeam.createUserTeam(admin, none, "initial", true);
-//        UserTeam.createUserTeam(manager, none, "initial", true);
-//        UserTeam.createUserTeam(user, none, "initial", true);
-//        UserTeam.createUserTeam(unauthorized, none, "initial", true);
-//
+        UserTeam.createUserTeam(admin, none, "initial", true);
+        UserTeam.createUserTeam(manager, none, "initial", true);
+        UserTeam.createUserTeam(user, none, "initial", true);
+        UserTeam.createUserTeam(unauthorized, none, "initial", true);
+
 //        //UserRole 생성
-//        UserRole.createUserRole(admin, adminRole, "initial", true);
-//        UserRole.createUserRole(manager, managerRole, "initial", true);
-//        UserRole.createUserRole(user, userRole, "initial", true);
-//        UserRole.createUserRole(unauthorized, unauthorizedRole, "initial", true);
+        UserRole.createUserRole(admin, adminRole, "initial", true);
+        UserRole.createUserRole(manager, managerRole, "initial", true);
+        UserRole.createUserRole(user, userRole, "initial", true);
+        UserRole.createUserRole(unauthorized, unauthorizedRole, "initial", true);
 
 
 
 
 
 
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeon", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeonNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("snoh", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jaewpark", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("mosong", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("dhyeon", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("hyeonsok", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("cjang", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("hseong", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("naykim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("sohan", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("yejikim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jayoon", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("sjin", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeokim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("michoe", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("haryu", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("dahpark", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("polarBear", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyunkim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("donshin", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed2", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("adminNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed3", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("testNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed2", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("intraNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("Kshim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyhan", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed3", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed4", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed5", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed6", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("sham", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("oooNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyle", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("taeskim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("skuNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("skuNotUsed2", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jaebae", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("donghyki", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("hena", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("yonghlee", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("seokjyoo", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("minsupk2", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("joohhan", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jjin", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("asdf", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyolee", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("susong", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("seongjki", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiwonlee", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jwoo", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("ccho", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("ycha", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("sorkim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed1", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed2", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed3", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed4", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("jimin", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("hahseo", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("dohykim", "42Seoul!"));
-//        userService.validateUserNameAndSignUp(new UserSignUpRequest("sooyokim", "42Seoul!"));
-//
-//        userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
-//
-//        캘린더_생성_7_10월();
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeon", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeonNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("snoh", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jaewpark", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("mosong", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("dhyeon", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hyeonsok", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("cjang", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hseong", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("naykim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sohan", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("yejikim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jayoon", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sjin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("gyeokim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("michoe", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("haryu", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("dahpark", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("polarBear", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyunkim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("donshin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("adminNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("takimNotUsed3", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("testNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("intraNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("Kshim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyhan", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed3", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed4", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed5", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyleNotUsed6", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sham", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("oooNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("chanhyle", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("taeskim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("skuNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("skuNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jaebae", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("donghyki", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hena", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("yonghlee", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("seokjyoo", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("minsupk2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("joohhan", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jjin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("asdf", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("kyolee", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("susong", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("seongjki", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiwonlee", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jwoo", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("ccho", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("ycha", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sorkim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed1", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed2", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed3", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jiminNotUsed4", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("jimin", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("hahseo", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("dohykim", "42Seoul!"));
+        userService.validateUserNameAndSignUp(new UserSignUpRequest("sooyokim", "42Seoul!"));
+
+
+
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("gyeon").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("gyeonNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("snoh").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jaewpark").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("mosong").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("dhyeon").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("hyeonsok").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("cjang").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("hseong").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("naykim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("sohan").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("yejikim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jayoon").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("sjin").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("gyeokim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("michoe").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("haryu").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("dahpark").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("polarBear").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("kyunkim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("donshin").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("takimNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("takimNotUsed2").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("adminNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("takimNotUsed3").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("testNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyleNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyleNotUsed2").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("intraNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("Kshim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("kyhan").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyleNotUsed3").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyleNotUsed4").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyleNotUsed5").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyleNotUsed6").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("sham").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("oooNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("chanhyle").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("taeskim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("skuNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("skuNotUsed2").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jaebae").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("donghyki").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("hena").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("yonghlee").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("seokjyoo").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("minsupk2").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("joohhan").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jjin").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("asdf").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("kyolee").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("susong").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("seongjki").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jiwonlee").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jwoo").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("ccho").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("ycha").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("sorkim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jiminNotUsed1").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jiminNotUsed2").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jiminNotUsed3").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jiminNotUsed4").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("jimin").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("hahseo").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("dohykim").get(), unauthorizedRole, "signUpDefault", true));
+//        userRoleRepository.save(UserRole.createUserRole(userRepository.findByUsername("sooyokim").get(), unauthorizedRole, "signUpDefault", true));
+
+
+        userRepository.saveAll(Arrays.asList(admin, manager, user, unauthorized));
+
+        캘린더_생성_7_10월();
     }
 
 
