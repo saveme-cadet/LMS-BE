@@ -250,6 +250,12 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
             idx = sr.nextInt(len);    // 강력한 난수를 발생시키기 위해 SecureRandom을 사용한다.
             sb.append(charSet[idx]);
         }
+        int[] start = {0, 10, 36, 62};
+        int[] diff = {10, 26, 26, 7};
+        for (int i=0; i<4; i++) {
+            idx = sr.nextInt(len);
+            sb.append(charSet[(idx + start[i]) % diff[i]]);
+        }
 
         return sb.toString();
     }
