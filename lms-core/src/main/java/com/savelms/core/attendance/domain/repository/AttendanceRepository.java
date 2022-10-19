@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     Optional<Attendance> findByUserIdAndCalendarId(Long userId, Long calId);
+    boolean existsByUserIdAndCalendarId(Long userId, Long calId);
+
 
     Optional<Attendance> findAllByCalendarId(Long calendarId);
     List<Attendance> findByCalendarId(Long calendarId);

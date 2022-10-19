@@ -56,43 +56,13 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                 .map(x -> x.getId());
         Long[] attendUserList = attendUser.toArray(Long[]::new);
 
-        // calendar에서 요일 뽑아내기
+        // calendar에서 요일 뽑아내기calendar
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now().minusDays(1));
         final Calendar nowDay = calendarRepository.findAllByDate(LocalDate.now());
-        System.out.println("=============================" + "+++++++++++++++++" + day.getDate());
-        // ===================================== 매일 1일 0으로 초기화 ========================= //
+
         if (LocalDate.now().getDayOfMonth() == 1) {
             for (Long x : attendUserList) {
-                System.out.println("=============================" + x + "===================");
-                //     DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar(x, day.getId());
-                data.add(DayStatisticalData.builder()
-                        .absentScore((double) 0)
-                        .attendanceScore((double) 0)
-                        .user(userRepository.getById(x))
-                        .todoSuccessRate((double) 0)
-                        .weekAbsentScore((double) 0)
-                        .calendar(nowDay)
-                        .totalScore((double) 0)
-                        .studyTimeScore((double) 0)
-                        .build());
-            }
-        } else {
-            for (Long x : attendUserList) {
-                System.out.println("=============================" + x + "===================");
-                if (dayStatisticalDataRepository.existsByuser_idAndCalendar_id(x, day.getId())) {
-                    List<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
-                    System.out.println(":::: " + dayStatisticalData.get(0).getAbsentScore());
-                    data.add(DayStatisticalData.builder()
-                            .absentScore(dayStatisticalData.get(0).getAbsentScore())
-                            .attendanceScore(dayStatisticalData.get(0).getAttendanceScore())
-                            .user(userRepository.getById(x))
-                            .todoSuccessRate(dayStatisticalData.get(0).getTodoSuccessRate())
-                            .weekAbsentScore(dayStatisticalData.get(0).getWeekAbsentScore())
-                            .calendar(nowDay)
-                            .totalScore(dayStatisticalData.get(0).getTotalScore())
-                            .studyTimeScore(dayStatisticalData.get(0).getStudyTimeScore())
-                            .build());
-                } else {
+                if (!dayStatisticalDataRepository.existsByuser_idAndCalendar_id(x, nowDay.getId())) {
                     data.add(DayStatisticalData.builder()
                             .absentScore((double) 0)
                             .attendanceScore((double) 0)
@@ -103,6 +73,35 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                             .totalScore((double) 0)
                             .studyTimeScore((double) 0)
                             .build());
+                }
+            }
+        } else {
+            for (Long x : attendUserList) {
+                if (!dayStatisticalDataRepository.existsByuser_idAndCalendar_id(x, nowDay.getId())) {
+                    if (dayStatisticalDataRepository.existsByuser_idAndCalendar_id(x, day.getId())) {
+                        List<DayStatisticalData> dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar_id(x, day.getId());
+                        data.add(DayStatisticalData.builder()
+                                .absentScore(dayStatisticalData.get(0).getAbsentScore())
+                                .attendanceScore(dayStatisticalData.get(0).getAttendanceScore())
+                                .user(userRepository.getById(x))
+                                .todoSuccessRate(dayStatisticalData.get(0).getTodoSuccessRate())
+                                .weekAbsentScore(dayStatisticalData.get(0).getWeekAbsentScore())
+                                .calendar(nowDay)
+                                .totalScore(dayStatisticalData.get(0).getTotalScore())
+                                .studyTimeScore(dayStatisticalData.get(0).getStudyTimeScore())
+                                .build());
+                    } else {
+                        data.add(DayStatisticalData.builder()
+                                .absentScore((double) 0)
+                                .attendanceScore((double) 0)
+                                .user(userRepository.getById(x))
+                                .todoSuccessRate((double) 0)
+                                .weekAbsentScore((double) 0)
+                                .calendar(nowDay)
+                                .totalScore((double) 0)
+                                .studyTimeScore((double) 0)
+                                .build());
+                    }
                 }
             }
 

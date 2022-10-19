@@ -55,17 +55,17 @@ public class AttendanceTasklet implements Tasklet {
 
         // calendar에서 요일 뽑아내기
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now().minusDays(1));
-        System.out.println(day.getId());
+        final Calendar nowDay = calendarRepository.findAllByDate(LocalDate.now());
 
         for (Long x : attendUserList) {
-            System.out.println("=============================" + x + "===================");
-            //     DayStatisticalData dayStatisticalData = dayStatisticalDataRepository.findByuser_idAndCalendar(x, day.getId());
-            attendanceData.add(Attendance.builder()
-                            .calendar(calendarRepository.findByDate(LocalDate.now()).get())
-                            .user(userRepository.getById(x))
-                            .checkInStatus(AttendanceStatus.NONE)
-                            .checkOutStatus(AttendanceStatus.NONE)
-                            .build());
+            if (!attendanceRepository.existsByUserIdAndCalendarId(x, nowDay.getId())) {
+                attendanceData.add(Attendance.builder()
+                        .calendar(nowDay)
+                        .user(userRepository.getById(x))
+                        .checkInStatus(AttendanceStatus.NONE)
+                        .checkOutStatus(AttendanceStatus.NONE)
+                        .build());
+            }
         }
 
         return attendanceData;

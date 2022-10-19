@@ -42,6 +42,7 @@ public class ReportController {
     /*
     위험한 유저 보고
      */
+    @PreAuthorize("hasAuthority('week_report.read')")
     @Operation(description = "위험한 유저 보고")
     @GetMapping("/report-user")
     public ResponseEntity<List<ReportResponse>> reportDangerUser(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
@@ -51,6 +52,7 @@ public class ReportController {
             return ResponseEntity.ok().body(reportResponse);
     }
 
+    @PreAuthorize("hasAuthority('month_report.read')")
     @Operation(description = "출석 등 수 보고")
     @GetMapping("/report-good-user")
     public ResponseEntity<List<MonthReport>> reportGoodUser(@Parameter(hidden = true) @AuthenticationPrincipal User user,
