@@ -254,7 +254,7 @@ public class User extends BaseEntity implements UserDetails, CredentialsContaine
         int[] diff = {10, 26, 26, 7};
         for (int i=0; i<4; i++) {
             idx = sr.nextInt(len);
-            sb.append(charSet[(idx + start[i]) % diff[i]]);
+            sb.append(charSet[(idx) % diff[i] + start[i]]);
         }
 
         return sb.toString();
