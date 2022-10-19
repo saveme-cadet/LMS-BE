@@ -82,17 +82,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<AttendanceStatus> list2 = new ArrayList(Arrays.asList(checkOutList));
         list1.addAll(list2);
 
-        LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
+        LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SATURDAY));
         Stream<AttendanceStatus> checkOut2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
-                .filter(x -> x.getCheckOutStatus() != NONE)
+                .filter(x -> x.getCheckOutStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                .filter(x -> x.getCalendar().getDate().isBefore(date))
+                .filter(x -> x.getCalendar().getDate().isAfter(date))
                 .map(x -> x.getCheckOutStatus());
         AttendanceStatus[] checkOutList2 = checkOut2.toArray(AttendanceStatus[]::new);
         Stream<AttendanceStatus> checkIn2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
-                .filter(x -> x.getCheckInStatus() != NONE)
+                .filter(x -> x.getCheckInStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                .filter(x -> x.getCalendar().getDate().isBefore(date))
+                .filter(x -> x.getCalendar().getDate().isAfter(date))
                 .map(x -> x.getCheckInStatus());
         AttendanceStatus[] checkInList2 = checkIn2.toArray(AttendanceStatus[]::new);
         List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList2));
@@ -112,10 +112,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 participateScore += 0.5;
             }
         }
-        for (AttendanceStatus a : list3) {
-            if (a == ABSENT)
-                weekAbsentScore += 0.5;
-        }
+        weekAbsentScore = list3.size() * 0.5;
 
         double result = score;
         double participateResult = participateScore;
@@ -196,17 +193,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<AttendanceStatus> list2 = new ArrayList(Arrays.asList(checkOutList));
         list1.addAll(list2);
 
-        LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
+        LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SATURDAY));
         Stream<AttendanceStatus> checkOut2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
-                .filter(x -> x.getCheckOutStatus() != NONE)
+                .filter(x -> x.getCheckOutStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                .filter(x -> x.getCalendar().getDate().isBefore(date))
+                .filter(x -> x.getCalendar().getDate().isAfter(date))
                 .map(x -> x.getCheckOutStatus());
         AttendanceStatus[] checkOutList2 = checkOut2.toArray(AttendanceStatus[]::new);
         Stream<AttendanceStatus> checkIn2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
-                .filter(x -> x.getCheckInStatus() != NONE)
+                .filter(x -> x.getCheckInStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
-                .filter(x -> x.getCalendar().getDate().isBefore(date))
+                .filter(x -> x.getCalendar().getDate().isAfter(date))
                 .map(x -> x.getCheckInStatus());
         AttendanceStatus[] checkInList2 = checkIn2.toArray(AttendanceStatus[]::new);
         List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList2));
@@ -227,10 +224,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 participateScore += 0.5;
             }
         }
-        for (AttendanceStatus a : list3) {
-            if (a == ABSENT)
-                weekAbsentScore += 0.5;
-        }
+         weekAbsentScore = list3.size() * 0.5;
 
         double result = score;
         double participateResult = participateScore;
