@@ -113,7 +113,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         }
         for (AttendanceStatus a : list3) {
-            if (a == PRESENT)
+            if (a == ABSENT)
                 weekAbsentScore += 0.5;
         }
 
@@ -228,7 +228,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             }
         }
         for (AttendanceStatus a : list3) {
-            if (a == PRESENT)
+            if (a == ABSENT)
                 weekAbsentScore += 0.5;
         }
 
