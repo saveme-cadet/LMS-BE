@@ -18,6 +18,7 @@ import com.savelms.core.user.role.RoleEnum;
 import com.savelms.core.user.role.domain.entity.UserRole;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -84,6 +85,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SATURDAY));
         System.out.println("============================" + date);
+        System.out.println("================ ++++++++++++++++ ===========" + LocalDateTime.now().plusDays(1));
         Stream<AttendanceStatus> checkOut2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
                 .filter(x -> x.getCheckOutStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
