@@ -83,6 +83,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         list1.addAll(list2);
 
         LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SATURDAY));
+        System.out.println("============================" + date);
         Stream<AttendanceStatus> checkOut2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
                 .filter(x -> x.getCheckOutStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
