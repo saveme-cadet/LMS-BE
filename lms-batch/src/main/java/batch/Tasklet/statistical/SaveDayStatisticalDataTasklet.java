@@ -56,7 +56,7 @@ public class SaveDayStatisticalDataTasklet implements Tasklet {
                 .map(x -> x.getId());
         Long[] attendUserList = attendUser.toArray(Long[]::new);
 
-        // calendar에서 요일 뽑아내기
+        // calendar에서 요일 뽑아내기calendar
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now().minusDays(1));
         final Calendar nowDay = calendarRepository.findAllByDate(LocalDate.now());
 
