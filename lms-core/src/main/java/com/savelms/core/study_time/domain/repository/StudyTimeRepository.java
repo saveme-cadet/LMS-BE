@@ -37,5 +37,8 @@ public interface StudyTimeRepository extends JpaRepository<StudyTime, Long> {
             @Param("beginTime") LocalDateTime beginTime,
             @Param("endTime") LocalDateTime endTime);
 
+    Optional<StudyTime> findByUserIdAndCalendarIdAndIsStudying(Long userId, Long calendarId, Boolean ch);
+    boolean existsByUserIdAndCalendarIdAndIsStudying(Long userId, Long calendarId, Boolean ch);
+
 }
 
