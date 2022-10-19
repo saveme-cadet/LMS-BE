@@ -57,7 +57,7 @@ public class TooMuchAojiTImeTasklet implements Tasklet {
                     studyTime1.setStudyScore(StudyTime.getStudyScore(studyTime1.getBeginTime(), endStudyTime));
                 });
                 Calendar calendar = calendarRepository.findAllByDate(LocalDate.now().plusDays(1));
-                StudyTime studyTime3 = StudyTime.of(userRepository.getById(x), calendar);
+                StudyTime studyTime3 = StudyTime.ofBeforeDailyConfig(userRepository.getById(x), calendar);
                 studyTimeRepository.save(studyTime3);
                 final double score = studyTime.get().getStudyScore();
 

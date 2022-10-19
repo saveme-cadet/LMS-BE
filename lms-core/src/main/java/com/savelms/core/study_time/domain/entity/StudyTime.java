@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -70,6 +72,18 @@ public class StudyTime extends BaseEntity {
                 .calendar(calendar)
                 .beginTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now().with(LocalTime.MIN))
+                .isStudying(true)
+                .studyScore(0D)
+                .finalStudyTime("00:00:00")
+                .build();
+    }
+
+    public static StudyTime ofBeforeDailyConfig(User user, Calendar calendar) {
+        return StudyTime.builder()
+                .user(user)
+                .calendar(calendar)
+                .beginTime(LocalDateTime.now())
+                .endTime(LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.of(00,00,00)))
                 .isStudying(true)
                 .studyScore(0D)
                 .finalStudyTime("00:00:00")

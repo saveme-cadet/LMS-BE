@@ -84,8 +84,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         list1.addAll(list2);
 
         LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SATURDAY));
-        System.out.println("============================" + date);
-        System.out.println("================ ++++++++++++++++ ===========" + LocalDateTime.now().plusDays(1));
         Stream<AttendanceStatus> checkOut2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
                 .filter(x -> x.getCheckOutStatus() == ABSENT)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
@@ -101,8 +99,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList2));
         List<AttendanceStatus> list4 = new ArrayList(Arrays.asList(checkOutList2));
         list3.addAll(list4);
-
-
         double score = 0;
         double participateScore = 0;
         double weekAbsentScore = 0;
@@ -134,8 +130,6 @@ public class AttendanceServiceImpl implements AttendanceService {
                     score += 0.5;
                 } else if (attendStatus.get().getCheckInStatus() == PRESENT) {
                     participateScore += 0.5;
-//                    if (Math.abs(calendarId - calendarRepository.findByDate(LocalDate.now()).get().getId()) < 7)
-//                        weekAbsentScore += 0.5;
                 }
                 if (attendStatus.get().getCheckOutStatus() == TARDY) {
                     score += 0.25;
@@ -143,8 +137,6 @@ public class AttendanceServiceImpl implements AttendanceService {
                     score += 0.5;
                 } else if (attendStatus.get().getCheckOutStatus() == PRESENT) {
                     participateScore += 0.5;
-//                    if (Math.abs(calendarId - calendarRepository.findByDate(LocalDate.now()).get().getId()) < 7)
-//                        weekAbsentScore += 0.5;
                 }
             }
             result = score;
