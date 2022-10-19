@@ -42,13 +42,13 @@ public class UserTeamService {
         return userTeams;
     }
 
-    public Map<Long, TeamEnum> findAllUserTeamByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+    public Map<Long, TeamEnum> findAllUserTeamByDateAndAttendStatus(LocalDate date) {
         Map<Long, TeamEnum> userTeams = new HashMap<>();
         Map<User, List<UserTeam>> userAndUserTeams
 //                = userTeamRepository.findAllByCreatedAt(LocalDateTime.of(date, LocalTime.MAX))
 //                .stream().filter(x -> x.getUser().getAttendStatus().equals(attendStatus))
 //                .collect(Collectors.groupingBy(UserTeam::getUser));
-                = userTeamRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX), attendStatus)
+                = userTeamRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX))
                     .stream().collect(Collectors.groupingBy(UserTeam::getUser));
 
         for (User user : userAndUserTeams.keySet()) {

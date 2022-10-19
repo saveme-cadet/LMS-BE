@@ -1,6 +1,7 @@
 package com.savelms.api.attendance.service;
 
 import com.savelms.core.attendance.domain.AttendanceStatus;
+import com.savelms.core.attendance.domain.entity.Attendance;
 import com.savelms.core.attendance.dto.AttendanceDto;
 import com.savelms.core.exception.NoPermissionException;
 import com.savelms.core.user.AttendStatus;
@@ -17,5 +18,5 @@ public interface AttendanceService {
     //AttendanceDto getAttendanceByDate(String username, LocalDate date);
 
     Map<Long, AttendanceDto> getAllAttendanceByDate(LocalDate date);
-    Map<Long, AttendanceDto> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus);
+    Map<Long, Attendance> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus);
 }

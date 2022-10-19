@@ -7,6 +7,7 @@ import com.savelms.core.user.AttendStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,9 @@ public class DayStatisticalDataController {
             @RequestParam("date") @DateTimeFormat(pattern = StudyTime.DATE_FORMAT) LocalDate date,
             @RequestParam(value = "attendStatus", required = false) AttendStatus attendStatus)
     {
+        if (attendStatus == null || attendStatus == AttendStatus.NOT_PARTICIPATED) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         List<DayLogDto> dayLogs = dayStatisticalDataService.getDayLogs(date, attendStatus);
 
         return ResponseEntity.ok().body(dayLogs);

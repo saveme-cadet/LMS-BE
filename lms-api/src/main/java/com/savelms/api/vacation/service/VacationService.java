@@ -75,8 +75,8 @@ public class VacationService {
     /**
      * 조회
      * */
-    public Map<Long, Double> getRemainingVacationByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
-        List<Vacation> vacations = vacationRepository.findAllByDateAttendStatus(date, attendStatus.name());
+    public Map<Long, Double> getRemainingVacationByDateAndAttendStatus(LocalDate date) {
+        List<Vacation> vacations = vacationRepository.findAllByDateAttendStatus(date);
         Map<Long, Double> allRemainingVacation = new HashMap<>();
 
         Map<User, List<Vacation>> collect = vacations.stream().collect(Collectors.groupingBy(Vacation::getUser));

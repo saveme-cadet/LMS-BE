@@ -270,13 +270,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         return new AttendanceDto(attendance);
     }
 
-    public Map<Long, AttendanceDto> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+    public Map<Long, Attendance> getAllAttendanceByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
 
         return attendanceRepository.findAllByDateAndAttendStatusWithUser(date, attendStatus)
                 .stream()
                 .collect(Collectors.toMap(
                         attendance -> attendance.getUser().getId(),
-                        AttendanceDto::new
+                        attendance -> attendance
                 ));
     }
 

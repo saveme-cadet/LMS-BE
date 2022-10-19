@@ -22,11 +22,10 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
     @Query("SELECT ut FROM UserTeam ut " +
             "JOIN FETCH ut.user u " +
-            "WHERE ut.createdAt <= :date AND u.attendStatus = :attendStatus " +
+            "WHERE ut.createdAt <= :date " +
             "ORDER BY ut.createdAt desc")
     List<UserTeam> findAllByDateAndAttendStatus(
-            @Param("date") LocalDateTime date,
-            @Param("attendStatus") AttendStatus attendStatus);
+            @Param("date") LocalDateTime date);
 
     //List<UserTeam> findAllByCreatedAt(LocalDateTime date);
 }

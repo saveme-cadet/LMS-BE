@@ -4,6 +4,8 @@ import com.savelms.core.attendance.domain.AttendanceStatus;
 import com.savelms.core.team.TeamEnum;
 import com.savelms.core.user.AttendStatus;
 import com.savelms.core.user.role.RoleEnum;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DayLogDto {
 
     private LocalDate tableDay;

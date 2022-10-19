@@ -31,11 +31,10 @@ public interface DayStatisticalDataRepository extends JpaRepository<DayStatistic
             "join fetch d.user u " +
             "join fetch u.userRoles ur " +
             "join fetch ur.role r " +
-            "where d.calendar.date =:date and u.attendStatus = :attendStatus " +
+            "where d.calendar.date =:date " +
             "order by u.id asc")
     List<DayStatisticalData> findAllByDateAndAttendStatus(
-            @Param("date") LocalDate date,
-            @Param("attendStatus") AttendStatus attendStatus);
+            @Param("date") LocalDate date);
 
     @Query("select d from DayStatisticalData d where d.user.username = :username and d.calendar.date = :date")
     Optional<DayStatisticalData> findByUsernameAndDate(@Param("username") String username, @Param("date") LocalDate date);

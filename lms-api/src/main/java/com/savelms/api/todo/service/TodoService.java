@@ -105,9 +105,9 @@ public class TodoService {
         return response;
     }
 
-    public Map<String, Double> getTodoProgressAndAttendStatus(LocalDate localDate, AttendStatus attendStatus) {
+    public Map<String, Double> getTodoProgressAndAttendStatus(LocalDate localDate) {
 
-        List<Todo> todos = todoRepository.findByTodoDayAndAttendStatusFetchJoin(localDate, attendStatus);
+        List<Todo> todos = todoRepository.findByTodoDayAndAttendStatusFetchJoin(localDate);
         ListResponse<GetTodoProgressResponse> response = new ListResponse<>();
         Map<String, Integer[]> data = new HashMap<>(40);
 

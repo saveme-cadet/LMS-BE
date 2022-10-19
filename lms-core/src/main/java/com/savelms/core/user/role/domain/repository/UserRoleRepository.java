@@ -21,11 +21,10 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     List<UserRole> findAllByDate(@Param("date") LocalDateTime date);
 
     @Query("SELECT ur FROM UserRole ur JOIN FETCH ur.user u " +
-            "WHERE ur.createdAt <= :date AND u.attendStatus = :attendStatus " +
+            "WHERE ur.createdAt <= :date " +
             "ORDER BY ur.createdAt DESC")
     List<UserRole> findAllByDateAndAttendStatus(
-            @Param("date") LocalDateTime date,
-            @Param("attendStatus") AttendStatus attendStatus);
+            @Param("date") LocalDateTime date);
 
     List<UserRole> findAllByCreatedAt(LocalDateTime date);
 }

@@ -37,10 +37,10 @@ public class UserRoleService {
         return userRoles;
     }
 
-    public Map<Long, RoleEnum> findAllUserRoleByDateAndAttendStatus(LocalDate date, AttendStatus attendStatus) {
+    public Map<Long, RoleEnum> findAllUserRoleByDateAndAttendStatus(LocalDate date) {
         Map<Long, RoleEnum> userRoles = new HashMap<>();
         Map<User, List<UserRole>> userAndUserRoles
-                = userRoleRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX), attendStatus)
+                = userRoleRepository.findAllByDateAndAttendStatus(LocalDateTime.of(date, LocalTime.MAX))
                 .stream().collect(Collectors.groupingBy(UserRole::getUser));
 
 //        = userTeamRepository.findAllByCreatedAt(LocalDateTime.of(date, LocalTime.MAX))

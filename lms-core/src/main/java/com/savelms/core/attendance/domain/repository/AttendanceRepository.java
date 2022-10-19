@@ -42,7 +42,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "join fetch a.user u " +
             "join fetch u.userRoles ur " +
             "join fetch ur.role r " +
-            "where a.calendar.date = :date and u.attendStatus = :attendStatus")
+            "where a.calendar.date = :date and a.attendStatus = :attendStatus")
     List<Attendance> findAllByDateAndAttendStatusWithUser(
             @Param("date") LocalDate date,
             @Param("attendStatus") AttendStatus attendStatus);
