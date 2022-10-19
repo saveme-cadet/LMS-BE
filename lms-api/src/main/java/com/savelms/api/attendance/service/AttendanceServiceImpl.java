@@ -88,15 +88,15 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
                 .filter(x -> x.getCalendar().getDate().isBefore(date))
                 .map(x -> x.getCheckOutStatus());
-        AttendanceStatus[] checkOutList2 = checkOut.toArray(AttendanceStatus[]::new);
+        AttendanceStatus[] checkOutList2 = checkOut2.toArray(AttendanceStatus[]::new);
         Stream<AttendanceStatus> checkIn2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
                 .filter(x -> x.getCheckInStatus() != NONE)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
                 .filter(x -> x.getCalendar().getDate().isBefore(date))
                 .map(x -> x.getCheckInStatus());
-        AttendanceStatus[] checkInList2 = checkIn.toArray(AttendanceStatus[]::new);
-        List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList));
-        List<AttendanceStatus> list4 = new ArrayList(Arrays.asList(checkOutList));
+        AttendanceStatus[] checkInList2 = checkIn2.toArray(AttendanceStatus[]::new);
+        List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList2));
+        List<AttendanceStatus> list4 = new ArrayList(Arrays.asList(checkOutList2));
         list3.addAll(list4);
 
 
@@ -202,15 +202,15 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
                 .filter(x -> x.getCalendar().getDate().isBefore(date))
                 .map(x -> x.getCheckOutStatus());
-        AttendanceStatus[] checkOutList2 = checkOut.toArray(AttendanceStatus[]::new);
+        AttendanceStatus[] checkOutList2 = checkOut2.toArray(AttendanceStatus[]::new);
         Stream<AttendanceStatus> checkIn2 = attendanceRepository.findAttendanceByUserId(user.get().getId())
                 .filter(x -> x.getCheckInStatus() != NONE)
                 .filter(x -> x.getCalendar().getDate().getMonth().equals(findAttendanceOptional.get().getCalendar().getDate().getMonth()))
                 .filter(x -> x.getCalendar().getDate().isBefore(date))
                 .map(x -> x.getCheckInStatus());
-        AttendanceStatus[] checkInList2 = checkIn.toArray(AttendanceStatus[]::new);
-        List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList));
-        List<AttendanceStatus> list4 = new ArrayList(Arrays.asList(checkOutList));
+        AttendanceStatus[] checkInList2 = checkIn2.toArray(AttendanceStatus[]::new);
+        List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList2));
+        List<AttendanceStatus> list4 = new ArrayList(Arrays.asList(checkOutList2));
         list3.addAll(list4);
 
 
