@@ -15,9 +15,16 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static com.savelms.core.attendance.domain.AttendanceStatus.ABSENT;
 
 public class CheckOutTasklet implements Tasklet {
     private final AttendanceRepository attendanceRepository;
@@ -49,6 +56,7 @@ public class CheckOutTasklet implements Tasklet {
         final Calendar day = calendarRepository.findAllByDate(LocalDate.now());
 
 
+        LocalDate date = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.SATURDAY));
         for (Long x : attendUserList) {
             Optional<Attendance> attendances = attendanceRepository.findByUserIdAndCalendarId(x, day.getId());
             /*
@@ -62,6 +70,23 @@ public class CheckOutTasklet implements Tasklet {
                     attendanceRepository.save(attendance);
                 });
 
+                Stream<AttendanceStatus> checkOut2 = attendanceRepository.findAttendanceByUserId(x)
+                        .filter(x1 -> x1.getCheckOutStatus() == ABSENT)
+                        .filter(x1 -> x1.getCalendar().getDate().getMonth().equals(day.getDate().getMonth()))
+                        .filter(x1 -> x1.getCalendar().getDate().isAfter(date))
+                        .map(x1 -> x1.getCheckOutStatus());
+                AttendanceStatus[] checkOutList2 = checkOut2.toArray(AttendanceStatus[]::new);
+                Stream<AttendanceStatus> checkIn2 = attendanceRepository.findAttendanceByUserId(x)
+                        .filter(x1 -> x1.getCheckInStatus() == ABSENT)
+                        .filter(x1 -> x1.getCalendar().getDate().getMonth().equals(day.getDate().getMonth()))
+                        .filter(x1 -> x1.getCalendar().getDate().isAfter(date))
+                        .map(x1 -> x1.getCheckInStatus());
+                AttendanceStatus[] checkInList2 = checkIn2.toArray(AttendanceStatus[]::new);
+                List<AttendanceStatus> list3 = new ArrayList(Arrays.asList(checkInList2));
+                List<AttendanceStatus> list4 = new ArrayList(Arrays.asList(checkOutList2));
+                list3.addAll(list4);
+                double weekAbsentScore = list3.size() * 0.5;
+
                 /*
                 AttendanceStatus 상태가 None에서 ABSENT로 변경됨에 따라 점수도 동시에 변경을 해준다.
                 */
@@ -70,6 +95,7 @@ public class CheckOutTasklet implements Tasklet {
                 dayStatisticalData.ifPresent(dayStatisticalData1 -> {
                     dayStatisticalData1.setAbsentScore(dayStatisticalData1.getAbsentScore() + 0.5);
                     dayStatisticalData1.setTotalScore(dayStatisticalData1.getAbsentScore() - dayStatisticalData1.getStudyTimeScore());
+                    dayStatisticalData1.setWeekAbsentScore(weekAbsentScore);
                     dayStatisticalDataRepository.save(dayStatisticalData1);
                 });
             }
