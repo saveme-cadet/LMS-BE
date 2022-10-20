@@ -66,52 +66,10 @@ public class DaliyConfig {
     public Job DailyJob() throws Exception {
         return this.jobBuilderFactory.get("DailyJob")
                 .incrementer(new RunIdIncrementer())
-               // .start(saveAttendanceStep())
-                //.start(this.ItemDailyWriterStep())
                 .start(this.saveDayStatisticalDataStep())
                 .next(this.saveAttendanceStep())
                 .build();
     }
-
-    // =============================================== calendar make  ============================//
-
-    @Bean
-    public Step ItemDailyWriterStep() throws Exception {
-        return stepBuilderFactory.get("ItemDailyWriterStep")
-                .<Calendar, Calendar>chunk(10)
-                .reader(itemReader())
-                .writer(jpaItemWriter())
-                .build();
-    }
-
-    private ItemWriter<Calendar> jpaItemWriter() throws Exception {
-        JpaItemWriter<Calendar> itemWriter = new JpaItemWriterBuilder<Calendar>()
-                .entityManagerFactory(entityManagerFactory)
-                .build();
-        itemWriter.afterPropertiesSet();
-
-        return itemWriter;
-    }
-
-    private ItemReader<Calendar> itemReader() {
-        return new CustomItemReader<>(getItems());
-    }
-
-
-    private List<Calendar> getItems() {
-        List<Calendar> items = new ArrayList<>();
-        if (DayOfWeek.getDayOfWeek() == 1 || DayOfWeek.getDayOfWeek() == 7)
-            items.add(new Calendar(LocalDate.now(),
-                    DayType.HOLIDAY
-            ));
-        else
-            items.add(new Calendar(LocalDate.now(),
-                    DayType.STUDYDAY
-            ));
-        return items;
-    }
-
-
     // =============================================== day_statistical_data ========================//
 
 
