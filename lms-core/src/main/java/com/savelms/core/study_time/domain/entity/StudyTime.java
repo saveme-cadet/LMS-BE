@@ -112,6 +112,8 @@ public class StudyTime extends BaseEntity {
     }
 
     public void updateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+        validateStudyTime(beginTime, endTime);
+
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.studyScore = getStudyScore(this.beginTime, this.endTime);
@@ -137,14 +139,13 @@ public class StudyTime extends BaseEntity {
     public static String getFinalStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
-        validateStudyTime(beginTime, endTime);
         return String.format("%02d:%02d:%02d",
                 between.toHours(),
                 between.toMinutesPart(),
                 between.toSecondsPart());
     }
 
-    public static void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
+    private void validateStudyTime(LocalDateTime beginTime, LocalDateTime endTime) {
         Duration between = Duration.between(beginTime, endTime);
 
         if (endTime.isBefore(beginTime)) {
