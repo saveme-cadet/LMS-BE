@@ -150,7 +150,7 @@ public class DayStatisticalDataService {
                     .attendanceScore(dayStatisticalDataDtoMap.get(e.getValue().getUser().getId())
                         .getAttendanceScore())
                     .totalAbsentScore(dayStatisticalDataDtoMap.get(e.getValue().getUser().getId())
-                        .getAbsentScore())
+                        .getTotalScore())
                     .build()
             ))
             .collect(Collectors.toList());
