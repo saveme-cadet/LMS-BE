@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.5.2"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.savelms'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'junit', module: 'junit'
+        }
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-mail'
+        implementation 'org.springframework.boot:spring-boot-devtools'
+
+
+        runtimeOnly 'com.h2database:h2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        runtimeOnly 'mysql:mysql-connector-java'
+        // compile group: 'io.jsonwebtoekn', name: 'jjwt', version: '0.9.1' jjwt 라이브러리 추가 안됨
+        //     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+        //    implementation 'org.springframework.boot:spring-boot-starter-security'
+        //swagger
+        // implementation 'io.springfox:springfox-boot-starter:3.0.0'
+        //springdoc
+        implementation 'org.springdoc:springdoc-openapi-ui:1.5.4'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.security:spring-security-test'
+        implementation 'org.springframework.session:spring-session-jdbc'
+
+
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+}
+project(':lms-api') {
+    dependencies {
+        implementation project(':lms-core')
+    }
+}
+
+
+project(':lms-batch') {
+    dependencies {
+        implementation project(':lms-core')
+    }
+}
