@@ -1,21 +1,14 @@
 # lmssavecadet
 
-# Save Cadet 구해줘 카뎃 LMS Back-End
+## Save Cadet 구해줘 카뎃 LMS Back-End 2차
 
 
-# Description
+## Description
 
 - 구해줘 카뎃 동아리의 Learning Management System 입니다.
-- 기존의 Numbers로 진행한 출결 관리, Todo List, 아오지 탄광 기능을 수정 및 디자인하였습니다.
-- 인원교체가 빈번하게 발생하면서 머슴의 일이 복잡해졌기에 머슴의 기능을 최소화 하는 측면에서 만들기 시작했습니다.
+- 실 사용자들의 feedback을 바탕으로 기능을 수정, 추가 하였습니다.
 
-## Skill
 
-<img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=Spring&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=Spring Security&logoColor=white"/> <img src="https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=Amazon AWS&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> 
-
-## tools
-
-<img src="https://img.shields.io/badge/Intellij-000000?style=flat-square&logo=Intellij IDEA&logoColor=white"/> <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
 
 ### Team Project Notion
 ___Link___: [Notion] https://www.notion.so/savemecadet/LMS-24781856e3e5429490b8b88e0a1b8af8
