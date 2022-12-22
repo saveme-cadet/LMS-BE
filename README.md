@@ -24,10 +24,6 @@ ___Link___: [Swagger] http://15.165.148.236:8080/swagger-ui/index.html?configUrl
 
 * * *
 
-## 기존의 Numbers 출결 관리 시스템
-
-![스크린샷 2022-02-19 오전 8 04 58](https://user-images.githubusercontent.com/56079997/154772720-688fee97-d235-4576-82e5-f3b64586a71d.png)
-
 ## 문제점
 - 달마다 인원추가가 있어서 Numbers를 전체적으로 수정을 해줘야 했습니다.
 - UI 측면에서 인원이 늘어남에 따라 가로로 추가되어 보기 어려워 졌습니다.
@@ -62,6 +58,11 @@ ___Link___: [Swagger] http://15.165.148.236:8080/swagger-ui/index.html?configUrl
 - AWS
 - __FrontEnd 기술 스택__ : React, java script
 - __BackEnd 기술 스택__ : Spring boot, java
+
+## 기존의 Numbers 출결 관리 시스템
+
+![스크린샷 2022-02-19 오전 8 04 58](https://user-images.githubusercontent.com/56079997/154772720-688fee97-d235-4576-82e5-f3b64586a71d.png)
+
 
 * * *
 ## 초기 Figma - 기본 디자인
