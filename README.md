@@ -77,6 +77,6 @@ ___Link___: [Swagger] http://15.165.148.236:8080/swagger-ui/index.html?configUrl
 - ___Porject Design Plan___ : Taeskim
 - ___UI Design___ : Dhyeon
 - ___FrontEnd___ : Sham, Chanhyle
-- ___BackEnd___ : sjin
+- ___BackEnd___ : sjin, takim
 
 
