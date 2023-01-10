@@ -11,7 +11,6 @@
 
 
 ### Team Project Notion
-___Link___: [Notion] https://www.notion.so/savemecadet/LMS-24781856e3e5429490b8b88e0a1b8af8
 
 ___Link___: [Swagger] http://3.38.226.166:8080/swagger-ui/index.html?configUrl=/api-docs/swagger-config
 
