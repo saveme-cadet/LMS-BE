@@ -10,7 +10,7 @@
 
 
 
-### Team Project Notion
+### API Docs
 
 ___Link___: [Swagger] http://3.38.226.166:8080/swagger-ui/index.html?configUrl=/api-docs/swagger-config
 
